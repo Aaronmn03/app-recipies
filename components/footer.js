@@ -7,7 +7,7 @@ export default function Footer({ color }) {
   const background1 = color === 0 ? '#8ae2ff' : '#2e6f85'; // Color para el primer ícono
   const background2 = color === 1 ? '#8ae2ff' : '#2e6f85'; // Color para el segundo ícono
   const icon1 = color === 0 ? '#2e6f85' : '#8ae2ff'; // Color para el primer ícono
-  const icon2 = color === 2 ? '#2e6f85' : '#8ae2ff'; // Color para el segundo ícono
+  const icon2 = color === 1 ? '#2e6f85' : '#8ae2ff'; // Color para el segundo ícono
   return (
     <View style={styles.container}>
       <View style={[styles.iconContainer, { backgroundColor: background1 }]}>

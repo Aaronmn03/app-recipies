@@ -22,5 +22,17 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aaronmn03/app-gestion-inventario.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aaronmn03/app-gestion-inventario/issues"
+  },
+  "homepage": "https://github.com/Aaronmn03/app-gestion-inventario#readme",
+  "description": ""
 }
