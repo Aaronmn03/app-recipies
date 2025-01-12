@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../styles/colors';
+import config from '../config/config';
 
 const sizes = {
   iconSize: 65,
@@ -21,7 +22,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('http://192.168.1.39:3000/')
+    fetch(`${config.backendHost}:${config.backendPort}/`)
       .then(response => response.json())
       .then(data => {
         console.log('Datos recibidos del backend:', data);
@@ -33,7 +34,9 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style ={styles.text_blue} >Hola, {name}</Text>
-      <View style={styles.container_days}> </View>
+      <View style={styles.container_days}>
+        
+      </View>
       <View style={styles.container_recipies}> 
         <TouchableOpacity style={styles.calendario}>
           <Text style={styles.text_blue}>CALENDARIO</Text>

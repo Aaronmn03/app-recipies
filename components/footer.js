@@ -5,22 +5,21 @@ import { useRouter } from 'expo-router';
 import colors from '../styles/colors';
 
 export default function Footer({ color }) {
-  // Define los colores condicionales
-  const background1 = color === 0 ? colors.secondary : colors.backgroundColor; // Color para el primer ícono
-  const background2 = color === 1 ? colors.secondary : colors.backgroundColor; // Color para el segundo ícono
-  const icon1 = color === 0 ? colors.backgroundColor : colors.secondary; // Color para el primer ícono
-  const icon2 = color === 1 ? colors.backgroundColor : colors.secondary; // Color para el segundo ícono
+  const background1 = color === 0 ? colors.secondary : colors.backgroundColor; 
+  const background2 = color === 1 ? colors.secondary : colors.backgroundColor; 
+  const icon1 = color === 0 ? colors.backgroundColor : colors.secondary; 
+  const icon2 = color === 1 ? colors.backgroundColor : colors.secondary; 
 
   const router = useRouter();
 
   return (
     <View style={styles.container}>
         <TouchableOpacity style={[styles.iconContainer, { backgroundColor: background1 }]} onPress={() => router.push('/')}>
-          <Text style={[styles.text, color={icon1}]}>HOME</Text>
+          <Text style={[styles.text, { color: icon1 }]}>HOME</Text>
           <Icon name="home" size={20} color={icon1} />
         </TouchableOpacity>
       <TouchableOpacity style={[styles.iconContainer, { backgroundColor: background2 }]}>
-        <Text style={[styles.text, color={icon2}]} >USER</Text>
+        <Text style={[styles.text, { color: icon2 }]} >USER</Text>
         <Icon name="user" size={20} color={icon2} />
       </TouchableOpacity>
     </View>

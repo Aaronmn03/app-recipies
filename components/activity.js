@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import colors from '../styles/colors';
 
 export default function Activity({nombreActividad, descripcionActividad}) {
   return (
@@ -10,7 +11,7 @@ export default function Activity({nombreActividad, descripcionActividad}) {
         <Text style={styles.title}>{nombreActividad}</Text>
         <Text style={styles.description}>{descripcionActividad}</Text>
       </View>
-      <Icon name="chevron-right" size={15} color="#2e6f85" style={styles.chevronIcon} />
+      <Icon name="chevron-right" size={15} color= {colors.secondary} style={styles.chevronIcon} />
     </View>
   );
 }
@@ -19,12 +20,12 @@ const styles = StyleSheet.create({
   title: {
     padding: 5,
     fontSize: 20,
-    color: '#2e6f85',
+    color: colors.secondary
   },
   container: {
     width: '95%',
     borderRadius: 20,
-    backgroundColor: '#8ae2ff',
+    backgroundColor: '#7CDDEEFF',  //'#8ae2ff',
     height: 100,
     flexDirection: 'row',
     alignItems: 'center',
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
   description: {
     padding: 5,
     fontSize: 18,
-    color: '#2e6f85',
+    color: colors.secondary,
   },
   chevronIcon: {
     marginLeft: 'auto',

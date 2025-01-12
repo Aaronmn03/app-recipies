@@ -1,8 +1,10 @@
 const colors = {
-    backgroundColor: '#ACF3FFFF', //'#FFFFFFFF',
-    primary: '#FCFCFC50', //'#E6E6E6FF',  //'#B1D8F8FF',
-    secondary: '#21303FFF', //'#0F0F0FFF',  //'#0C021FFF',
-    shadow: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: '#ACF3FFFF', 
+    primary: '#7CDDEEFF', //'#FCFCFC59',
+    secondary: '#27394BFF',
+    ok: '#00FFB3FF',
+    exit: '#FC7A7AFF',
+    shadow: 'rgba(255, 255, 255, 0.1)',
   };
 
 export default colors;

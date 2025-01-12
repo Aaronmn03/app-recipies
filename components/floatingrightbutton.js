@@ -4,10 +4,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../styles/colors';
 
 
-const FloatingPlusButton = ({ onPress }) => {
+const FloatingRightButton = ({ onPress, color, icon }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Icon name="plus" size={30} color="#FFFFFF" />
+      <Icon name={icon} size={30} color={color} />
     </TouchableOpacity>
   );
 };
@@ -23,12 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
 });
 
-export default FloatingPlusButton;
+export default FloatingRightButton;

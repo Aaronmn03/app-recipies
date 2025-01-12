@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
+import { useRouter } from 'expo-router';
 import Item from '../components/item.js';
-import FloatingPlusButton from '../components/floatingplusbutton.js';
-import colors from '../styles/colors.js';
+import FloatingPlusButton from '../components/floatingrightbutton';
+import colors from '../styles/colors';
+import config from '../config/config';
+import BackButton from '../components/BackButton';
 
 const sizes = {
   iconSize: 65,
   buttonIconSize: 80,
-  textSize: 20,
+  textSize: 26,
   borderRadius: 8,
   buttonWidth: '45%',
   buttonHeight: '100%',
@@ -17,9 +20,10 @@ const sizes = {
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
-    fetch('http://192.168.1.39:3000/Inventory')
+    fetch(`${config.backendHost}:${config.backendPort}/Inventory`)
       .then(response => response.json())
       .then(data => {
         console.log('Datos recibidos del backend:', data);
@@ -30,8 +34,12 @@ export default function Inventary() {
 
   return (
     <View style={styles.mainContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.headerContainer}>
+        <BackButton />
         <Text style={styles.text}>TU INVENTARIO</Text>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        
         {items.length > 0 ? (
           items.map((item, index) => (
             <Item 
@@ -44,7 +52,7 @@ export default function Inventary() {
           <Text style={styles.text}>No hay items en el inventario</Text>
         )}
       </ScrollView>
-      <FloatingPlusButton onPress={() => console.log('Botón flotante presionado')} />
+      <FloatingPlusButton onPress={() => router.push('/AddItem')} color={colors.backgroundColor} icon={'plus'}/>
       </View>
   );
 }
@@ -54,6 +62,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: colors.backgroundColor,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '70%',
+    marginTop: 20,
+    marginRight: '20%',
   },
   scrollContainer: {
     width: '100%',
@@ -68,7 +84,6 @@ const styles = StyleSheet.create({
     borderRadius: sizes.borderRadius,
     justifyContent: 'center',
     alignItems: 'center',
-    
     marginTop: 20,
   },
   text: {

@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import Header from '../components/header';
 import Footer from '../components/footer';
+import colors from '../styles/colors';
 
 export default function Layout() {
   return (
@@ -21,5 +22,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginBottom: 60,
+    backgroundColor: colors.backgroundColor,
   },
 });
