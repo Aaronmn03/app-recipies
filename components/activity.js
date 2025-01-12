@@ -2,16 +2,15 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Activity({ style, nombreActividad}) {
+export default function Activity({nombreActividad, descripcionActividad}) {
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
       <Image source={require('../assets/aguacate.jpg')} style={styles.icon} />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{nombreActividad}</Text>
-        <Text style={styles.description}>Breve descripcion introducida por el usuario sobre la actividad</Text>
+        <Text style={styles.description}>{descripcionActividad}</Text>
       </View>
       <Icon name="chevron-right" size={15} color="#2e6f85" style={styles.chevronIcon} />
-      <Icon name="calendar" size={15} color="#2e6f85" style={styles.topRightIcon} />
     </View>
   );
 }
@@ -19,7 +18,7 @@ export default function Activity({ style, nombreActividad}) {
 const styles = StyleSheet.create({
   title: {
     padding: 5,
-    fontSize: 22,
+    fontSize: 20,
     color: '#2e6f85',
   },
   container: {
@@ -29,7 +28,7 @@ const styles = StyleSheet.create({
     height: 100,
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 15,
+    margin: 5,
     padding: 10,
     position: 'relative', 
     shadowColor: '#000',
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
   },
   description: {
     padding: 5,
-    fontSize: 14,
+    fontSize: 18,
     color: '#2e6f85',
   },
   chevronIcon: {

@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import colors from '../styles/colors';
 export default function Footer() {
   return (
     <View style={styles.container}>
@@ -12,7 +11,10 @@ export default function Footer() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 30,
-    backgroundColor: '#2e6f85',
+    height: 35,
+    backgroundColor: colors.backgroundColor,
+    borderStyle: 'solid',
+    borderBottomWidth: 2,
+    borderColor: colors.secondary,
   },
 });
