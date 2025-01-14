@@ -1,9 +1,9 @@
 const colors = {
     backgroundColor: '#ACF3FFFF', 
-    primary: '#7CDDEEFF', //'#FCFCFC59',
+    primary: '#FCFCFC59' , //, '#7CDDEEFF'
     secondary: '#27394BFF',
     ok: '#00FFB3FF',
-    exit: '#FC7A7AFF',
+    exit: '#F76262FF',
     shadow: 'rgba(255, 255, 255, 0.1)',
   };
 

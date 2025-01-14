@@ -6,21 +6,20 @@ import FloatingPlusButton from '../components/floatingrightbutton';
 import colors from '../styles/colors';
 import config from '../config/config';
 import BackButton from '../components/BackButton';
+import TitleView from '../components/TitleView.js';
+import sizes from '../styles/sizes';
 
-const sizes = {
-  iconSize: 65,
-  buttonIconSize: 80,
-  textSize: 26,
-  borderRadius: 8,
-  buttonWidth: '45%',
-  buttonHeight: '100%',
-  containerWidth: '90%',
-  containerHeight: '20%',
-};
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
   const router = useRouter();
+
+  const handleItemDetails = (item) => {
+    router.push({
+      pathname: '/ItemInventoryDetails',
+      params: {item: JSON.stringify(item)},
+    });
+  };
 
   useEffect(() => {
     fetch(`${config.backendHost}:${config.backendPort}/Inventory`)
@@ -34,18 +33,15 @@ export default function Inventary() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
-        <BackButton />
-        <Text style={styles.text}>TU INVENTARIO</Text>
-      </View>
+      <TitleView title={'TU INVENTARIO'} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        
         {items.length > 0 ? (
           items.map((item, index) => (
             <Item 
               key={index} 
               nombreItem={item.item.toString().toUpperCase()} 
               descripcionItem={`${item.cantidad} ${item.unidades.toString().toUpperCase()}`}
+              funcion={() => handleItemDetails(item)}
             />
           ))
         ) : (
@@ -74,8 +70,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 10,
-    flexGrow: 1,
   },
   container: {
     width: sizes.containerWidth,

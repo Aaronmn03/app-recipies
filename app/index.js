@@ -33,9 +33,8 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style ={styles.text_blue} >Hola, {name}</Text>
+      <Text style ={styles.name_title} >Hola, {name}</Text>
       <View style={styles.container_days}>
-        
       </View>
       <View style={styles.container_recipies}> 
         <TouchableOpacity style={styles.calendario}>
@@ -95,6 +94,7 @@ const styles = StyleSheet.create({
   },
   container_days: {
     ...commonStyles.container,
+    marginTop:0,
     boxShadow: `2px 3px 1px ${colors.shadow}`,
   },
   despensa: {
@@ -125,4 +125,10 @@ const styles = StyleSheet.create({
   icon: {
     textAlign: 'center',
   },
+  name_title:{
+    color: colors.secondary,
+    fontSize: sizes.textSize + 5,
+    textAlign: 'center',
+    padding: 15,
+  }
 });

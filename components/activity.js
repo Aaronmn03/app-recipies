@@ -7,7 +7,7 @@ export default function Activity({nombreActividad, descripcionActividad}) {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/aguacate.jpg')} style={styles.icon} />
-      <View style={styles.textContainer}>
+      <View>
         <Text style={styles.title}>{nombreActividad}</Text>
         <Text style={styles.description}>{descripcionActividad}</Text>
       </View>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   container: {
     width: '95%',
     borderRadius: 20,
-    backgroundColor: '#7CDDEEFF',  //'#8ae2ff',
+    backgroundColor: '#7CDDEEFF',
     height: 100,
     flexDirection: 'row',
     alignItems: 'center',
@@ -37,11 +37,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  textContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
   },
   icon: {
     width: 80,

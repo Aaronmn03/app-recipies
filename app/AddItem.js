@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TextInput } from 'react-native';
 import Formulario_Texto from '../components/formulario_texto';
 import FloatingRightButton from '../components/floatingrightbutton';
 import ModalSelector from 'react-native-modal-selector';
 import colors from '../styles/colors';
-import config from '../config/config';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useRouter } from 'expo-router';
-import BackButton from '../components/BackButton';
+import { useRouter} from 'expo-router';
 import CustomModal from '../components/CustomModal';
+import TitleView from '../components/TitleView';
+import config from '../config/config';
 
 export default function AddItem() {
   const [selectedValue, setSelectedValue] = useState('Gramos');
@@ -24,17 +23,21 @@ export default function AddItem() {
   ];
 
   const handleAddItem = () => {
-    validateInput();
-    console.log('Item añadido:', itemName, itemQuantity, selectedValue);
-    sendDataBackend();
+    if (validateInput()){
+      console.log('Item añadido:', itemName, itemQuantity, selectedValue);
+      sendDataBackend();
+    }
+    
   };
 
   function validateInput() {
     if (!itemName || !itemQuantity || !selectedValue) {
+      console.log("Todos los campos correctos");
       setErrorMessage('Todos los campos son obligatorios.');
       setModalVisible(true);
-      return;
+      return false;
     }
+    return true;
   }
 
   function sendDataBackend() {
@@ -44,7 +47,7 @@ export default function AddItem() {
       unidades: selectedValue,
     });
     console.log(body);
-    fetch('http://192.168.1.39:3000/Inventory/AddItem/' ,{
+    fetch(`${config.backendHost}:${config.backendPort}/Inventory/AddItem/` ,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,23 +73,26 @@ export default function AddItem() {
   const router = useRouter();  
   return (
     <View style={styles.main_container}>
-      <BackButton></BackButton>
-      <Formulario_Texto question="Nombre de articulo:" onChangeText={setItemName}/>
-      <Formulario_Texto question="Cantidad:" onChangeText={setItemQuantity}/>
-      <Text style={styles.label}>Unidades:</Text>
-      <ModalSelector
-        data={data}
-        initValue="Selecciona una unidad"
-        onChange={(option) => setSelectedValue(option.label)}
-        style={styles.selector}
-      >
-        <TextInput
-          style={styles.input}
-          editable={false}
-          placeholder="Selecciona una unidad"
-          value={selectedValue}
-        />
-      </ModalSelector>
+      <TitleView title={'!AÑADE TU ALIMENTO!'} />
+      <View style={styles.form}>
+        <Formulario_Texto question="Nombre de articulo:" onChangeText={setItemName}/>
+        <Formulario_Texto question="Cantidad:" onChangeText={setItemQuantity}/>
+        <Text style={styles.label}>Unidades:</Text>
+        <ModalSelector
+          data={data}
+          initValue="Selecciona una unidad"
+          onChange={(option) => setSelectedValue(option.label)}
+          style={styles.selector}
+          cancelText='Cerrar'
+        >
+          <TextInput
+            style={styles.input}
+            editable={false}
+            placeholder="Selecciona una unidad"
+            value={selectedValue}
+          />
+        </ModalSelector>
+      </View>
       <FloatingRightButton onPress={handleAddItem} color={colors.ok} icon={'check'} />
       <CustomModal
         visible={modalVisible}
@@ -100,8 +106,6 @@ export default function AddItem() {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
-    alignItems: 'center',
-    padding: 20,
     backgroundColor: colors.backgroundColor,
   },
   label: {
@@ -124,19 +128,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundColor,
     color: colors.secondary,
     placeholderTextColor: colors.secondary,
-    },
+  },
   selector: {
     width: '100%',
     marginBottom: 20,
     backgroundColor: colors.backgroundColor,
   },
-  button: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: colors.secondary,
-    justifyContent: 'center',
+  form: {
+    width: '100%',
+    height: '80%',
     alignItems: 'center',
-    alignSelf: 'flex-start'
+    justifyContent: 'center',
   },
 });

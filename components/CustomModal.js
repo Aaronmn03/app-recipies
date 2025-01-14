@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import colors from '../styles/colors';
 
-const CustomModal = ({ visible, onClose, message }) => {
+const CustomModal = ({ visible, onClose, message, onConfirm, confirmText = 'Confirmar', cancelText = 'Cerrar' }) => {
   return (
     <Modal
       transparent={true}
@@ -13,9 +13,16 @@ const CustomModal = ({ visible, onClose, message }) => {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <Text style={styles.message}>{message}</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <Text style={onConfirm ? styles.cancelButtonText : styles.singleButtonText}>{cancelText}</Text>
+            </TouchableOpacity>
+            {onConfirm && (
+              <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
+                <Text style={styles.confirmButtonText}>{confirmText}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
     </Modal>
@@ -37,16 +44,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   message: {
-    fontSize: 18,
+    fontSize: 20,
     color: colors.backgroundColor,
     marginBottom: 20,
   },
   closeButton: {
+    flex: 1,
     padding: 10,
     backgroundColor: colors.primary,
     borderRadius: 5,
+    alignItems: 'center',
   },
-  closeButtonText: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  confirmButton: {
+    flex: 1,
+    marginLeft: 10,
+    padding: 10,
+    backgroundColor: colors.primary,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: colors.ok,
+    fontSize: 16,
+  },
+  confirmButtonText: {
+    color: colors.exit,
+    fontSize: 16,
+  },
+  singleButtonText: {
     color: colors.exit,
     fontSize: 16,
   },

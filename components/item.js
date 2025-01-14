@@ -1,10 +1,12 @@
-import { StyleSheet, View, Text} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import Activity from './activity.js';
 
-export default function Item({nombreItem, descripcionItem}) {
+export default function Item({nombreItem, descripcionItem, funcion}) {
   return (
     <View>
-        <Activity nombreActividad={nombreItem} descripcionActividad={descripcionItem}></Activity>
+        <TouchableOpacity onPress={funcion}>
+          <Activity nombreActividad={nombreItem} descripcionActividad={descripcionItem}></Activity>
+        </TouchableOpacity>
     </View>
   );
 }
