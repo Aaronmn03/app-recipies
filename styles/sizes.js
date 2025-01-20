@@ -6,7 +6,7 @@ const sizes = {
   buttonWidth: '45%',
   buttonHeight: '100%',
   containerWidth: '90%',
-  containerHeight: '20%',
+  containerHeight: '25%',
 };
 
 export default sizes;

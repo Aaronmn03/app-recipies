@@ -10,13 +10,15 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@expo/metro-runtime": "~4.0.0",
-    "@react-native-picker/picker": "^2.11.0",
+    "@expo/metro-runtime": "~3.2.1",
+    "@react-native-picker/picker": "^2.9.0",
     "app": "file:",
     "axios": "^1.7.9",
     "build": "^0.1.4",
     "expo": "~52.0.25",
     "expo-constants": "~17.0.4",
+    "expo-device": "~7.0.2",
+    "expo-image-picker": "~16.0.4",
     "expo-linking": "~7.0.4",
     "expo-router": "~4.0.16",
     "expo-status-bar": "~2.0.1",
@@ -32,8 +34,11 @@
     "uglify-js": "^3.14.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "standard": "^17.1.2"
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "@types/react-native": "^0.72.8",
+    "standard": "^17.1.2",
+    "typescript": "^5.3.3"
   },
   "private": true
 }

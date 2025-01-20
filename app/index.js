@@ -5,17 +5,7 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../styles/colors';
 import config from '../config/config';
-
-const sizes = {
-  iconSize: 65,
-  buttonIconSize: 80,
-  textSize: 20,
-  borderRadius: 8,
-  buttonWidth: '45%',
-  buttonHeight: '100%',
-  containerWidth: '90%',
-  containerHeight: '25%',
-};
+import sizes from '../styles/sizes';
 
 export default function Home() {
   const [name, setName] = useState('');
@@ -25,7 +15,6 @@ export default function Home() {
     fetch(`${config.backendHost}:${config.backendPort}/`)
       .then(response => response.json())
       .then(data => {
-        console.log('Datos recibidos del backend:', data);
         setName(data[0].nombre_usuario)
       })
       .catch(error => console.error('Error fetching data:', error));

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import colors from '../styles/colors';
+import colors from '../../styles/colors';
 
 const CustomModal = ({ visible, onClose, message, onConfirm, confirmText = 'Confirmar', cancelText = 'Cerrar' }) => {
   return (
     <Modal
       transparent={true}
-      animationType="slide"
+      animationType="fade"
       visible={visible}
       onRequestClose={onClose}
     >
@@ -34,47 +34,54 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.transparent,
   },
   modalContainer: {
     width: '80%',
     padding: 20,
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.backgroundColor,
     borderRadius: 10,
     alignItems: 'center',
+    borderStyle:'solid',
+    borderWidth:3,
+    borderColor: colors.secondary
   },
   message: {
-    fontSize: 20,
-    color: colors.backgroundColor,
-    marginBottom: 20,
-  },
-  closeButton: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: colors.primary,
-    borderRadius: 5,
-    alignItems: 'center',
+    fontSize: 22,
+    color: colors.secondary,
+    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    padding:10,
     width: '100%',
   },
   confirmButton: {
-    flex: 1,
-    marginLeft: 10,
+    flex:0.48,
     padding: 10,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.secondary,
     borderRadius: 5,
     alignItems: 'center',
+    justifyContent:'center',
+  },
+  closeButton: {
+    flex:0.48,
+    padding: 10,
+    backgroundColor: colors.secondary,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent:'center',
   },
   cancelButtonText: {
     color: colors.ok,
     fontSize: 16,
+    textAlign:'center',
   },
   confirmButtonText: {
     color: colors.exit,
     fontSize: 16,
+    textAlign:'center',
   },
   singleButtonText: {
     color: colors.exit,

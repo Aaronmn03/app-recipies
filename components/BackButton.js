@@ -4,11 +4,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useRouter } from 'expo-router';
 import colors from '../styles/colors';
 
-const BackButton = () => {
-  const router = useRouter();
 
+const BackButton = ({onclick}) => {
+  const router = useRouter();
   return (
-    <TouchableOpacity style={styles.button} onPress={() => router.push('../')}>
+    <TouchableOpacity style={styles.button} onPress={onclick || (() => router.push('../'))}>
       <Icon name={'arrow-left'} size={26} color={colors.backgroundColor} />
     </TouchableOpacity>
   );

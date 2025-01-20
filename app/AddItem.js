@@ -5,12 +5,12 @@ import FloatingRightButton from '../components/floatingrightbutton';
 import ModalSelector from 'react-native-modal-selector';
 import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
-import CustomModal from '../components/CustomModal';
+import CustomModal from '../components/Modals/CustomModal';
 import TitleView from '../components/TitleView';
 import config from '../config/config';
 
 export default function AddItem() {
-  const [selectedValue, setSelectedValue] = useState('Gramos');
+  const [UnidadSeleccionada, setSelectedValue] = useState('Gramos');
   const [itemName, setItemName] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,17 +22,20 @@ export default function AddItem() {
     { key: 3, label: 'Unidades' },
   ];
 
+  const alimento={
+    nombre: itemName,
+    cantidad: itemQuantity,
+    unidad_medida: UnidadSeleccionada
+  }
+
   const handleAddItem = () => {
     if (validateInput()){
-      console.log('Item añadido:', itemName, itemQuantity, selectedValue);
       sendDataBackend();
     }
-    
   };
 
   function validateInput() {
-    if (!itemName || !itemQuantity || !selectedValue) {
-      console.log("Todos los campos correctos");
+    if (!itemName || !itemQuantity || !UnidadSeleccionada) {
       setErrorMessage('Todos los campos son obligatorios.');
       setModalVisible(true);
       return false;
@@ -41,12 +44,7 @@ export default function AddItem() {
   }
 
   function sendDataBackend() {
-    const body = JSON.stringify({
-      item: itemName,
-      cantidad: itemQuantity,
-      unidades: selectedValue,
-    });
-    console.log(body);
+    const body = JSON.stringify(alimento);
     fetch(`${config.backendHost}:${config.backendPort}/Inventory/AddItem/` ,{
       method: 'POST',
       headers: {
@@ -73,7 +71,7 @@ export default function AddItem() {
   const router = useRouter();  
   return (
     <View style={styles.main_container}>
-      <TitleView title={'!AÑADE TU ALIMENTO!'} />
+      <TitleView title={'¡AÑADE TU ALIMENTO!'} />
       <View style={styles.form}>
         <Formulario_Texto question="Nombre de articulo:" onChangeText={setItemName}/>
         <Formulario_Texto question="Cantidad:" onChangeText={setItemQuantity}/>
@@ -89,7 +87,7 @@ export default function AddItem() {
             style={styles.input}
             editable={false}
             placeholder="Selecciona una unidad"
-            value={selectedValue}
+            value={UnidadSeleccionada}
           />
         </ModalSelector>
       </View>

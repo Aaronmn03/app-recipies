@@ -4,10 +4,10 @@ import colors from '../styles/colors';
 import BackButton from '../components/BackButton';
 import sizes from '../styles/sizes';
 
-export default function TitleView({title}) { 
+export default function TitleView({title, onclick}) { 
     return (
     <View style={styles.headerContainer}>
-        <BackButton />
+        <BackButton onclick={onclick}/>
         <Text style={styles.text}>{title}</Text>
     </View>
     );

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
-import Item from '../components/item.js';
 import FloatingPlusButton from '../components/floatingrightbutton';
 import colors from '../styles/colors';
 import config from '../config/config';
-import BackButton from '../components/BackButton';
 import TitleView from '../components/TitleView.js';
 import sizes from '../styles/sizes';
+import { unidad_medida } from '../utils/unitConverter.js';
+import Aliment from '../components/Aliment';
 
 
 export default function Inventary() {
@@ -25,11 +25,11 @@ export default function Inventary() {
     fetch(`${config.backendHost}:${config.backendPort}/Inventory`)
       .then(response => response.json())
       .then(data => {
-        console.log('Datos recibidos del backend:', data);
         setInventory(data);
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
+
 
   return (
     <View style={styles.mainContainer}>
@@ -37,11 +37,14 @@ export default function Inventary() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {items.length > 0 ? (
           items.map((item, index) => (
-            <Item 
+            <Aliment 
               key={index} 
-              nombreItem={item.item.toString().toUpperCase()} 
-              descripcionItem={`${item.cantidad} ${item.unidades.toString().toUpperCase()}`}
+              nombreItem={item.nombre.toString().toUpperCase()} 
+              descripcionItem={`${item.cantidad} ${unidad_medida(item)}`}
               funcion={() => handleItemDetails(item)}
+              image={item.imagen ? { uri: item.imagen } : require('../assets/aguacate.jpg')}
+              outOfStock={item.stock_minimo && parseFloat(item.cantidad) < parseFloat(item.stock_minimo)}
+        
             />
           ))
         ) : (
