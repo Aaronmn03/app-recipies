@@ -4,12 +4,12 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import colors from '../styles/colors';
 import FloatingRightButton from '../components/floatingrightbutton';
 import TitleView from '../components/TitleView';
-import config from '../config/config';
 import CustomModal from '../components/Modals/CustomModal';
 import { unidad_medida } from '../utils/unitConverter.js';
 import TextOrInput from '../components/TextOrInput';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import * as ImagePicker from 'expo-image-picker';
+import { uploadImage, editAliment, removeAliment } from '../services/inventoryService';
 
 export default function ItemInventoryDetails() { 
     const router = useRouter();
@@ -26,17 +26,6 @@ export default function ItemInventoryDetails() {
     const [editModalVisible, setEditModalVisible] = useState(false);
 
     /****REMOVE*****/
-    const fetchRemoveItem = () => {
-        fetch(`${config.backendHost}:${config.backendPort}/Inventory/${itemData.id}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            console.assert('Item eliminado:', response);
-            router.push('/');
-        })
-        .catch(error => console.error('Error eliminando item:', error));
-    };
-
 
     const handleRemoveCancel = () => {
         setRemoveModalVisible(false);
@@ -44,49 +33,17 @@ export default function ItemInventoryDetails() {
 
     const handleRemoveConfirm = () => {
         setRemoveModalVisible(false);
-        fetchRemoveItem();
+        removeAliment(alimento.id)
+        router.push('/');
     };
 
     /********EDIT******/
-    const fetchEditItem = async () => {
+
+    const handleEdit = () =>{
         setEditModalVisible(false);
-        const body = JSON.stringify(alimento);
-        console.log("El que mando a la bbdd", alimento.imagen);
-        const response = await fetch (`${config.backendHost}:${config.backendPort}/Inventory/${alimento.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-              },
-            body: body,
-        })
-        .then(response => {
-            console.assert('Item actualizado:', response);
-            router.push('/');
-        })
-        .catch(error => console.error('Error eliminando item:', error));   
-        
-        if (uri !== undefined) {
-            const formData = new FormData();
-            const fileName = alimento.imagen;
-            formData.append('image', {
-            uri: uri,
-            name: fileName, 
-            type: 'image/jpeg',  
-            });
-            try {
-                const response = await fetch(`${config.backendHost}:${config.backendPort}/upload`, {
-                method: 'POST',
-                body: formData,
-                });
-                
-                if (!response.ok) {
-                throw new Error(`Error en la respuesta del servidor: ${response.status}`);
-                }
-                const data = await response.json();
-            } catch (error) {
-                console.error('Error al subir la foto:', error);
-            }
-        }
+        editAliment(alimento);
+        router.push('/');
+        uploadImage(uri, alimento);
     }
 
     const pickImage = async () => {
@@ -111,8 +68,6 @@ export default function ItemInventoryDetails() {
         } catch (error) {
             console.error('Error al seleccionar la imagen:', error);
         }
-        
-
     };  
 
     const updateAlimento = (key, value) => {
@@ -120,7 +75,7 @@ export default function ItemInventoryDetails() {
             ...prevAlimento,
             [key]: value,
         }));
-    };    
+    };        
     
     const handleCount = (value) => {
         const parsedValue = parseInt(value, 10);
@@ -174,7 +129,7 @@ export default function ItemInventoryDetails() {
             <View style={styles.cantidad_container}>
                 <TextOrInput titulo={'Cantidad:'} keyboardType={'numeric'} condition={editMode} placeholder={String(alimento.cantidad)} valor= {alimento.cantidad} onChangeText={handleCount}  unidad ={unidad_medida(itemData)} direccion={'row'}></TextOrInput>
             </View>
-            <View style={{flexDirection:'row', alignContent:'center', alignItems:'center', justifyContent: 'space-around', width: '90%', borderStyle:'solid', borderColor:colors.secondary, borderTopWidth:1, borderBottomWidth:1 ,paddingVertical:30}}>
+            <View style={{...commonStyles.container, width: '90%', borderColor:colors.secondary, borderTopWidth:1, borderBottomWidth:1 ,paddingVertical:30}}>
                 <View style={styles.stock_container}>
                     <TextOrInput titulo={'Stock mínimo '} keyboardType={'numeric'}condition={editMode} placeholder={String(alimento.stock_minimo)} valor= {alimento.stock_minimo} onChangeText={handleStockMin} direccion={'column'}></TextOrInput>
                     <TextOrInput titulo={'Stock máximo '} keyboardType={'numeric'} condition={editMode} placeholder={String(alimento.stock_maximo)} valor= {alimento.stock_maximo} onChangeText={handleStockMax} direccion={'column'}></TextOrInput>
@@ -184,10 +139,9 @@ export default function ItemInventoryDetails() {
                 </View>
             </View>
             <Text style={styles.headerDesc}>DESCRIPCIÓN</Text>
-            <View style={{width:'80%', borderStyle:'solid', borderWidth:1, borderRadius:10, padding:20, alignItems:'center', justifyContent:'flex-start', backgroundColor: colors.primary, }}>
+            <View style={styles.contDesc}>
                 <TextOrInput condition={editMode} placeholder={String(alimento.descripcion)} valor= {alimento.descripcion} onChangeText={handleDescription}></TextOrInput>
             </View>
-                
             
             {editMode && (
             <FloatingRightButton bottom={100} icon="check" color={colors.ok} onPress={() => setEditModalVisible(true)}/>       
@@ -196,37 +150,21 @@ export default function ItemInventoryDetails() {
             <FloatingRightButton bottom={100} icon="edit" color={colors.backgroundColor} onPress={() => {setEditMode(true)}}/>
             )}
             <FloatingRightButton icon="trash" color={colors.exit} onPress={() => setRemoveModalVisible(true)}/>
-            <CustomModal
-                visible={removeModalVisible}
-                onClose={handleRemoveCancel}
-                message={`¿Eliminar ${itemData.nombre}?`}
-                confirmText='Eliminar'
-                cancelText='Cancelar'
-                onConfirm={handleRemoveConfirm}
-            /> 
-            <CustomModal
-                visible={exitModalVisible}
-                message={`¿Salir sin guardar?`}
-                onClose={() => setExitModal(false)}
-                cancelText='Continuar modificando'
-                onConfirm={() => {
-                    setExitModal(false);
-                    router.push('/');}
-                }
-                confirmText='Salir'
-            />  
 
-            <CustomModal
-                visible={editModalVisible}
-                onClose={() => setEditModalVisible(false)}
-                message={`¿Guardar cambios en ${itemData.nombre}?`}
-                confirmText='Editar'
-                cancelText='Cancelar'
-                onConfirm={fetchEditItem}
-            /> 
+            <CustomModal visible={removeModalVisible} onClose={handleRemoveCancel} message={`¿Eliminar ${itemData.nombre}?`} confirmText='Eliminar' cancelText='Cancelar' onConfirm={handleRemoveConfirm} /> 
+            <CustomModal visible={exitModalVisible} message={`¿Salir sin guardar?`} onClose={() => setExitModal(false)} cancelText='Continuar modificando' onConfirm={() => { setExitModal(false); router.push('/');} } confirmText='Salir'/> 
+            <CustomModal visible={editModalVisible} onClose={() => setEditModalVisible(false)} message={`¿Guardar cambios en ${itemData.nombre}?`} confirmText='Editar' cancelText='Cancelar' onConfirm={handleEdit} /> 
         </View>
     );
 }
+
+const commonStyles = {
+    container: {
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+  };
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -245,9 +183,7 @@ const styles = StyleSheet.create({
         borderWidth: 2.5,
     },
     headerDetail: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
+        ...commonStyles.container,
         width: '90%',
         padding: 15,
         paddingHorizontal: 20,
@@ -267,28 +203,15 @@ const styles = StyleSheet.create({
         borderRadius: 100,
     },
     cantidad_container:{
+        ...commonStyles.container,
         width:'80%',
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignItems:'center',
-        margin:10,
-        padding:15,
+        margin:30,
+        padding:10,
         borderStyle:'solid',
         borderWidth:1,
         borderColor: colors.secondary,
         borderRadius:10,
         backgroundColor: colors.primary
-    },
-    input: {
-        height:40,
-        borderWidth: 1,
-        borderColor: colors.secondary,  
-        borderRadius: 5,  
-        padding: 1, 
-        fontSize:16,
-        color: colors.secondary,  
-        textAlign: 'center',  
-        minWidth: 60,  
     },
     stock_container:{
         borderStyle:'solid',
@@ -311,4 +234,14 @@ const styles = StyleSheet.create({
         color: colors.secondary,
         fontSize:24,
     },  
+    contDesc:{
+        width:'80%',
+        borderStyle:'solid', 
+        borderWidth:1, 
+        borderRadius:10,
+        padding:20, 
+        alignItems:'center', 
+        justifyContent:'flex-start', 
+        backgroundColor: colors.primary, 
+    }
 });

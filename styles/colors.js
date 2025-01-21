@@ -7,5 +7,15 @@ const colors = {
     transparent: '#0000006B',
     shadow: 'rgba(255, 255, 255, 0.1)',
   };
+/*
+const colors = {
+  backgroundColor: '#27394BFF',
+  primary: '#6DD3E6FF' , 
+  secondary: '#BDF4FDFF',
+  ok: '#0FA861FF',
+  exit: '#E24B4BFF',
+  transparent: '#0000006B',
+  shadow: 'rgba(255, 255, 255, 0.1)',
+}*/
 
 export default colors;
