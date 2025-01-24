@@ -15,6 +15,7 @@ export default function Home() {
 
   useEffect(()  =>  {
     const fetchData = async () => {
+      console.log(auth.user);
       fetch(`${config.backendHost}:${config.backendPort}/${auth.user}`,{
         method: 'GET',
         headers: {

@@ -1,6 +1,7 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import colors from '../styles/colors';
 import Formulario_Texto from '../components/formulario_texto';
+import Formulario_Contraseña from '../components/formulario_contraseña';
 import { useRouter} from 'expo-router';
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
@@ -8,8 +9,11 @@ import config from '../config/config';
 import {useAuth} from '../context/AuthContext';
 
 export default function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [loginUsername, setLoginUsername] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [registerUsername, setRegisterUsername] = useState('');
+    const [registerPassword, setRegisterPassword] = useState('');
     const router = useRouter();
     const auth = useAuth();
 
@@ -21,8 +25,8 @@ export default function Login() {
                     'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        nombre_usuario: username,
-                        contraseña: password,
+                        nombre_usuario: loginUsername,
+                        contraseña: loginPassword,
                       }),
             });
             if(response.ok){
@@ -40,23 +44,52 @@ export default function Login() {
         }
       };
 
+    const handleRegister = async () => {
+        try{
+            const response = await fetch(`${config.backendHost}:${config.backendPort}/register`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nombre_usuario: registerUsername,
+                        contraseña: registerPassword,
+                        email: email,
+                      }),
+            });
+            if(response.ok){
+                const data = await response.json();
+                const{token, userID} = data;
+                console.log(data);
+                auth.login(userID, token);
+            }else{
+                const errorData = await response.json();
+                Alert.alert('Error', errorData.message || 'Usuario o contraseña incorrectos');  
+            }
+
+        }catch (error){
+            console.error('Error durante el inicio de sesión:', error);
+            Alert.alert('Error', 'Ocurrió un error al intentar iniciar sesión.');
+        }
+      };
+
     return(
         <View style={styles.container}>
             <Text style={{fontSize:32, color: colors.secondary, margin:20}}>¡BIENVENIDO!</Text>
             <View style={styles.login_container}>
                 <Text style={styles.header_title}>LOGIN</Text> 
-                <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setUsername}></Formulario_Texto>
-                <Formulario_Texto question="Introduce tu contraseña" onChangeText={setPassword}></Formulario_Texto>
+                <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setLoginUsername}></Formulario_Texto>
+                <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setLoginPassword}></Formulario_Contraseña>
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text>Accede!</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.register_container}>
                 <Text style={styles.header_title}>REGISTRARSE</Text> 
-                <Formulario_Texto question="Introduce tu nombre de usuario"></Formulario_Texto>
-                <Formulario_Texto question="Introduce un correo electronico"></Formulario_Texto>
-                <Formulario_Texto question="Introduce tu contraseña"></Formulario_Texto>
-                <TouchableOpacity style={styles.button}>
+                <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
+                <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
+                <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
+                <TouchableOpacity style={styles.button} onPress={handleRegister}>
                     <Text>Registrate!</Text>
                 </TouchableOpacity>
             </View>
