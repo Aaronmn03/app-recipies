@@ -10,6 +10,7 @@ import TextOrInput from '../components/TextOrInput';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImage, editAliment, removeAliment } from '../services/inventoryService';
+import { useAuth } from '../context/AuthContext';
 
 export default function ItemInventoryDetails() { 
     const router = useRouter();
@@ -24,6 +25,7 @@ export default function ItemInventoryDetails() {
     const [exitModalVisible, setExitModal] = useState(false);
     const [imageAux, setImageAux] = useState(null);
     const [editModalVisible, setEditModalVisible] = useState(false);
+    const auth = useAuth()
 
     /****REMOVE*****/
 
@@ -33,7 +35,7 @@ export default function ItemInventoryDetails() {
 
     const handleRemoveConfirm = () => {
         setRemoveModalVisible(false);
-        removeAliment(alimento.id)
+        removeAliment(alimento.id, auth.token)
         router.push('/');
     };
 
@@ -41,9 +43,9 @@ export default function ItemInventoryDetails() {
 
     const handleEdit = () =>{
         setEditModalVisible(false);
-        editAliment(alimento);
+        editAliment(alimento, auth.token);
         router.push('/');
-        uploadImage(uri, alimento);
+        uploadImage(uri, alimento, auth.token);
     }
 
     const pickImage = async () => {

@@ -16,14 +16,12 @@ const styles = StyleSheet.create({
     container: {
         width: '95%',
         height: 75,
-        marginTop: 0,
         flexDirection: 'column',
         borderRadius: 6,
         padding: 10,
     },
     input: {
         height: 42,
-        marginTop: 0,
         fontSize: 16,
         borderColor: colors.secondary,
         borderWidth: 2,

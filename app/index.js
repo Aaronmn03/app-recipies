@@ -6,19 +6,32 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../styles/colors';
 import config from '../config/config';
 import sizes from '../styles/sizes';
+import {useAuth} from '../context/AuthContext';
 
 export default function Home() {
   const [name, setName] = useState('');
   const router = useRouter();
+  const auth = useAuth();
 
-  useEffect(() => {
-    fetch(`${config.backendHost}:${config.backendPort}/`)
-      .then(response => response.json())
-      .then(data => {
-        setName(data[0].nombre_usuario)
+  useEffect(()  =>  {
+    const fetchData = async () => {
+      fetch(`${config.backendHost}:${config.backendPort}/${auth.user}`,{
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${auth.token}`, 
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
+        .then(response => response.json())
+        .then(data => {
+          setName(data[0].nombre_usuario);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+    if(!auth.isLoading && auth.isAuthenticated){
+      fetchData();
+    }
+  }, [auth.isLoading]);
 
   return (
     <View style={styles.container}>
@@ -30,7 +43,9 @@ export default function Home() {
           <Text style={styles.text_blue}>CALENDARIO</Text>
           <Icon style={styles.icon} name='calendar' size={sizes.iconSize} color={colors.secondary} />
         </TouchableOpacity>
-          <TouchableOpacity style={styles.despensa} onPress={() => router.push('/Inventory')}>
+          <TouchableOpacity style={styles.despensa} onPress={() => router.push({pathname: '/Inventory',
+            params: {id: JSON.stringify(auth.user)},
+          })}>
             <Text style={styles.text_blue}>INVENTARIO</Text>
             <Icon style={styles.icon} name='archive' size={sizes.iconSize} color={colors.secondary} />
           </TouchableOpacity>

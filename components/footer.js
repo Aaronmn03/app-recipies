@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useRouter } from 'expo-router';
 import colors from '../styles/colors';
+import useAuth from "../hooks/useAuth";
 
 export default function Footer({ color }) {
   const background1 = color === 0 ? colors.secondary : colors.backgroundColor; 
@@ -10,6 +11,7 @@ export default function Footer({ color }) {
   const icon1 = color === 0 ? colors.backgroundColor : colors.secondary; 
   const icon2 = color === 1 ? colors.backgroundColor : colors.secondary; 
 
+  const auth = useAuth();
   const router = useRouter();
 
   return (
@@ -18,7 +20,7 @@ export default function Footer({ color }) {
           <Text style={[styles.text, { color: icon1 }]}>HOME</Text>
           <Icon name="home" size={20} color={icon1} />
         </TouchableOpacity>
-      <TouchableOpacity style={[styles.iconContainer, { backgroundColor: background2 }]}>
+      <TouchableOpacity style={[styles.iconContainer, { backgroundColor: background2 }]} onPress={auth.logout}>
         <Text style={[styles.text, { color: icon2 }]} >USER</Text>
         <Icon name="user" size={20} color={icon2} />
       </TouchableOpacity>

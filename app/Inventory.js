@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import FloatingPlusButton from '../components/floatingrightbutton';
 import colors from '../styles/colors';
 import config from '../config/config';
@@ -8,11 +8,13 @@ import TitleView from '../components/TitleView.js';
 import sizes from '../styles/sizes';
 import { unidad_medida } from '../utils/unitConverter.js';
 import Aliment from '../components/Aliment';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
   const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const userID = JSON.parse(id);
 
   const handleItemDetails = (item) => {
     router.push({
@@ -22,12 +24,22 @@ export default function Inventary() {
   };
 
   useEffect(() => {
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory`)
-      .then(response => response.json())
-      .then(data => {
-        setInventory(data);
+    const fetchData = async () => {      
+      const token = await AsyncStorage.getItem('userToken');     
+      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${userID}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(error => console.error('Error fetching data:', error));
+        .then(response => response.json())
+        .then(data => {
+          setInventory(data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+    fetchData();
   }, []);
 
 

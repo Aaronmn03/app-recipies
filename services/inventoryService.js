@@ -1,8 +1,12 @@
 import config from "../config/config";
 
-export const removeAliment = (id) => {
+export const removeAliment = (id, token) => {
     fetch(`${config.backendHost}:${config.backendPort}/Inventory/${id}`, {
         method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
     })
     .then(response => {
         console.assert('Item eliminado:', response);
@@ -11,12 +15,12 @@ export const removeAliment = (id) => {
     .catch(error => console.error('Error eliminando item:', error));
 };
 
-export const editAliment = async (alimento) =>{
+export const editAliment = async (alimento, token) =>{
     const body = JSON.stringify(alimento);
-    console.log("El que mando a la bbdd", alimento.imagen);
     const response = await fetch (`${config.backendHost}:${config.backendPort}/Inventory/${alimento.id}`, {
         method: 'PUT',
         headers: {
+            'Authorization': `Bearer ${token}`, 
             'Content-Type': 'application/json',
             },
         body: body,
@@ -27,7 +31,7 @@ export const editAliment = async (alimento) =>{
     .catch(error => console.error('Error eliminando item:', error)); 
 }
 
-export const uploadImage = async (uri, alimento) => {
+export const uploadImage = async (uri, alimento, token) => {
     if (uri !== undefined) {
         const formData = new FormData();
         const fileName = alimento.imagen;
@@ -38,6 +42,10 @@ export const uploadImage = async (uri, alimento) => {
         });
         try {
             const response = await fetch(`${config.backendHost}:${config.backendPort}/upload`, {
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'multipart/form-data'
+            },
             method: 'POST',
             body: formData,
             });

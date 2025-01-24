@@ -59,7 +59,6 @@ export default function AddItem() {
       return response.json();
     })
     .then((data) => {
-      console.log('Datos recibidos del backend:', data);
       router.push('/Inventory');
     })
     .catch((error) => {
