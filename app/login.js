@@ -1,21 +1,53 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity, Animated, Easing} from 'react-native'
 import colors from '../styles/colors';
 import Formulario_Texto from '../components/formulario_texto';
 import Formulario_Contraseña from '../components/formulario_contraseña';
-import { useRouter} from 'expo-router';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Alert } from 'react-native';
 import config from '../config/config';
 import {useAuth} from '../context/AuthContext';
 
 export default function Login() {
+    const [isLoginView, setIsLoginView] = useState(true);
+    const rotationAnim = useRef(new Animated.Value(0)).current;
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [email, setEmail] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
-    const router = useRouter();
     const auth = useAuth();
+
+    const toggleView = () => {
+        Animated.timing(rotationAnim,{
+            toValue: isLoginView ? 1 : 0,
+            duration:750,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+        }).start(() => {
+            setIsLoginView(!isLoginView);
+
+        })
+    }
+
+    const frontRotation = rotationAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '180deg'], // Rotación del frente
+    });
+
+    const backRotation = rotationAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['180deg', '360deg'], // Rotación de la parte trasera
+    });
+
+    const frontOpacity = rotationAnim.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [1, 0, 0], // Oculta el frente cuando gira
+    });
+
+    const backOpacity = rotationAnim.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [0, 0, 1], // Muestra la parte trasera después del giro
+    });
 
     const handleLogin = async () => {
         try{
@@ -75,24 +107,42 @@ export default function Login() {
 
     return(
         <View style={styles.container}>
-            <Text style={{fontSize:32, color: colors.secondary, margin:20}}>¡BIENVENIDO!</Text>
+            <Animated.View
+                style={[styles.flipContainer,{transform: [{rotateY: frontRotation}], opacity:frontOpacity,}]}pointerEvents={isLoginView ? 'auto' : 'none'}>
+            <Text style={styles.welcome_message}>¡Hola de nuevo!</Text>
             <View style={styles.login_container}>
                 <Text style={styles.header_title}>LOGIN</Text> 
                 <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setLoginUsername}></Formulario_Texto>
                 <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setLoginPassword}></Formulario_Contraseña>
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                    <Text>Accede!</Text>
+                    <Text style={styles.button_text}>Accede!</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
+                <Text style={{ color: colors.primary }}>
+                    ¿Aun no tienes cuenta?
+                </Text>
                 </TouchableOpacity>
             </View>
+            </Animated.View>
+            <Animated.View
+                style={[styles.flipContainer,{transform: [{rotateY: backRotation}], opacity:backOpacity,}]}pointerEvents={!isLoginView ? 'auto' : 'none'}>
+            <Text style={styles.welcome_message}>¡BIENVENIDO!</Text>
             <View style={styles.register_container}>
-                <Text style={styles.header_title}>REGISTRARSE</Text> 
+                <Text style={styles.header_title}>REGISTRARTE</Text> 
                 <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
                 <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
                 <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
                 <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                    <Text>Registrate!</Text>
+                    <Text style={styles.button_text}>Registrate!</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
+                <Text style={{ color: colors.primary }}>
+                    ¿Ya tienes alguna cuenta?
+                </Text>
+            </TouchableOpacity>
             </View>
+            
+            </Animated.View>
         </View>
     );
 }
@@ -101,9 +151,9 @@ const commonStyles = {
     container:{
         backgroundColor: colors.primary,
         width:'90%',
-        paddingVertical:20,
         alignItems:'center',
-        justifyContent:'center',
+        justifyContent:'space-evenly',
+        paddingVertical:20,
         borderWidth:5,
         borderRadius:25,
         margin:10,
@@ -113,34 +163,51 @@ const commonStyles = {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        flexDirection:'column',
-        justifyContent:'space-evenly',
+        justifyContent:'center',
         alignItems:'center',
-        backgroundColor: colors.backgroundColor,
-        
+        backgroundColor: colors.backgroundColor,  
+    },
+    welcome_message:{
+        fontSize:40,
+        color: colors.secondary,
+    },
+    flipContainer: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backfaceVisibility: 'hidden', // Esconde el lado trasero
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     login_container:{
         ...commonStyles.container,
-        flex:1,
     },
     register_container:{
         ...commonStyles.container,
-        flex:1.2,
-        marginBottom:20,
     },
     header_title:{
         color: colors.secondary,
-        fontSize: 24
+        fontSize: 28
     },
     button:{
         backgroundColor: colors.ok,
-        padding:10,
         borderRadius:15,
         borderColor: colors.secondary,
         borderWidth:1,
-        width:'30%',
-        height:'20%',
+        width:'70%',
+        height:'15%',
         justifyContent:'center',
-        alignItems:'center'
-    }
+        alignItems:'center',
+        marginTop:5,
+    },
+    button_text:{
+        color:colors.secondary,
+        fontSize:20
+    },
+    toggleButton: {
+        marginTop: 20,
+        padding: 10,
+        borderRadius: 15,
+        backgroundColor: colors.secondary,
+    },
 });

@@ -1,7 +1,7 @@
 import config from "../config/config";
 
-export const removeAliment = (id, token) => {
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${id}`, {
+export const removeAliment = (id_aliment, token, id) => {
+    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${id}/${id_aliment}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`, 
@@ -29,6 +29,11 @@ export const editAliment = async (alimento, token) =>{
         console.assert('Item actualizado:', response);
     })
     .catch(error => console.error('Error eliminando item:', error)); 
+}
+
+export const emptyAliment = async (alimento, token) =>{
+    alimento.cantidad = 0;
+    editAliment(alimento, token);
 }
 
 export const uploadImage = async (uri, alimento, token) => {

@@ -8,6 +8,7 @@ import { useRouter} from 'expo-router';
 import CustomModal from '../components/Modals/CustomModal';
 import TitleView from '../components/TitleView';
 import config from '../config/config';
+import { useAuth } from '../context/AuthContext';
 
 export default function AddItem() {
   const [UnidadSeleccionada, setSelectedValue] = useState('Gramos');
@@ -15,6 +16,7 @@ export default function AddItem() {
   const [itemQuantity, setItemQuantity] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const auth = useAuth();
 
   const data = [
     { key: 1, label: 'Gramos' },
@@ -45,9 +47,10 @@ export default function AddItem() {
 
   function sendDataBackend() {
     const body = JSON.stringify(alimento);
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory/AddItem/` ,{
+    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${auth.user}/AddItem` ,{
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${auth.token}`, 
         'Content-Type': 'application/json',
       },
       body: body,
@@ -59,7 +62,7 @@ export default function AddItem() {
       return response.json();
     })
     .then((data) => {
-      router.push('/Inventory');
+      router.replace('/Inventory');
     })
     .catch((error) => {
       console.error('Error fetching data:', error);

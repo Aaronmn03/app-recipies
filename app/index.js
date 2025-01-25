@@ -44,9 +44,7 @@ export default function Home() {
           <Text style={styles.text_blue}>CALENDARIO</Text>
           <Icon style={styles.icon} name='calendar' size={sizes.iconSize} color={colors.secondary} />
         </TouchableOpacity>
-          <TouchableOpacity style={styles.despensa} onPress={() => router.push({pathname: '/Inventory',
-            params: {id: JSON.stringify(auth.user)},
-          })}>
+          <TouchableOpacity style={styles.despensa} onPress={() => router.push('/Inventory')}>
             <Text style={styles.text_blue}>INVENTARIO</Text>
             <Icon style={styles.icon} name='archive' size={sizes.iconSize} color={colors.secondary} />
           </TouchableOpacity>

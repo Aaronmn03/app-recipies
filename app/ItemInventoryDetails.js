@@ -9,7 +9,7 @@ import { unidad_medida } from '../utils/unitConverter.js';
 import TextOrInput from '../components/TextOrInput';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import * as ImagePicker from 'expo-image-picker';
-import { uploadImage, editAliment, removeAliment } from '../services/inventoryService';
+import { uploadImage, editAliment, removeAliment, emptyAliment } from '../services/inventoryService';
 import { useAuth } from '../context/AuthContext';
 
 export default function ItemInventoryDetails() { 
@@ -33,10 +33,14 @@ export default function ItemInventoryDetails() {
         setRemoveModalVisible(false);
     };
 
-    const handleRemoveConfirm = () => {
+    const handleRemoveConfirm = async () => {
         setRemoveModalVisible(false);
-        removeAliment(alimento.id, auth.token)
-        router.push('/');
+        if(alimento.stock_minimo && parseInt(alimento.stock_minimo) > 0 && alimento.cantidad != 0){
+            emptyAliment(alimento, auth.token);
+        }else{
+            removeAliment(alimento.id, auth.token, auth.user);
+        }
+        router.replace('/');
     };
 
     /********EDIT******/
@@ -44,7 +48,7 @@ export default function ItemInventoryDetails() {
     const handleEdit = () =>{
         setEditModalVisible(false);
         editAliment(alimento, auth.token);
-        router.push('/');
+        router.replace('/');
         uploadImage(uri, alimento, auth.token);
     }
 
@@ -118,7 +122,7 @@ export default function ItemInventoryDetails() {
                 if(editMode){
                     setExitModal(true);
                 }else{
-                    router.push('../');
+                    router.replace('../');
                 }
             }}/>        
             <View style={styles.headerDetail}>

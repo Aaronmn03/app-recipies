@@ -8,13 +8,12 @@ import TitleView from '../components/TitleView.js';
 import sizes from '../styles/sizes';
 import { unidad_medida } from '../utils/unitConverter.js';
 import Aliment from '../components/Aliment';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../context/AuthContext';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
   const router = useRouter();
-  const { id } = useLocalSearchParams();
-  const userID = JSON.parse(id);
+  const auth = useAuth();
 
   const handleItemDetails = (item) => {
     router.push({
@@ -25,11 +24,10 @@ export default function Inventary() {
 
   useEffect(() => {
     const fetchData = async () => {      
-      const token = await AsyncStorage.getItem('userToken');     
-      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${userID}`, {
+      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${auth.user}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`, 
+          'Authorization': `Bearer ${auth.token}`, 
           'Content-Type': 'application/json',
         },
       })
