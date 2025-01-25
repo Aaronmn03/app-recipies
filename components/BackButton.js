@@ -8,7 +8,7 @@ import colors from '../styles/colors';
 const BackButton = ({onclick}) => {
   const router = useRouter();
   return (
-    <TouchableOpacity style={styles.button} onPress={onclick || (() => router.push('../'))}>
+    <TouchableOpacity style={styles.button} onPress={onclick || (() => router.replace('../'))}>
       <Icon name={'arrow-left'} size={26} color={colors.backgroundColor} />
     </TouchableOpacity>
   );

@@ -1,27 +1,31 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, {useState} from "react";
+import { View, StyleSheet } from "react-native";
 import { useRouter } from 'expo-router';
 import colors from '../styles/colors';
+import FooterButton from './FooterButton'; // Importa el botón reutilizable
 
-export default function Footer({ color }) {
-  const background1 = color === 0 ? colors.secondary : colors.backgroundColor; 
-  const background2 = color === 1 ? colors.secondary : colors.backgroundColor; 
-  const icon1 = color === 0 ? colors.backgroundColor : colors.secondary; 
-  const icon2 = color === 1 ? colors.backgroundColor : colors.secondary; 
-
+export default function Footer() {
   const router = useRouter();
+  const [selected, setSelected] = useState(0); 
+  const handleNavigation = (path, index) => {
+    setSelected(index)
+    router.replace(path);
+  };
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity style={[styles.iconContainer, { backgroundColor: background1 }]} onPress={() => router.push('/')}>
-          <Text style={[styles.text, { color: icon1 }]}>HOME</Text>
-          <Icon name="home" size={20} color={icon1} />
-        </TouchableOpacity>
-      <TouchableOpacity style={[styles.iconContainer, { backgroundColor: background2 }]}>
-        <Text style={[styles.text, { color: icon2 }]} >USER</Text>
-        <Icon name="user" size={20} color={icon2} />
-      </TouchableOpacity>
+      <FooterButton
+        label="HOME"
+        iconName="home"
+        isActive={selected == 0}
+        onPress={() => handleNavigation('/', 0)}
+      />
+      <FooterButton
+        label="USER"
+        iconName="user"
+        isActive={selected == 1}
+        onPress={() => handleNavigation('/Profile', 1)}
+      />
     </View>
   );
 }
@@ -29,33 +33,14 @@ export default function Footer({ color }) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 60, // Aumenta la altura para que los íconos sean visibles
+    height: 60,
     backgroundColor: colors.backgroundColor,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    position: 'absolute', 
+    position: 'absolute',
     bottom: 0,
-    borderStyle: 'solid',
     borderTopWidth: 2,
     borderColor: colors.secondary,
-  },
-  link: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    width: 50, 
-    height: 50, 
-    borderRadius: 8, // Ajusta el radio del borde para que sea un círculo
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: colors.backgroundColor, 
-    borderStyle: 'solid', 
-    borderWidth: 2, // Ajusta el ancho del borde si es necesario
-  },
-  text: {
-    fontSize: 12,
-    textAlign: 'center',
   },
 });

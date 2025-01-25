@@ -1,20 +1,69 @@
+import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import colors from '../styles/colors';
+import { useRouter} from 'expo-router';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+
+function LayoutContent() {
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try{
+        if (!auth.isAuthenticated ) {
+          router.replace('/login'); 
+        } else{
+          router.replace('/');
+        }
+      }catch(error){
+        console.error("Error comprobando autenticación:", error);
+      }
+    };
+    if(!auth.isLoading){
+      checkAuth();
+    }
+    
+  }, [auth.isLoading, auth.isAuthenticated]);
+
+  if (auth.isLoading){
+    return(
+    <View style={{ flex: 1 }}>
+      <Text>Cargando...</Text>
+    </View>  
+    );       
+  }else{
+    if (!auth.isAuthenticated){
+      return(
+        <View style={{ flex: 1 }}>
+            <Stack screenOptions={{ headerShown: false }} />
+        </View>
+      );
+    }else{
+      return (
+        <View style={{ flex: 1 }}>
+          <Header style={styles.header} />
+          <View style={styles.content}>
+            <Stack screenOptions={{ headerShown: false }} />
+          </View>
+          <Footer color={0} style={styles.footer} />
+        </View>
+      );
+    }
+  }
+}
 
 export default function Layout() {
   return (
-    <View style={{ flex: 1 }}>
-      <Header style={styles.header} />
-      <View style={styles.content}>
-        <Stack screenOptions={{ headerShown: false }} />
-      </View>
-      <Footer color={0}/>
-    </View>
+    <AuthProvider>
+      <LayoutContent />
+    </AuthProvider>
   );
 }
+
 const styles = StyleSheet.create({
   header: {
     marginBottom: 20,
@@ -24,4 +73,7 @@ const styles = StyleSheet.create({
     marginBottom: 60,
     backgroundColor: colors.backgroundColor,
   },
+  footer:{
+    marginBottom: 60,
+  }
 });

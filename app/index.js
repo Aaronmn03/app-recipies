@@ -6,19 +6,33 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../styles/colors';
 import config from '../config/config';
 import sizes from '../styles/sizes';
+import {useAuth} from '../context/AuthContext';
 
 export default function Home() {
   const [name, setName] = useState('');
   const router = useRouter();
+  const auth = useAuth();
 
-  useEffect(() => {
-    fetch(`${config.backendHost}:${config.backendPort}/`)
-      .then(response => response.json())
-      .then(data => {
-        setName(data[0].nombre_usuario)
+  useEffect(()  =>  {
+    const fetchData = async () => {
+      console.log(auth.user);
+      fetch(`${config.backendHost}:${config.backendPort}/${auth.user}`,{
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${auth.token}`, 
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
+        .then(response => response.json())
+        .then(data => {
+          setName(data[0].nombre_usuario);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+    if(!auth.isLoading && auth.isAuthenticated){
+      fetchData();
+    }
+  }, [auth.isLoading]);
 
   return (
     <View style={styles.container}>

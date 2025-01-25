@@ -3,11 +3,11 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import colors from '../styles/colors';
 
 
-const Formulario_Texto = ({question, onChangeText}) => {
+const Formulario_Contraseña = ({question, onChangeText}) => {
   return (
     <View style={styles.container}>
         <Text color={colors.secondary}>{question}</Text>
-        <TextInput style={styles.input} onChangeText={onChangeText} placeholder="Escribe aquí"/>
+        <TextInput secureTextEntry={true} style={styles.input} onChangeText={onChangeText} placeholder="Escribe aquí"/>
     </View>
   );
 };
@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Formulario_Texto;
+export default Formulario_Contraseña;
