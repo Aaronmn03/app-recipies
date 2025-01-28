@@ -9,6 +9,7 @@ import sizes from '../styles/sizes';
 import { unidad_medida } from '../utils/unitConverter.js';
 import Aliment from '../components/Aliment';
 import { useAuth } from '../context/AuthContext';
+import FloatingAlert from '../components/Modals/FloatingAlert';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
@@ -43,6 +44,7 @@ export default function Inventary() {
 
   return (
     <View style={styles.mainContainer}>
+      <FloatingAlert/>
       <TitleView title={'TU INVENTARIO'} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {items.length > 0 ? (

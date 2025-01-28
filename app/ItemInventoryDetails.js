@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImage, editAliment, removeAliment, emptyAliment } from '../services/inventoryService';
 import { useAuth } from '../context/AuthContext';
+import { useAlert } from '../context/AlertContext';
 
 export default function ItemInventoryDetails() { 
     const router = useRouter();
@@ -26,6 +27,7 @@ export default function ItemInventoryDetails() {
     const [imageAux, setImageAux] = useState(null);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const auth = useAuth()
+    const {handleError, handleSuccess, handleInfo} = useAlert();
 
     /****REMOVE*****/
 
@@ -36,9 +38,9 @@ export default function ItemInventoryDetails() {
     const handleRemoveConfirm = async () => {
         setRemoveModalVisible(false);
         if(alimento.stock_minimo && parseInt(alimento.stock_minimo) > 0 && alimento.cantidad != 0){
-            emptyAliment(alimento, auth.token);
+            emptyAliment(alimento, auth.token, handleError, handleSuccess);
         }else{
-            removeAliment(alimento.id, auth.token, auth.user);
+            removeAliment(alimento.id, auth.token, auth.user, handleError, handleSuccess);
         }
         router.replace('/');
     };
@@ -47,7 +49,7 @@ export default function ItemInventoryDetails() {
 
     const handleEdit = () =>{
         setEditModalVisible(false);
-        editAliment(alimento, auth.token);
+        editAliment(alimento, auth.token, handleError, handleSuccess);
         router.replace('/');
         uploadImage(uri, alimento, auth.token);
     }

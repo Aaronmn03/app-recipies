@@ -1,6 +1,6 @@
 import config from "../config/config";
 
-export const removeAliment = (id_aliment, token, id) => {
+export const removeAliment = (id_aliment, token, id, handleError, handleSuccess) => {
     fetch(`${config.backendHost}:${config.backendPort}/Inventory/${id}/${id_aliment}`, {
         method: 'DELETE',
         headers: {
@@ -10,12 +10,16 @@ export const removeAliment = (id_aliment, token, id) => {
     })
     .then(response => {
         console.assert('Item eliminado:', response);
-        
+        handleSuccess('Alimento consumido correctamente');
+    
     })
-    .catch(error => console.error('Error eliminando item:', error));
+    .catch(error => {
+        console.error('Error eliminando item:', error)
+        handleError('Ha ocurrido un error eliminando el alimento');
+    });
 };
 
-export const editAliment = async (alimento, token) =>{
+export const editAliment = async (alimento, token, handleError, handleSuccess) =>{
     const body = JSON.stringify(alimento);
     const response = await fetch (`${config.backendHost}:${config.backendPort}/Inventory/${alimento.id}`, {
         method: 'PUT',
@@ -27,13 +31,17 @@ export const editAliment = async (alimento, token) =>{
     })
     .then(response => {
         console.assert('Item actualizado:', response);
+        handleSuccess('Alimento editado correctamente');
     })
-    .catch(error => console.error('Error eliminando item:', error)); 
+    .catch(error => {
+        console.error('Error eliminando item:', error)
+        handleError('Ha ocurrido un error editando el alimento');
+    }); 
 }
 
-export const emptyAliment = async (alimento, token) =>{
+export const emptyAliment = async (alimento, token, handleError, handleSuccess) =>{
     alimento.cantidad = 0;
-    editAliment(alimento, token);
+    editAliment(alimento, token, handleError, handleSuccess);
 }
 
 export const uploadImage = async (uri, alimento, token) => {

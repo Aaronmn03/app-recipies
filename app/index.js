@@ -7,6 +7,7 @@ import colors from '../styles/colors';
 import config from '../config/config';
 import sizes from '../styles/sizes';
 import {useAuth} from '../context/AuthContext';
+import FloatingAlert from '../components/Modals/FloatingAlert';
 
 export default function Home() {
   const [name, setName] = useState('');
@@ -15,7 +16,6 @@ export default function Home() {
 
   useEffect(()  =>  {
     const fetchData = async () => {
-      console.log(auth.user);
       fetch(`${config.backendHost}:${config.backendPort}/${auth.user}`,{
         method: 'GET',
         headers: {
@@ -36,6 +36,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
+      <FloatingAlert/>
       <Text style ={styles.name_title} >Hola, {name}</Text>
       <View style={styles.container_days}>
       </View>
@@ -54,6 +55,7 @@ export default function Home() {
           <Icon name="book" size={sizes.buttonIconSize} color={colors.secondary} />
         </TouchableOpacity>
       <StatusBar style="auto"/>
+      
     </View>
     
   );

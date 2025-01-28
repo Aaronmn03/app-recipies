@@ -9,14 +9,15 @@ import CustomModal from '../components/Modals/CustomModal';
 import TitleView from '../components/TitleView';
 import config from '../config/config';
 import { useAuth } from '../context/AuthContext';
+import FloatingAlert from '../components/Modals/FloatingAlert';
+import { AlertContext, useAlert } from '../context/AlertContext';
 
 export default function AddItem() {
   const [UnidadSeleccionada, setSelectedValue] = useState('Gramos');
   const [itemName, setItemName] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const auth = useAuth();
+  const {handleSuccess, handleInfo, handleError} = useAlert();
 
   const data = [
     { key: 1, label: 'Gramos' },
@@ -38,8 +39,7 @@ export default function AddItem() {
 
   function validateInput() {
     if (!itemName || !itemQuantity || !UnidadSeleccionada) {
-      setErrorMessage('Todos los campos son obligatorios.');
-      setModalVisible(true);
+      handleError('Rellena todos los campos');
       return false;
     }
     return true;
@@ -57,22 +57,24 @@ export default function AddItem() {
     })
     .then((response) => {
       if (!response.ok) {
+        handleError(response.text());
         return response.text().then(text => { throw new Error(`Network response was not ok: ${text}`) });
       }
       return response.json();
     })
     .then((data) => {
+      handleSuccess('Alimento añadido correctamente');
       router.replace('/Inventory');
     })
     .catch((error) => {
       console.error('Error fetching data:', error);
-      setErrorMessage(`Error al añadir el ítem: ${error.message}`);
-      setModalVisible(true);
+      handleError(error.message);
     });
   }
   const router = useRouter();  
   return (
     <View style={styles.main_container}>
+      <FloatingAlert/>
       <TitleView title={'¡AÑADE TU ALIMENTO!'} />
       <View style={styles.form}>
         <Formulario_Texto question="Nombre de articulo:" onChangeText={setItemName}/>
@@ -94,11 +96,6 @@ export default function AddItem() {
         </ModalSelector>
       </View>
       <FloatingRightButton onPress={handleAddItem} color={colors.ok} icon={'check'} />
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        message={errorMessage}
-      />
     </View>
   );
 }

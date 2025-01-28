@@ -6,6 +6,7 @@ import Footer from '../components/footer';
 import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import { AlertProvider } from '../context/AlertContext';
 
 function LayoutContent() {
   const auth = useAuth();
@@ -39,7 +40,9 @@ function LayoutContent() {
     if (!auth.isAuthenticated){
       return(
         <View style={{ flex: 1 }}>
-            <Stack screenOptions={{ headerShown: false }} />
+            <AlertProvider>
+              <Stack screenOptions={{ headerShown: false }} />
+            </AlertProvider>
         </View>
       );
     }else{
@@ -47,7 +50,9 @@ function LayoutContent() {
         <View style={{ flex: 1 }}>
           <Header style={styles.header} />
           <View style={styles.content}>
-            <Stack screenOptions={{ headerShown: false }} />
+            <AlertProvider>
+              <Stack screenOptions={{ headerShown: false }} />
+            </AlertProvider>
           </View>
           <Footer color={0} style={styles.footer} />
         </View>
