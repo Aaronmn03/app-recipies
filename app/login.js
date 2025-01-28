@@ -6,6 +6,8 @@ import React, { useState, useRef } from 'react';
 import { Alert } from 'react-native';
 import config from '../config/config';
 import {useAuth} from '../context/AuthContext';
+import FloatingAlert from '../components/Modals/FloatingAlert';
+import { useAlert } from '../context/AlertContext';
 
 export default function Login() {
     const [isLoginView, setIsLoginView] = useState(true);
@@ -16,6 +18,7 @@ export default function Login() {
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
     const auth = useAuth();
+    const {handleError} = useAlert();
 
     const toggleView = () => {
         Animated.timing(rotationAnim,{
@@ -67,12 +70,12 @@ export default function Login() {
                 auth.login(userID, token);
             }else{
                 const errorData = await response.json();
-                Alert.alert('Error', errorData.message || 'Usuario o contraseña incorrectos');  
+                handleError("Usuario o contraseña incorrectos");
             }
 
         }catch (error){
             console.error('Error durante el inicio de sesión:', error);
-            Alert.alert('Error', 'Ocurrió un error al intentar iniciar sesión.');
+            handleError("Ha ocurrido un error al intentar iniciar sesión");
         }
       };
 
@@ -96,53 +99,60 @@ export default function Login() {
                 auth.login(userID, token);
             }else{
                 const errorData = await response.json();
-                Alert.alert('Error', errorData.message || 'Usuario o contraseña incorrectos');  
+                //Alert.alert('Error', errorData.message || 'Usuario o contraseña incorrectos');  
+                handleError("Revise los campos, deben estar todos completos");
             }
 
         }catch (error){
             console.error('Error durante el inicio de sesión:', error);
-            Alert.alert('Error', 'Ocurrió un error al intentar iniciar sesión.');
+            //Alert.alert('Error', 'Ocurrió un error al intentar iniciar sesión.');
+            handleError("Ha ocurrido un error al intentar registrar al usuario");
+
         }
       };
 
     return(
-        <View style={styles.container}>
-            <Animated.View
-                style={[styles.flipContainer,{transform: [{rotateY: frontRotation}], opacity:frontOpacity,}]}pointerEvents={isLoginView ? 'auto' : 'none'}>
-            <Text style={styles.welcome_message}>¡Hola de nuevo!</Text>
-            <View style={styles.login_container}>
-                <Text style={styles.header_title}>LOGIN</Text> 
-                <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setLoginUsername}></Formulario_Texto>
-                <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setLoginPassword}></Formulario_Contraseña>
-                <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.button_text}>Accede!</Text>
+        <View style={styles.main_container}>
+            <FloatingAlert/>
+            <View style={styles.container}>
+                
+                <Animated.View
+                    style={[styles.flipContainer,{transform: [{rotateY: frontRotation}], opacity:frontOpacity,}]}pointerEvents={isLoginView ? 'auto' : 'none'}>
+                <Text style={styles.welcome_message}>¡Hola de nuevo!</Text>
+                <View style={styles.login_container}>
+                    <Text style={styles.header_title}>LOGIN</Text> 
+                    <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setLoginUsername}></Formulario_Texto>
+                    <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setLoginPassword}></Formulario_Contraseña>
+                    <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                        <Text style={styles.button_text}>Accede!</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
+                    <Text style={{ color: colors.primary }}>
+                        ¿Aun no tienes cuenta?
+                    </Text>
+                    </TouchableOpacity>
+                </View>
+                </Animated.View>
+                <Animated.View
+                    style={[styles.flipContainer,{transform: [{rotateY: backRotation}], opacity:backOpacity,}]}pointerEvents={!isLoginView ? 'auto' : 'none'}>
+                <Text style={styles.welcome_message}>¡BIENVENIDO!</Text>
+                <View style={styles.register_container}>
+                    <Text style={styles.header_title}>REGISTRARTE</Text> 
+                    <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
+                    <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
+                    <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
+                    <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                        <Text style={styles.button_text}>Registrate!</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
+                    <Text style={{ color: colors.primary }}>
+                        ¿Ya tienes alguna cuenta?
+                    </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
-                <Text style={{ color: colors.primary }}>
-                    ¿Aun no tienes cuenta?
-                </Text>
-                </TouchableOpacity>
+                </View>
+                
+                </Animated.View>
             </View>
-            </Animated.View>
-            <Animated.View
-                style={[styles.flipContainer,{transform: [{rotateY: backRotation}], opacity:backOpacity,}]}pointerEvents={!isLoginView ? 'auto' : 'none'}>
-            <Text style={styles.welcome_message}>¡BIENVENIDO!</Text>
-            <View style={styles.register_container}>
-                <Text style={styles.header_title}>REGISTRARTE</Text> 
-                <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
-                <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
-                <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
-                <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                    <Text style={styles.button_text}>Registrate!</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
-                <Text style={{ color: colors.primary }}>
-                    ¿Ya tienes alguna cuenta?
-                </Text>
-            </TouchableOpacity>
-            </View>
-            
-            </Animated.View>
         </View>
     );
 }
@@ -161,6 +171,10 @@ const commonStyles = {
 }
 
 const styles = StyleSheet.create({
+    main_container:{
+        flex:1,
+        backgroundColor: colors.backgroundColor,  
+    },
     container:{
         flex:1,
         justifyContent:'center',
