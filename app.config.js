@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default{
   "expo": {
     "name": "app",
     "slug": "app",
@@ -27,6 +29,11 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    extra: {
+      REACT_APP_HOST_API: process.env.REACT_APP_HOST_API,
+      REACT_APP_PORT_API: process.env.REACT_APP_PORT_API,
+    },
+
   }
 }

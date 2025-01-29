@@ -1,6 +1,8 @@
+import Constants from 'expo-constants';
+
 const config = {
-    backendHost: 'http://192.168.0.212',
-    backendPort: 3000,
+    backendHost: Constants.expoConfig.extra.REACT_APP_HOST_API,
+    backendPort: Constants.expoConfig.extra.REACT_APP_PORT_API,
   };
   
   export default config;

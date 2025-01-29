@@ -7,6 +7,7 @@ import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { AlertProvider } from '../context/AlertContext';
+import Constants from 'expo-constants';
 
 function LayoutContent() {
   const auth = useAuth();

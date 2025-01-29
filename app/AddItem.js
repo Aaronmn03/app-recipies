@@ -17,7 +17,7 @@ export default function AddItem() {
   const [itemName, setItemName] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
   const auth = useAuth();
-  const {handleSuccess, handleInfo, handleError} = useAlert();
+  const {handleSuccess, handleError} = useAlert();
 
   const data = [
     { key: 1, label: 'Gramos' },
