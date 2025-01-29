@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { View, StyleSheet } from "react-native";
 import { useRouter } from 'expo-router';
 import colors from '../styles/colors';
-import FooterButton from './FooterButton'; // Importa el botón reutilizable
+import FooterButton from './FooterButton'; 
 
 export default function Footer() {
   const router = useRouter();
@@ -13,6 +13,7 @@ export default function Footer() {
   };
 
   return (
+    <View style={styles.main_container}>
     <View style={styles.container}>
       <FooterButton
         label="HOME"
@@ -27,10 +28,17 @@ export default function Footer() {
         onPress={() => handleNavigation('/Profile', 1)}
       />
     </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  main_container:{
+    width: '100%',
+    backgroundColor: colors.backgroundColor,
+    position: 'absolute',
+    bottom: 0,
+  },
   container: {
     width: '100%',
     height: 60,
@@ -38,9 +46,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    borderTopWidth: 2,
+    borderWidth: 2,
     borderColor: colors.secondary,
+    borderTopStartRadius:35,
+    borderTopEndRadius:35,
   },
 });
