@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import FloatingPlusButton from '../components/floatingrightbutton';
 import colors from '../styles/colors';
 import config from '../config/config';
@@ -14,7 +14,7 @@ import FloatingAlert from '../components/Modals/FloatingAlert';
 export default function Inventary() {
   const [items, setInventory] = useState([]);
   const router = useRouter();
-  const auth = useAuth();
+  const {user, token} = useAuth();
 
   const handleItemDetails = (item) => {
     router.push({
@@ -25,10 +25,10 @@ export default function Inventary() {
 
   useEffect(() => {
     const fetchData = async () => {      
-      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${auth.user}`, {
+      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${user}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${auth.token}`, 
+          'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',
         },
       })
@@ -74,26 +74,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.backgroundColor,
   },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '70%',
-    marginTop: 20,
-    marginRight: '20%',
-  },
   scrollContainer: {
     width: '100%',
     alignItems: 'center',
-  },
-  container: {
-    width: sizes.containerWidth,
-    height: sizes.containerHeight,
-    backgroundColor: colors.primary,
-    borderRadius: sizes.borderRadius,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
   },
   text: {
     color: colors.secondary,
@@ -101,14 +84,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 5,
   },
-  boton_plus:{
-    width: sizes.containerWidth,
-    height: sizes.containerHeight,
-    backgroundColor: colors.primary,
-    borderRadius: sizes.borderRadius,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 0,
-    marginTop: 15,
-  }
 });

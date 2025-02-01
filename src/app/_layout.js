@@ -7,38 +7,25 @@ import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { AlertProvider } from '../context/AlertContext';
-import Constants from 'expo-constants';
 
 function LayoutContent() {
-  const auth = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try{
-        if (!auth.isAuthenticated ) {
-          router.replace('/login'); 
-        } else{
-          router.replace('/');
-        }
-      }catch(error){
-        console.error("Error comprobando autenticación:", error);
-      }
-    };
-    if(!auth.isLoading){
-      checkAuth();
+    if (!isLoading) {
+      router.replace(isAuthenticated ? '/' : '/login');
     }
-    
-  }, [auth.isLoading, auth.isAuthenticated]);
+  }, [isLoading, isAuthenticated]);
 
-  if (auth.isLoading){
+  if (isLoading){
     return(
     <View style={{ flex: 1 }}>
       <Text>Cargando...</Text>
     </View>  
     );       
   }else{
-    if (!auth.isAuthenticated){
+    if (!isAuthenticated){
       return(
         <View style={{ flex: 1 }}>
             <AlertProvider>

@@ -17,17 +17,20 @@ export default function ItemInventoryDetails() {
     const router = useRouter();
     const { item } = useLocalSearchParams();
     const itemData = JSON.parse(item);
+    const {user, token} = useAuth()
+    const {handleError, handleSuccess} = useAlert();
+
     const [removeModalVisible, setRemoveModalVisible] = useState(false);
+    const [exitModalVisible, setExitModal] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [alimento, setAlimento] = useState({
         ...itemData
     });
     const [uri, setUri] = useState();
-    const [exitModalVisible, setExitModal] = useState(false);
     const [imageAux, setImageAux] = useState(null);
-    const [editModalVisible, setEditModalVisible] = useState(false);
-    const auth = useAuth()
-    const {handleError, handleSuccess, handleInfo} = useAlert();
+    
+
 
     /****REMOVE*****/
 
@@ -38,9 +41,9 @@ export default function ItemInventoryDetails() {
     const handleRemoveConfirm = async () => {
         setRemoveModalVisible(false);
         if(alimento.stock_minimo && parseInt(alimento.stock_minimo) > 0 && alimento.cantidad != 0){
-            emptyAliment(alimento, auth.token, handleError, handleSuccess);
+            emptyAliment(alimento, token, handleError, handleSuccess);
         }else{
-            removeAliment(alimento.id, auth.token, auth.user, handleError, handleSuccess);
+            removeAliment(alimento.id, token, user, handleError, handleSuccess);
         }
         router.replace('/');
     };
@@ -49,9 +52,9 @@ export default function ItemInventoryDetails() {
 
     const handleEdit = () =>{
         setEditModalVisible(false);
-        editAliment(alimento, auth.token, handleError, handleSuccess);
+        editAliment(alimento, token, handleError, handleSuccess);
         router.replace('/');
-        uploadImage(uri, alimento, auth.token);
+        uploadImage(uri, alimento, token);
     }
 
     const pickImage = async () => {

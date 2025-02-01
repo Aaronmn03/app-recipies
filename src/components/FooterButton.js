@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../styles/colors';
 
 export default function FooterButton({ label, iconName, isActive, onPress }) {
-  const backgroundColor = isActive ? colors.secondary : colors.backgroundColor;
-  const iconColor = isActive ? colors.backgroundColor : colors.secondary;
+  const backgroundColor = isActive ? colors.secondary : colors.primary;
+  const iconColor = isActive ? colors.primary : colors.secondary;
 
   return (
     <TouchableOpacity
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: colors.backgroundColor,
+    borderColor: colors.primary,
   },
   label: {
     fontSize: 12,

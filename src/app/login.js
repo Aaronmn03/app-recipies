@@ -3,7 +3,6 @@ import colors from '../styles/colors';
 import Formulario_Texto from '../components/formulario_texto';
 import Formulario_Contraseña from '../components/formulario_contraseña';
 import React, { useState, useRef } from 'react';
-import { Alert } from 'react-native';
 import config from '../config/config';
 import {useAuth} from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
@@ -17,7 +16,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
-    const auth = useAuth();
+    const {login} = useAuth();
     const {handleError} = useAlert();
 
     const toggleView = () => {
@@ -26,30 +25,27 @@ export default function Login() {
             duration:750,
             easing: Easing.inOut(Easing.ease),
             useNativeDriver: true,
-        }).start(() => {
-            setIsLoginView(!isLoginView);
-
-        })
+        }).start(() => setIsLoginView(!isLoginView))
     }
 
     const frontRotation = rotationAnim.interpolate({
         inputRange: [0, 1],
-        outputRange: ['0deg', '180deg'], // Rotación del frente
+        outputRange: ['0deg', '180deg'], 
     });
 
     const backRotation = rotationAnim.interpolate({
         inputRange: [0, 1],
-        outputRange: ['180deg', '360deg'], // Rotación de la parte trasera
+        outputRange: ['180deg', '360deg'], 
     });
 
     const frontOpacity = rotationAnim.interpolate({
         inputRange: [0, 0.5, 1],
-        outputRange: [1, 0, 0], // Oculta el frente cuando gira
+        outputRange: [1, 0, 0], 
     });
 
     const backOpacity = rotationAnim.interpolate({
         inputRange: [0, 0.5, 1],
-        outputRange: [0, 0, 1], // Muestra la parte trasera después del giro
+        outputRange: [0, 0, 1], 
     });
 
     const handleLogin = async () => {
@@ -67,7 +63,7 @@ export default function Login() {
             if(response.ok){
                 const data = await response.json();
                 const{token, userID} = data;
-                auth.login(userID, token);
+                login(userID, token);
             }else{
                 const errorData = await response.json();
                 handleError("Usuario o contraseña incorrectos");
@@ -95,17 +91,13 @@ export default function Login() {
             if(response.ok){
                 const data = await response.json();
                 const{token, userID} = data;
-                console.log(data);
-                auth.login(userID, token);
+                login(userID, token);
             }else{
-                const errorData = await response.json();
-                //Alert.alert('Error', errorData.message || 'Usuario o contraseña incorrectos');  
                 handleError("Revise los campos, deben estar todos completos");
             }
 
         }catch (error){
             console.error('Error durante el inicio de sesión:', error);
-            //Alert.alert('Error', 'Ocurrió un error al intentar iniciar sesión.');
             handleError("Ha ocurrido un error al intentar registrar al usuario");
 
         }
@@ -114,8 +106,7 @@ export default function Login() {
     return(
         <View style={styles.main_container}>
             <FloatingAlert/>
-            <View style={styles.container}>
-                
+            <View style={styles.container}>  
                 <Animated.View
                     style={[styles.flipContainer,{transform: [{rotateY: frontRotation}], opacity:frontOpacity,}]}pointerEvents={isLoginView ? 'auto' : 'none'}>
                 <Text style={styles.welcome_message}>¡Hola de nuevo!</Text>

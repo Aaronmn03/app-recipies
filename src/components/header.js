@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 35,
-    backgroundColor: colors.backgroundColor,
+    backgroundColor: colors.primary,
     borderStyle: 'solid',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderColor: colors.secondary,
   },
 });

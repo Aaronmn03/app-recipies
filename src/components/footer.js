@@ -42,13 +42,13 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 60,
-    backgroundColor: colors.backgroundColor,
+    backgroundColor: colors.primary,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth:1,
     borderColor: colors.secondary,
-    borderTopStartRadius:35,
-    borderTopEndRadius:35,
+    borderTopStartRadius:25,
+    borderTopEndRadius:25,
   },
 });

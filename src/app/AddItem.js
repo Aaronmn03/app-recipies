@@ -5,19 +5,21 @@ import FloatingRightButton from '../components/floatingrightbutton';
 import ModalSelector from 'react-native-modal-selector';
 import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
-import CustomModal from '../components/Modals/CustomModal';
 import TitleView from '../components/TitleView';
-import config from '../config/config';
-import { useAuth } from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
-import { AlertContext, useAlert } from '../context/AlertContext';
+import { useAlert } from '../context/AlertContext';
+import { useAuth } from '../context/AuthContext';
+import { validateInput, sendDataBackend } from '../services/AddInventoryService';
+
 
 export default function AddItem() {
   const [UnidadSeleccionada, setSelectedValue] = useState('Gramos');
   const [itemName, setItemName] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
-  const auth = useAuth();
-  const {handleSuccess, handleError} = useAlert();
+  const { handleSuccess, handleError } = useAlert(); 
+  const { user, token } = useAuth(); 
+  const router = useRouter();
+  
 
   const data = [
     { key: 1, label: 'Gramos' },
@@ -32,46 +34,10 @@ export default function AddItem() {
   }
 
   const handleAddItem = () => {
-    if (validateInput()){
-      sendDataBackend();
+    if (validateInput(alimento, handleError)){
+      sendDataBackend(alimento, handleSuccess, handleError, user, token, router);
     }
   };
-
-  function validateInput() {
-    if (!itemName || !itemQuantity || !UnidadSeleccionada) {
-      handleError('Rellena todos los campos');
-      return false;
-    }
-    return true;
-  }
-
-  function sendDataBackend() {
-    const body = JSON.stringify(alimento);
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${auth.user}/AddItem` ,{
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${auth.token}`, 
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    })
-    .then((response) => {
-      if (!response.ok) {
-        handleError(response.text());
-        return response.text().then(text => { throw new Error(`Network response was not ok: ${text}`) });
-      }
-      return response.json();
-    })
-    .then((data) => {
-      handleSuccess('Alimento añadido correctamente');
-      router.replace('/Inventory');
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
-      handleError(error.message);
-    });
-  }
-  const router = useRouter();  
   return (
     <View style={styles.main_container}>
       <FloatingAlert/>
