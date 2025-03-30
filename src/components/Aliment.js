@@ -27,7 +27,9 @@ const styles = StyleSheet.create({
   title: {
     padding: 5,
     fontSize: 20,
-    color: colors.secondary
+    color: colors.secondary,
+    fontWeight:'500',
+
   },
   container: {
     width: '95%',
@@ -56,6 +58,8 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 18,
     color: colors.secondary,
+    fontWeight:'300',
+
   },
   alertIcon:{
     alignContent:'right',

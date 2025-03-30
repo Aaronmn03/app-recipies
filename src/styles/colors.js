@@ -8,7 +8,7 @@ const colors = {
     shadow: 'rgba(255, 255, 255, 0.1)',
     error: '#EC1846FF',
     success: '#16FA88FF',
-    info:'#00AEFFFF'
+    info:'#00AEFFFF',
   };
 /*
 const colors = {

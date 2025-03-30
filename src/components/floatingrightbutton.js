@@ -15,8 +15,8 @@ const FloatingRightButton = ({ onPress, color, icon, bottom = 20, right = 20 }) 
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 30,
     backgroundColor: colors.secondary,
     justifyContent: 'center',

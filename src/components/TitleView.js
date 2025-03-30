@@ -4,22 +4,18 @@ import colors from '../styles/colors';
 import BackButton from '../components/BackButton';
 import sizes from '../styles/sizes';
 
-export default function TitleView({title, onclick}) { 
+export default function TitleView({title}) { 
     return (
     <View style={styles.headerContainer}>
-        <BackButton onclick={onclick}/>
         <Text style={styles.text}>{title}</Text>
     </View>
     );
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: colors.backgroundColor,
-    },
     headerContainer: {
+        zIndex: 10,
+        backgroundColor: colors.backgroundColor,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -34,5 +30,6 @@ const styles = StyleSheet.create({
         fontSize: sizes.textSize,
         textAlign: 'center',
         margin: 5,
+        fontWeight:'700',
     },
 });

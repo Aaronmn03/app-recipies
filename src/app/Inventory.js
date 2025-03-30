@@ -17,6 +17,7 @@ export default function Inventary() {
   const {user, token} = useAuth();
 
   const handleItemDetails = (item) => {
+    console.log(item)
     router.push({
       pathname: '/ItemInventoryDetails',
       params: {item: JSON.stringify(item)},

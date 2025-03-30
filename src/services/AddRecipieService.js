@@ -1,17 +1,25 @@
 import config from '../config/config';
 
-export function validateInput(alimento, handleError) {
-    console.log(alimento);
-    if (!alimento.nombre || !alimento.cantidad || !alimento.unidad_medida) {
+export function validateInput(receta, handleError) {
+    if (!receta.nombre || !receta.instrucciones || !receta.dificultad || !validateIngredientes(receta.ingredientes)) {
       handleError('Rellena todos los campos');
       return false;
     }
     return true;
   }
 
-export function sendDataBackend(alimento, handleSuccess, handleError, user, token, router) {
-    const body = JSON.stringify(alimento);
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${user}/AddItem` ,{
+function validateIngredientes(ingredientes){
+    for (const ingrediente of ingredientes ){
+        if(!ingrediente.nombre || !ingrediente.cantidad || !ingrediente.unidad){
+            return false;
+        }
+    }
+    return true;
+}
+
+export function sendDataBackend(receta, handleSuccess, handleError, user, token, router) {
+    const body = JSON.stringify(receta);
+    fetch(`${config.backendHost}:${config.backendPort}/Recipie/${user}/AddRecipie` ,{
         method: 'POST',
         headers: {
         'Authorization': `Bearer ${token}`, 
@@ -29,8 +37,8 @@ export function sendDataBackend(alimento, handleSuccess, handleError, user, toke
         return response.json();
     })
     .then((data) => {
-        handleSuccess('Alimento añadido correctamente');
-        router.replace('/Inventory');
+        handleSuccess('Receta añadida correctamente');
+        router.replace('/Recipies');
     })
     .catch((error) => {
         console.error('Error fetching data:', error);

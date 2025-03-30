@@ -46,7 +46,7 @@ const fetchUserData = async () => {
         <ButtonWithIcon title='INVENTARIO' icon='archive' onPress={() => router.push('/Inventory')}></ButtonWithIcon> 
       </View> 
         <View style={styles.container_full}>
-          <ButtonWithIcon title='MIS RECETAS' icon='book' onPress={null}></ButtonWithIcon>
+          <ButtonWithIcon title='MIS RECETAS' icon='book' onPress={() => router.push('/Recipies')}></ButtonWithIcon>
         </View>
       <StatusBar style="auto"/>
       

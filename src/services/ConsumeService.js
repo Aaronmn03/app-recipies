@@ -1,18 +1,14 @@
 import config from '../config/config';
 
-export function validateInput(alimento, handleError) {
-    console.log(alimento);
-    if (!alimento.nombre || !alimento.cantidad || !alimento.unidad_medida) {
-      handleError('Rellena todos los campos');
-      return false;
-    }
-    return true;
-  }
 
-export function sendDataBackend(alimento, handleSuccess, handleError, user, token, router) {
-    const body = JSON.stringify(alimento);
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${user}/AddItem` ,{
-        method: 'POST',
+
+export const consume = (recipie, user, token, handleError, handleSuccess) =>{
+    const body = JSON.stringify(recipie.ingredientes)
+    
+    console.log(body)
+
+    fetch(`${config.backendHost}:${config.backendPort}/Recipie/${user}/Consume` ,{
+        method: 'PUT',
         headers: {
         'Authorization': `Bearer ${token}`, 
         'Content-Type': 'application/json',
@@ -29,8 +25,7 @@ export function sendDataBackend(alimento, handleSuccess, handleError, user, toke
         return response.json();
     })
     .then((data) => {
-        handleSuccess('Alimento añadido correctamente');
-        router.replace('/Inventory');
+        handleSuccess('Inventario modificado Correctamente');
     })
     .catch((error) => {
         console.error('Error fetching data:', error);
