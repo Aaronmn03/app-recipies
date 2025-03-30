@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
         fontSize: 29,
         textAlign: "center",
         margin: 5,
+        fontWeight:'500',
+
     },
 });
 

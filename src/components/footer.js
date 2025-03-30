@@ -1,12 +1,31 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { View, StyleSheet } from "react-native";
-import { useRouter } from 'expo-router';
+import { useRouter, usePathname  } from 'expo-router';
 import colors from '../styles/colors';
 import FooterButton from './FooterButton'; 
 
 export default function Footer() {
   const router = useRouter();
   const [selected, setSelected] = useState(0); 
+  const pathname = usePathname();
+
+  const routes = [
+    { path: '/', iconName: 'home', index: 0 },
+    { path: '/Inventory', iconName: 'archive', index: 2 },
+    { path: '/Recipies', iconName: 'book', index: 3 },
+    { path: '/Profile', iconName: 'user', index: 1 },
+  ];
+
+  const setSelectedIcon = () => {  
+    const currentRoute = routes.find(route => route.path === pathname);  
+    setSelected(currentRoute ? currentRoute.index : -1);
+  };
+  
+  useEffect(() => {
+    console.log('Ruta actual:', pathname);
+    setSelectedIcon()
+  }, [pathname]);
+
   const handleNavigation = (path, index) => {
     setSelected(index)
     router.replace(path);
@@ -15,18 +34,15 @@ export default function Footer() {
   return (
     <View style={styles.main_container}>
     <View style={styles.container}>
-      <FooterButton
-        label="HOME"
-        iconName="home"
-        isActive={selected == 0}
-        onPress={() => handleNavigation('/', 0)}
-      />
-      <FooterButton
-        label="USER"
-        iconName="user"
-        isActive={selected == 1}
-        onPress={() => handleNavigation('/Profile', 1)}
-      />
+    {routes.map(({ path, iconName, index }) => (
+        <FooterButton
+          key={path} 
+          iconName={iconName}
+          isActive={selected === index}
+          onPress={() => handleNavigation(path, index)}
+        />
+      ))}
+      
     </View>
     </View>
   );

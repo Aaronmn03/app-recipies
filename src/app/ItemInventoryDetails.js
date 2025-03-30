@@ -30,8 +30,6 @@ export default function ItemInventoryDetails() {
     const [uri, setUri] = useState();
     const [imageAux, setImageAux] = useState(null);
     
-
-
     /****REMOVE*****/
 
     const handleRemoveCancel = () => {
@@ -89,21 +87,21 @@ export default function ItemInventoryDetails() {
     };        
     
     const handleCount = (value) => {
-        const parsedValue = parseInt(value, 10);
+        const parsedValue = parseFloat(value);
         if (parsedValue != alimento.cantidad && !isNaN(parsedValue)){
             updateAlimento('cantidad', parsedValue);
         }   
     }
 
     const handleStockMin = (value) => {
-        const parsedValue = parseInt(value, 10);
+        const parsedValue = parseFloat(value);
         if (parsedValue != alimento.stock_minimo && !isNaN(parsedValue)){
             updateAlimento('stock_minimo', parsedValue);
         }   
     }
     
     const handleStockMax = (value) => {
-        const parsedValue = parseInt(value, 10);
+        const parsedValue = parseFloat(value);
         if (parsedValue != alimento.stock_maximo && !isNaN(parsedValue)){
             updateAlimento('stock_maximo', parsedValue);
         }   
@@ -123,13 +121,7 @@ export default function ItemInventoryDetails() {
 
     return (
         <View style={styles.mainContainer}> 
-            <TitleView title={'DETALLES'} onclick = {() => {
-                if(editMode){
-                    setExitModal(true);
-                }else{
-                    router.replace('../');
-                }
-            }}/>        
+            <TitleView title={'DETALLES'}/>        
             <View style={styles.headerDetail}>
                 <TouchableOpacity style={styles.icon} onPress={pickImage}>
                     <Image source={imageAux ? {uri:uri} : alimento.imagen ? { uri: alimento.imagen} : require('../assets/aguacate.jpg')} style={styles.image}  />
@@ -206,6 +198,8 @@ const styles = StyleSheet.create({
         color: colors.secondary,
         fontSize: 30,
         textAlign: 'center',
+        fontWeight:'500',
+
     },
     image: {
         width: '100%',  

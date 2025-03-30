@@ -38,6 +38,7 @@ export default function AddItem() {
       sendDataBackend(alimento, handleSuccess, handleError, user, token, router);
     }
   };
+  
   return (
     <View style={styles.main_container}>
       <FloatingAlert/>
