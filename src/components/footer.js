@@ -22,7 +22,6 @@ export default function Footer() {
   };
   
   useEffect(() => {
-    console.log('Ruta actual:', pathname);
     setSelectedIcon()
   }, [pathname]);
 
@@ -62,8 +61,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderWidth:1,
-    borderColor: colors.secondary,
     borderTopStartRadius:25,
     borderTopEndRadius:25,
   },

@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: colors.primary,
+    elevation: 1
   },
   label: {
     fontSize: 12,

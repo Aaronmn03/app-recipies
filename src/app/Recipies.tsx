@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView} from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TextInput} from 'react-native';
 import { useRouter } from 'expo-router';
 import FloatingPlusButton from '../components/floatingrightbutton';
 import colors from '../styles/colors';
@@ -17,6 +17,7 @@ import { useAlert } from '../context/AlertContext';
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
     const [recipieSelected, setRecipieSelected] = useState({ nombre: '' });
+    const [recipieSearch, setSearch] = useState('');
     const router = useRouter();
     const {user, token} = useAuth();
     const [selectedVisible, setSelectedVisible] = useState(false);
@@ -39,8 +40,9 @@ export default function Recipies() {
       setConsumeVisible(false);
     }
     useEffect(() => {
-      const fetchData = async () => {      
-        fetch(`${config.backendHost}:${config.backendPort}/Recipie/${user}`, {
+      const fetchData = async () => {   
+        const url = `${config.backendHost}:${config.backendPort}/Recipie/${user}?search=${recipieSearch}`;
+        fetch(url, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`, 
@@ -54,13 +56,14 @@ export default function Recipies() {
         .catch(error => console.error('Error fetching data:', error));
       }
       fetchData();
-    }, []);
+    }, [recipieSearch]);
   
     return (
       <View style={styles.mainContainer}>
         <FloatingAlert/>
         <TitleView title={'TUS RECETAS'}/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <TextInput style = {styles.textSearch} onChangeText={recipieSearch => setSearch(recipieSearch)} value = {recipieSearch} placeholder="Escribe aquí para encontrar una receta..."></TextInput>
           {recipies.length > 0 ? (
             <View style={styles.recipies_container}>
             {recipies.map((recipie, index) => (
@@ -84,13 +87,20 @@ export default function Recipies() {
   
   const styles = StyleSheet.create({
     mainContainer: {
-        flex:1,
-        alignItems: 'center',
-        backgroundColor: colors.backgroundColor,
+      flex:1,
+      backgroundColor: colors.backgroundColor,
     },
     scrollContainer: {
-        marginTop: 20,
-        width: '100%',
+      flexGrow: 1,
+      width: '100%',
+    },
+    textSearch:{
+      margin:10,
+      backgroundColor: colors.primary,
+      fontSize: 18,
+      borderRadius: 18,
+      borderColor: colors.secondary,
+      borderWidth: 1,
     },
     recipies_container: {
         flexDirection: 'row',

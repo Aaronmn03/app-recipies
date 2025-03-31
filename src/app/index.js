@@ -66,7 +66,7 @@ const commonStyles = {
   },
   container: {
     width: sizes.containerWidth,
-    height: sizes.containerHeight,
+    height: '30%',
     backgroundColor: colors.primary,
     borderRadius: sizes.borderRadius,
     justifyContent: 'space-around',
@@ -113,8 +113,7 @@ const styles = StyleSheet.create({
   },
   name_title:{
     color: colors.secondary,
-    fontSize: sizes.textSize + 5,
-    textAlign: 'center',
-    padding: 15,
+    fontSize: 18,
+    padding: 5,
   }
 });

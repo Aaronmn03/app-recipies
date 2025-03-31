@@ -4,9 +4,6 @@ import config from '../config/config';
 
 export const consume = (recipie, user, token, handleError, handleSuccess) =>{
     const body = JSON.stringify(recipie.ingredientes)
-    
-    console.log(body)
-
     fetch(`${config.backendHost}:${config.backendPort}/Recipie/${user}/Consume` ,{
         method: 'PUT',
         headers: {

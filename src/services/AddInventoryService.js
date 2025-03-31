@@ -1,7 +1,6 @@
 import config from '../config/config';
 
 export function validateInput(alimento, handleError) {
-    console.log(alimento);
     if (!alimento.nombre || !alimento.cantidad || !alimento.unidad_medida) {
       handleError('Rellena todos los campos');
       return false;
