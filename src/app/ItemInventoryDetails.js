@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import colors from '../styles/colors';
 import FloatingRightButton from '../components/floatingrightbutton';
 import TitleView from '../components/TitleView';
 import CustomModal from '../components/Modals/CustomModal';
@@ -12,6 +11,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { uploadImage, editAliment, removeAliment, emptyAliment } from '../services/inventoryService';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext';
+import {useTheme} from '../context/ThemeContext'
+import { ThemedPrimaryView, ThemedText, ThemedView } from '../components/ThemedComponents';
 
 export default function ItemInventoryDetails() { 
     const router = useRouter();
@@ -19,6 +20,7 @@ export default function ItemInventoryDetails() {
     const itemData = JSON.parse(item);
     const {user, token} = useAuth()
     const {handleError, handleSuccess} = useAlert();
+    const {theme} = useTheme();
 
     const [removeModalVisible, setRemoveModalVisible] = useState(false);
     const [exitModalVisible, setExitModal] = useState(false);
@@ -120,44 +122,44 @@ export default function ItemInventoryDetails() {
     }
 
     return (
-        <View style={styles.mainContainer}> 
+        <ThemedView style={styles.mainContainer}> 
             <TitleView title={'DETALLES'}/>        
             <View style={styles.headerDetail}>
                 <TouchableOpacity style={styles.icon} onPress={pickImage}>
                     <Image source={imageAux ? {uri:uri} : alimento.imagen ? { uri: alimento.imagen} : require('../assets/aguacate.jpg')} style={styles.image}  />
                 </TouchableOpacity>
-                <Text style={styles.title_text}>{itemData.nombre.toString().toUpperCase()}</Text>
-                {item.stock_minimo && parseFloat(item.cantidad) < parseFloat(item.stock_minimo) && <Icon name="exclamation-circle" size={25} color= {colors.exit} style={styles.alertIcon} />}
+                <ThemedText style={styles.title_text}>{itemData.nombre.toString().toUpperCase()}</ThemedText>
+                {item.stock_minimo && parseFloat(item.cantidad) < parseFloat(item.stock_minimo) && <Icon name="exclamation-circle" size={25} color= {theme.exit} style={styles.alertIcon} />}
             </View>
-            <View style={styles.cantidad_container}>
+            <ThemedPrimaryView style={styles.cantidad_container}>
                 <TextOrInput titulo={'Cantidad:'} keyboardType={'numeric'} condition={editMode} placeholder={String(alimento.cantidad)} valor= {alimento.cantidad} onChangeText={handleCount}  unidad ={unidad_medida(itemData)} direccion={'row'}></TextOrInput>
-            </View>
-            <View style={{...commonStyles.container, width: '90%', borderColor:colors.secondary, borderTopWidth:1, borderBottomWidth:1 ,paddingVertical:30}}>
-                <View style={styles.stock_container}>
+            </ThemedPrimaryView>
+            <View style={{...commonStyles.container, width: '90%', borderColor:theme.secondary, borderTopWidth:1, borderBottomWidth:1 ,paddingVertical:30}}>
+                <ThemedPrimaryView style={styles.stock_container}>
                     <TextOrInput titulo={'Stock mínimo '} keyboardType={'numeric'}condition={editMode} placeholder={String(alimento.stock_minimo)} valor= {alimento.stock_minimo} onChangeText={handleStockMin} direccion={'column'}></TextOrInput>
                     <TextOrInput titulo={'Stock máximo '} keyboardType={'numeric'} condition={editMode} placeholder={String(alimento.stock_maximo)} valor= {alimento.stock_maximo} onChangeText={handleStockMax} direccion={'column'}></TextOrInput>
-                </View>
-                <View style={styles.category_container}>
+                </ThemedPrimaryView>
+                <ThemedPrimaryView style={styles.category_container}>
                     <TextOrInput titulo={'Categoría '} condition={editMode} placeholder={String(alimento.categoria)} valor= {alimento.categoria} onChangeText={handleCategoria}></TextOrInput>
-                </View>
+                </ThemedPrimaryView>
             </View>
-            <Text style={styles.headerDesc}>DESCRIPCIÓN</Text>
-            <View style={styles.contDesc}>
+            <ThemedText style={styles.headerDesc}>DESCRIPCIÓN</ThemedText>
+            <ThemedPrimaryView style={styles.contDesc}>
                 <TextOrInput condition={editMode} placeholder={String(alimento.descripcion)} valor= {alimento.descripcion} onChangeText={handleDescription}></TextOrInput>
-            </View>
+            </ThemedPrimaryView>
             
             {editMode && (
-            <FloatingRightButton bottom={100} icon="check" color={colors.ok} onPress={() => setEditModalVisible(true)}/>       
+            <FloatingRightButton bottom={100} icon="check" color={theme.ok} onPress={() => setEditModalVisible(true)}/>       
             )}
             {!editMode && (
-            <FloatingRightButton bottom={100} icon="edit" color={colors.backgroundColor} onPress={() => {setEditMode(true)}}/>
+            <FloatingRightButton bottom={100} icon="edit" color={theme.backgroundColor} onPress={() => {setEditMode(true)}}/>
             )}
-            <FloatingRightButton icon="trash" color={colors.exit} onPress={() => setRemoveModalVisible(true)}/>
+            <FloatingRightButton icon="trash" color={theme.exit} onPress={() => setRemoveModalVisible(true)}/>
 
             <CustomModal visible={removeModalVisible} onClose={handleRemoveCancel} message={`¿Eliminar ${itemData.nombre}?`} confirmText='Eliminar' cancelText='Cancelar' onConfirm={handleRemoveConfirm} /> 
             <CustomModal visible={exitModalVisible} message={`¿Salir sin guardar?`} onClose={() => setExitModal(false)} cancelText='Continuar modificando' onConfirm={() => { setExitModal(false); router.push('/');} } confirmText='Salir'/> 
             <CustomModal visible={editModalVisible} onClose={() => setEditModalVisible(false)} message={`¿Guardar cambios en ${itemData.nombre}?`} confirmText='Editar' cancelText='Cancelar' onConfirm={handleEdit} /> 
-        </View>
+        </ThemedView>
     );
 }
 
@@ -173,16 +175,12 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: colors.backgroundColor,
     },
     icon: {
         width: 120,
         height: 120,
         borderRadius: 100,
         marginRight: 10,
-        elevation: 10,
-        borderStyle: 'solid',
-        borderColor: colors.secondary,
         borderWidth: 2.5,
     },
     headerDetail: {
@@ -190,16 +188,11 @@ const styles = StyleSheet.create({
         width: '90%',
         padding: 15,
         paddingHorizontal: 20,
-        borderStyle: 'solid',
-        borderBottomWidth: 1,
-        borderColor: colors.secondary,
     },
     title_text:{
-        color: colors.secondary,
         fontSize: 30,
         textAlign: 'center',
         fontWeight:'500',
-
     },
     image: {
         width: '100%',  
@@ -212,41 +205,27 @@ const styles = StyleSheet.create({
         width:'80%',
         margin:30,
         padding:10,
-        borderStyle:'solid',
-        borderWidth:1,
-        borderColor: colors.secondary,
         borderRadius:10,
-        backgroundColor: colors.primary
     },
     stock_container:{
-        borderStyle:'solid',
-        borderWidth: 1,
         borderRadius:10,
         padding:10,
-        backgroundColor: colors.primary
     },
     category_container:{
-        borderStyle:'solid',
-        borderWidth: 1,
         borderRadius:10,
         padding:10,
-        backgroundColor: colors.primary
     },    
     headerDesc:{
         alignSelf:'left',
         marginLeft:'15%',
         margin:10,
-        color: colors.secondary,
         fontSize:24,
     },  
     contDesc:{
         width:'80%',
-        borderStyle:'solid', 
-        borderWidth:1, 
         borderRadius:10,
         padding:20, 
         alignItems:'center', 
         justifyContent:'flex-start', 
-        backgroundColor: colors.primary, 
     }
 });

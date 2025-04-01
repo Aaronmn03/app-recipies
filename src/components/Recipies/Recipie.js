@@ -1,23 +1,26 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from "react-native";
-import colors from '../../styles/colors';
+import { ThemedPrimaryView, ThemedText, TouchableSecondary } from "../ThemedComponents";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function Recipie({nombre, funcion, funcion1, image}) {
+  const {theme} = useTheme();
+
   return (
-    <View style={styles.main_container}>
+    <ThemedPrimaryView style={styles.main_container}>
       <View style={styles.container}>
         <Image source={image} style={styles.image} /> 
-        <Text style={styles.main_title}>{nombre}</Text>
+        <ThemedText style={styles.main_title}>{nombre}</ThemedText>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, {backgroundColor:colors.backgroundColor}]} onPress={funcion}>
-            <Text style={styles.title}>Ver receta</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, {backgroundColor:colors.backgroundColor}]} onPress={funcion1}>
-            <Text style={styles.title}>Consumir</Text>
-        </TouchableOpacity>
-    </View>
-    </View>
+        <TouchableSecondary style={[styles.button, {backgroundColor: theme.backgroundColor}]} onPress={funcion}>
+            <ThemedText style={styles.title}>Ver receta</ThemedText>
+        </TouchableSecondary>
+        <TouchableSecondary style={[styles.button, {backgroundColor: theme.backgroundColor}]} onPress={funcion1}>
+            <ThemedText style={styles.title}>Consumir</ThemedText>
+        </TouchableSecondary>
+      </View>
+    </ThemedPrimaryView>
   );
 }
 
@@ -26,7 +29,6 @@ const styles = StyleSheet.create({
       width: '45%',
       alignItems: 'center', 
       borderRadius: 20,
-      backgroundColor: colors.primary,
       marginVertical: 20,
       padding: 10,
     },
@@ -38,7 +40,6 @@ const styles = StyleSheet.create({
     main_title: {
       fontSize: 20,
       marginTop: 40,
-      color: colors.secondary,
       fontWeight:'600',
       textAlign:'left',
     },
@@ -46,7 +47,6 @@ const styles = StyleSheet.create({
       padding: 2,
       fontSize: 14,
       fontWeight:'500',
-      color: colors.secondary,
     },
     image: {
       position: 'absolute',

@@ -1,15 +1,20 @@
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import colors from '../styles/colors';
+import { StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemedText, ThemedView, TouchablePrimary } from '../components/ThemedComponents';
 
 export default function Profile() {
+    const { toggleTheme } = useTheme();
 const auth = useAuth();
   return (
-    <View style={styles.mainContainer}>
-        <TouchableOpacity style={styles.close_session}>
-            <Text style={styles.text} onPress={auth.logout}>Cerrar Sesión</Text>
-        </TouchableOpacity>
-    </View>
+    <ThemedView style={styles.mainContainer}>
+        <TouchablePrimary style={styles.buttons}>
+            <ThemedText style={styles.text} onPress={auth.logout}>Cerrar Sesión</ThemedText>
+        </TouchablePrimary>
+        <TouchablePrimary style={styles.buttons}>
+            <ThemedText style={styles.text} onPress={toggleTheme}>Cambiar Tema</ThemedText>
+        </TouchablePrimary>
+    </ThemedView>
   );
 }
 
@@ -18,20 +23,14 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent:'flex-end',
-        backgroundColor: colors.backgroundColor,
     },
     text:{
-        color: colors.exit,
         fontSize: 20,
     },
-    close_session:{
+    buttons:{
         padding:10,
         marginBottom:30,
         borderStyle:'solid',
-        borderWidth:7,
         borderRadius:20,
-        borderColor: colors.exit,
-        backgroundColor: colors.secondary
-    }
-
+    },
 });

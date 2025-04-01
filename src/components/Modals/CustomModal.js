@@ -1,8 +1,12 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, StyleSheet } from 'react-native';
 import colors from '../../styles/colors';
+import {ThemedText, ThemedView, TouchableSecondary} from '../ThemedComponents'
+import { useTheme } from '../../context/ThemeContext';
 
 const CustomModal = ({ visible, onClose, message, onConfirm, confirmText = 'Confirmar', cancelText = 'Cerrar' }) => {
+
+  const {theme} = useTheme();
   return (
     <Modal
       transparent={true}
@@ -11,19 +15,19 @@ const CustomModal = ({ visible, onClose, message, onConfirm, confirmText = 'Conf
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.message}>{message}</Text>
+        <ThemedView style={styles.modalContainer}>
+          <ThemedText style={styles.message}>{message}</ThemedText>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-              <Text style={onConfirm ? styles.cancelButtonText : styles.singleButtonText}>{cancelText}</Text>
-            </TouchableOpacity>
+            <TouchableSecondary style={styles.closeButton} onPress={onClose}>
+              <Text style={onConfirm ? [styles.cancelButtonText,{color: theme.ok}] : [styles.singleButtonText, {color:theme.exit}]}>{cancelText}</Text>
+            </TouchableSecondary>
             {onConfirm && (
-              <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
-                <Text style={styles.confirmButtonText}>{confirmText}</Text>
-              </TouchableOpacity>
+              <TouchableSecondary style={styles.confirmButton} onPress={onConfirm}>
+                <Text style={[styles.confirmButtonText, {color: theme.exit}]}>{confirmText}</Text>
+              </TouchableSecondary>
             )}
           </View>
-        </View>
+        </ThemedView>
       </View>
     </Modal>
   );
@@ -39,16 +43,11 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: '80%',
     padding: 20,
-    backgroundColor: colors.backgroundColor,
     borderRadius: 10,
     alignItems: 'center',
-    borderStyle:'solid',
-    borderWidth:3,
-    borderColor: colors.secondary
   },
   message: {
     fontSize: 22,
-    color: colors.secondary,
     marginBottom: 10,
   },
   buttonContainer: {
@@ -60,7 +59,6 @@ const styles = StyleSheet.create({
   confirmButton: {
     flex:0.48,
     padding: 10,
-    backgroundColor: colors.secondary,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent:'center',
@@ -68,23 +66,19 @@ const styles = StyleSheet.create({
   closeButton: {
     flex:0.48,
     padding: 10,
-    backgroundColor: colors.secondary,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent:'center',
   },
   cancelButtonText: {
-    color: colors.ok,
     fontSize: 16,
     textAlign:'center',
   },
   confirmButtonText: {
-    color: colors.exit,
     fontSize: 16,
     textAlign:'center',
   },
   singleButtonText: {
-    color: colors.exit,
     fontSize: 16,
   },
 });

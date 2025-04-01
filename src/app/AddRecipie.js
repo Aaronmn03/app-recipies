@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Formulario_Texto from '../components/formulario_texto';
 import FloatingRightButton from '../components/floatingrightbutton';
-import ModalSelector from 'react-native-modal-selector';
-import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
 import TitleView from '../components/TitleView';
 import FloatingAlert from '../components/Modals/FloatingAlert';
@@ -11,7 +9,8 @@ import IngredientsModal from '../components/Modals/IngredientsModal';
 import { validateInput, sendDataBackend } from '../services/AddRecipieService';
 import { useAlert } from '../context/AlertContext';
 import { useAuth } from '../context/AuthContext';
-
+import { ThemedModalSelector, ThemedText, ThemedTextInput, ThemedView } from '../components/ThemedComponents';
+import {useTheme} from '../context/ThemeContext'
 
 export default function AddRecipie() {
   const [nombreReceta, setNombreReceta] = useState('');
@@ -24,6 +23,7 @@ export default function AddRecipie() {
   const { user, token } = useAuth(); 
   const { handleSuccess, handleError } = useAlert(); 
   const router = useRouter();
+  const {theme} = useTheme();
   
 
   const receta = {
@@ -49,7 +49,7 @@ export default function AddRecipie() {
 
   return (
     
-    <View style={styles.main_container}>
+    <ThemedView style={styles.main_container}>
       <FloatingAlert/>
       <TitleView title={'¡AÑADE TU RECETA!'} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -58,37 +58,35 @@ export default function AddRecipie() {
         <Formulario_Texto question="Instrucciones:" onChangeText={setInstruccionesReceta}/>
         <Formulario_Texto question="Tiempo de preparacion (horas):" onChangeText={setTiempoPreparacionReceta}/>
         <Formulario_Texto question="Porciones (personas):" onChangeText={setPorciones}/>
-        <Text style={styles.label}>Dificultad:</Text>
-        <ModalSelector
+        <ThemedText style={styles.label}>Dificultad:</ThemedText>
+        <ThemedModalSelector
           data={dificultad}
           initValue="Selecciona una dificultad"
           onChange={(option) => setSelectedValue(option.label)}
           style={styles.selector}
           cancelText='Cerrar'
-            ><TextInput
+            ><ThemedTextInput
                 style={styles.input}
                 editable={false}
                 placeholder="Selecciona una dificultad"
                 value={dificultadReceta}
               />
-        </ModalSelector>
+        </ThemedModalSelector>
         <IngredientsModal onSelect={setSelectedIngredientes} />
       </View> 
       </ScrollView>
-      <FloatingRightButton onPress={handleAddRecipie} color={colors.ok} icon={'check'} />
-    </View>
+      <FloatingRightButton onPress={handleAddRecipie} color={theme.ok} icon={'check'} />
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
-    backgroundColor: colors.backgroundColor,
   },
   label: {
     alignSelf: 'left',
     fontSize: 15,
-    color: colors.secondary,
     marginTop: 5,
     marginLeft: 20,
   },
@@ -98,18 +96,13 @@ const styles = StyleSheet.create({
     height: 42,
     marginTop: 5,
     fontSize: 16,
-    borderColor: colors.secondary,
     borderWidth: 2,
     borderRadius: 10,
     paddingLeft: 10, 
-    backgroundColor: colors.backgroundColor,
-    color: colors.secondary,
-    placeholderTextColor: colors.secondary,
   },
   selector: {
     width: '100%',
     marginBottom: 20,
-    backgroundColor: colors.backgroundColor,
   },
   form: {
     width: '100%',

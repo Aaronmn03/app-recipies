@@ -1,17 +1,18 @@
-import { StyleSheet, View, Text, Modal, Image, ScrollView} from 'react-native';
-import colors from '../../styles/colors';
+import { StyleSheet, View, Modal, Image, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {ThemedPrimaryView, ThemedText, ThemedView} from '../ThemedComponents'
+import { useTheme } from '../../context/ThemeContext';
 
 const ViewerRecipiesModal = ({ recipie, visible, onClose }) => {
-  
+  const {theme} = useTheme();
   const getDifficultColor = (dificultad) => {
     switch (dificultad){
         case 'Fácil':
-          return colors.ok;
+          return theme.ok;
         case 'Media':
-          return colors.secondary;
+          return theme.secondary;
         case 'Difícil':
-          return colors.error;
+          return theme.error;
     }
   }
 
@@ -23,48 +24,48 @@ const ViewerRecipiesModal = ({ recipie, visible, onClose }) => {
       onRequestClose={onClose}
       >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
+        <ThemedView style={styles.modalContent}>
             <View style ={styles.Row}>
               <Image style={styles.image} source={recipie.imagen ? { uri: recipie.imagen } : require('../../assets/aguacate.jpg')}/>
-              <View style={styles.rightHeaderContent}>
-                <Text style={styles.recipieName}>{recipie.nombre}</Text>
+              <ThemedPrimaryView style={styles.rightHeaderContent}>
+                <ThemedText style={styles.recipieName}>{recipie.nombre}</ThemedText>
                 <View style={{ backgroundColor: getDifficultColor(recipie.dificultad), borderRadius:10, alignSelf: 'center', paddingHorizontal:20}}>
-                  <Text style={styles.textHeader}>{recipie.dificultad}</Text>
+                  <ThemedText style={styles.textHeader}>{recipie.dificultad}</ThemedText>
                 </View>
                 <View style={styles.horizontalContainerHeader}>
-                  <Text style={styles.textHeader}>{recipie.tiempo_preparacion}h</Text>
-                  <Icon name="clock-o" size={25} color={colors.secondary} />
+                  <ThemedText style={styles.textHeader}>{recipie.tiempo_preparacion}h</ThemedText>
+                  <Icon name="clock-o" size={25} color={theme.secondary} />
                 </View>
                 <View style={styles.horizontalContainerHeader}>
-                  <Text style={styles.textHeader}>{recipie.porciones}</Text>
-                  <Icon name="user" size={25} color={colors.secondary} />
+                  <ThemedText style={styles.textHeader}>{recipie.porciones}</ThemedText>
+                  <Icon name="user" size={25} color={theme.secondary} />
                 </View>
-              </View>
+              </ThemedPrimaryView>
             </View>
               <ScrollView>
-              <View style={styles.ingredientsContainer}>
+              <ThemedPrimaryView style={styles.ingredientsContainer}>
                 {visible && recipie.ingredientes.map((ingredient, index) => (
                   <View key={index} style={styles.ingredientContainer}>
                     <Image style={styles.image_ingredient} source={ingredient.imagen ? { uri: ingredient.imagen } : require('../../assets/aguacate.jpg')}/>
-                    <Text style={styles.text_ingredient}>{ingredient.nombre}</Text>
-                    <Text style={styles.text_ingredient}> {ingredient.cantidad}</Text>
-                    <Text style={styles.text_ingredient}> {ingredient.unidad}</Text>
+                    <ThemedText style={styles.text_ingredient}>{ingredient.nombre}</ThemedText>
+                    <ThemedText style={styles.text_ingredient}> {ingredient.cantidad}</ThemedText>
+                    <ThemedText style={styles.text_ingredient}> {ingredient.unidad}</ThemedText>
                   </View>
                 ))}
-              </View>
+              </ThemedPrimaryView>
 
               <View>
-              <Text style={styles.text_instructions}>{recipie.instrucciones}</Text>
+              <ThemedText style={styles.text_instructions}>{recipie.instrucciones}</ThemedText>
 
               </View>
               </ScrollView> 
               <Icon 
                 name={recipie.estado === 'Privado' ? 'lock' : 'unlock'} 
                 size={26} 
-                color={colors.secondary} 
+                color={theme.secondary} 
                 style={{ marginLeft: 5, textAlign: 'right'}} 
               />             
-        </View>
+        </ThemedView>
       </View>
     </Modal>
     
@@ -80,13 +81,10 @@ const styles = StyleSheet.create({
   },
   modalContent:{
     flex: 1,
-    backgroundColor: colors.backgroundColor,
     margin: 20,
     marginVertical: 150,
     padding: 20,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.secondary,
   },
   Row:{
     flexDirection: 'row',
@@ -95,7 +93,6 @@ const styles = StyleSheet.create({
   },
   rightHeaderContent:{
     flex: 1,
-    backgroundColor: colors.primary,
     borderRadius: 10,
     padding:5,
     marginLeft: 10,
@@ -105,7 +102,6 @@ const styles = StyleSheet.create({
   recipieName: {  
     marginTop:10,
     fontSize: 20,
-    color: colors.secondary,
     textAlign: 'center',
     flexWrap: 'wrap',
     fontWeight: 'bold',
@@ -116,14 +112,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }, 
   tiempo_preparacion:{
-    color: colors.secondary,
     fontSize: 25,
     marginHorizontal: 10,
     fontWeight: 'bold',
   },
   textHeader:{
     textAlign: 'center',
-    color: colors.secondary,
     fontSize: 20,
   },
   image:{
@@ -138,7 +132,6 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   ingredientsContainer:{
-    backgroundColor: colors.primary,
     borderRadius:15,
     marginBottom:10,
   },
@@ -150,11 +143,9 @@ const styles = StyleSheet.create({
   },
   text_ingredient:{
     fontSize: 15,
-    color: colors.secondary
   },
   text_instructions:{
     fontSize:14,
-    color: colors.secondary,
     marginHorizontal:15 
   }
 });

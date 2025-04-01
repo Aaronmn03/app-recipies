@@ -1,10 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import ModalSelector from "react-native-modal-selector";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import colors from '../../styles/colors';
+import { ThemedModalSelector, ThemedText, ThemedTextInput, ThemedView } from "../ThemedComponents";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function Ingredient({ ingredient, index, selectedIngredients, setSelectedIngredients, onSelect }) {
+
+    const {theme} = useTheme()
+
     const unidades = [
         { key: 'g', label: 'Gramos' },
         { key: 'l', label: 'Litros' },
@@ -32,30 +35,30 @@ export default function Ingredient({ ingredient, index, selectedIngredients, set
     };
 
     return (
-        <View style={styles.ingredientItem}>
-            <Text style={styles.ingredientText}>{ingredient.nombre}</Text>
-            <TextInput
+        <ThemedView style={[styles.ingredientItem, {borderColor: theme.secondary}]}>
+            <ThemedText style={styles.ingredientText}>{ingredient.nombre}</ThemedText>
+            <ThemedTextInput
                 style={styles.input}
                 placeholder="Cantidad"
                 keyboardType="numeric"
                 value={ingredient.cantidad}
                 onChangeText={handleQuantityChange}
             />
-            <ModalSelector
+            <ThemedModalSelector
                 data={unidades}
                 initValue=""
                 onChange={handleUnitChange}
             >
-                <TextInput
+                <ThemedTextInput
                     style={styles.unidadSelector}
                     placeholder="Seleccione"
                     value={ingredient.unidad}
                 />
-            </ModalSelector>
-            <TouchableOpacity onPress={removeIngredient} style={styles.removeButton}>
+            </ThemedModalSelector>
+            <TouchableOpacity onPress={removeIngredient} style={[styles.removeButton, {backgroundColor: theme.error}]}>
                 <Icon name="times" size={20} color="white" />
             </TouchableOpacity>
-        </View>
+        </ThemedView>
     );
 }
 
@@ -63,39 +66,30 @@ const styles = StyleSheet.create({
     ingredientItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.backgroundColor,
         padding: 10,
         marginTop: 10,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: colors.secondary,
-        backgroundColor: colors.primary,
     },
     ingredientText: {
         fontSize: 18,
-        color: colors.secondary,
         flex: 5,
     },
     input: {
         height: 40,
         padding: 5,
         borderWidth: 1,
-        borderColor: colors.secondary,
         borderRadius: 5,
         textAlign: 'center',
-        color: colors.secondary,
     },
     unidadSelector: {
         width: '100%',
-        backgroundColor: colors.primary,
-        borderColor: colors.secondary,
         borderWidth: 1,
         borderRadius: 5,
         marginLeft: 10,
         textAlign: 'center',
     },
     removeButton: {
-        backgroundColor: colors.error,
         padding: 8,
         borderRadius: 8,
         marginLeft: 20,

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
 import FloatingPlusButton from '../components/floatingrightbutton';
-import colors from '../styles/colors';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import sizes from '../styles/sizes';
@@ -10,11 +9,14 @@ import { unidad_medida } from '../utils/unitConverter.js';
 import Aliment from '../components/Aliment';
 import { useAuth } from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
+import { ThemedText, ThemedView } from '../components/ThemedComponents';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
   const router = useRouter();
   const {user, token} = useAuth();
+  const {theme} = useTheme();
 
   const handleItemDetails = (item) => {
     router.push({
@@ -43,7 +45,7 @@ export default function Inventary() {
 
 
   return (
-    <View style={styles.mainContainer}>
+    <ThemedView style={styles.mainContainer}>
       <FloatingAlert/>
       <TitleView title={'TU INVENTARIO'} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -60,11 +62,11 @@ export default function Inventary() {
             />
           ))
         ) : (
-          <Text style={styles.text}>No hay items en el inventario</Text>
+          <ThemedText style={styles.text}>No hay items en el inventario</ThemedText>
         )}
       </ScrollView>
-      <FloatingPlusButton onPress={() => router.push('/AddItem')} color={colors.backgroundColor} icon={'plus'}/>
-      </View>
+      <FloatingPlusButton onPress={() => router.push('/AddItem')} color={theme.backgroundColor} icon={'plus'}/>
+      </ThemedView>
   );
 }
 
@@ -72,14 +74,12 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.backgroundColor,
   },
   scrollContainer: {
     width: '100%',
     alignItems: 'center',
   },
   text: {
-    color: colors.secondary,
     fontSize: sizes.textSize,
     textAlign: 'center',
     margin: 5,

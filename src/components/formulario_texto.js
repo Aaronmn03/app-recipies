@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import colors from '../styles/colors';
-
+import { StyleSheet, View } from 'react-native';
+import { ThemedText, ThemedTextInput } from './ThemedComponents';
+import { useTheme } from '../context/ThemeContext';
 
 const Formulario_Texto = ({question, onChangeText}) => {
+  const {theme} = useTheme();
   return (
     <View style={styles.container}>
-        <Text color={colors.secondary}>{question}</Text>
-        <TextInput style={styles.input} onChangeText={onChangeText} placeholder="Escribe aquí"/>
+        <ThemedText>{question}</ThemedText>
+        <ThemedTextInput style={[styles.input, {borderColor: theme.secondary}]} onChangeText={onChangeText} placeholder="Escribe aquí"/>
     </View>
   );
 };
@@ -23,12 +24,9 @@ const styles = StyleSheet.create({
     input: {
         height: 42,
         fontSize: 16,
-        borderColor: colors.secondary,
         borderWidth: 2,
         borderRadius: 10,
         paddingLeft: 10, 
-        color: colors.secondary,
-        placeholderTextColor: colors.secondary,
     },
 });
 

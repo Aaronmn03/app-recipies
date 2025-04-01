@@ -1,32 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import colors from '../styles/colors';
-import BackButton from '../components/BackButton';
+import { StyleSheet } from 'react-native';
 import sizes from '../styles/sizes';
+import { ThemedText, ThemedView } from './ThemedComponents';
 
 export default function TitleView({title}) { 
     return (
-    <View style={styles.headerContainer}>
-        <Text style={styles.text}>{title}</Text>
-    </View>
+    <ThemedView style={styles.headerContainer}>
+        <ThemedText style={styles.text}>{title}</ThemedText>
+    </ThemedView>
     );
 }
 
 const styles = StyleSheet.create({
     headerContainer: {
         zIndex: 10,
-        backgroundColor: colors.backgroundColor,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '100%',
-        padding: 10,
-        borderStyle: 'solid',
-        borderBottomWidth: 1,
-        borderColor: colors.secondary,
+        padding: 5,
     },
     text: {
-        color: colors.secondary,
         fontSize: sizes.textSize,
         textAlign: 'center',
         margin: 5,

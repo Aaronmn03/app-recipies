@@ -7,10 +7,12 @@ import colors from '../styles/colors';
 import { useRouter} from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { AlertProvider } from '../context/AlertContext';
+import { ThemeProvider, useTheme } from '../context/ThemeContext';
 
 function LayoutContent() {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const {theme} = useTheme();
 
   useEffect(() => {
     if (!isLoading) {
@@ -37,7 +39,7 @@ function LayoutContent() {
       return (
         <View style={{ flex: 1 }}>
           <Header style={styles.header} />
-          <View style={styles.content}>
+          <View style={[styles.content, {backgroundColor: theme.backgroundColor}]}>
             <AlertProvider>
               <Stack screenOptions={{ headerShown: false }} />
             </AlertProvider>
@@ -51,9 +53,12 @@ function LayoutContent() {
 
 export default function Layout() {
   return (
-    <AuthProvider>
-      <LayoutContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <LayoutContent />
+      </AuthProvider>
+    </ThemeProvider>
+    
   );
 }
 
@@ -64,7 +69,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginBottom: 60,
-    backgroundColor: colors.backgroundColor,
   },
   footer:{
     marginBottom: 60,

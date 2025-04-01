@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useRouter, usePathname  } from 'expo-router';
-import colors from '../styles/colors';
-import FooterButton from './FooterButton'; 
+import FooterButton from './FooterButton';
+import { ThemedView, ThemedPrimaryView } from '../components/ThemedComponents' 
 
 export default function Footer() {
   const router = useRouter();
@@ -31,8 +31,8 @@ export default function Footer() {
   };
 
   return (
-    <View style={styles.main_container}>
-    <View style={styles.container}>
+    <ThemedView style={styles.main_container}>
+    <ThemedPrimaryView style={styles.container}>
     {routes.map(({ path, iconName, index }) => (
         <FooterButton
           key={path} 
@@ -42,22 +42,20 @@ export default function Footer() {
         />
       ))}
       
-    </View>
-    </View>
+    </ThemedPrimaryView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   main_container:{
     width: '100%',
-    backgroundColor: colors.backgroundColor,
     position: 'absolute',
     bottom: 0,
   },
   container: {
     width: '100%',
     height: 60,
-    backgroundColor: colors.primary,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',

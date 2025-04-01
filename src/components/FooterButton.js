@@ -1,11 +1,12 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import colors from '../styles/colors';
+import { useTheme } from '../context/ThemeContext';
 
 export default function FooterButton({ iconName, isActive, onPress }) {
-  const backgroundColor = isActive ? colors.secondary : colors.primary;
-  const iconColor = isActive ? colors.primary : colors.secondary;
+  const { theme } = useTheme();
+  const backgroundColor = isActive ? theme.secondary : theme.primary;
+  const iconColor = isActive ? theme.primary : theme.secondary;
 
   return (
     <TouchableOpacity
@@ -24,8 +25,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: colors.primary,
     elevation: 1
   },
   label: {

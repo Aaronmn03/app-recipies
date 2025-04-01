@@ -1,10 +1,10 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import colors from '../styles/colors';
+import { StyleSheet } from "react-native";
+import { ThemedPrimaryView } from "./ThemedComponents";
 export default function Footer() {
   return (
-    <View style={styles.container}>
-    </View>
+    <ThemedPrimaryView style={styles.container}>
+    </ThemedPrimaryView>
   );
 }
 
@@ -12,9 +12,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 35,
-    backgroundColor: colors.primary,
     borderStyle: 'solid',
     borderBottomWidth: 1,
-    borderColor: colors.secondary,
   },
 });

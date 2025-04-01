@@ -1,15 +1,15 @@
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import colors from "../styles/colors";
+import { StyleSheet, View } from "react-native";
 import sizes from "../styles/sizes";
+import {ThemedText, TouchablePrimary, IconSecondary } from '../components/ThemedComponents';
+
 
 const ButtonWithIcon = ({ title, icon, onPress }) => {
     return (
         <View>
-            <TouchableOpacity style={styles.button} onPress={onPress}>
-                <Text style={styles.text}>{title}</Text>
-                <Icon name={icon} size={86} color={colors.secondary} />
-            </TouchableOpacity>
+            <TouchablePrimary style={styles.button} onPress={onPress}>
+                <ThemedText style={styles.text}>{title}</ThemedText>
+                <IconSecondary name={icon} size={86}/>
+            </TouchablePrimary>
         </View>
     );
 };
@@ -19,10 +19,8 @@ const styles = StyleSheet.create({
         width:'100%',
         height: "100%",
         borderRadius: sizes.borderRadius,
-        backgroundColor: colors.primary,
         justifyContent: "center",
         alignItems: "center",
-        elevation: 2,
     },
     buttonRow: {
         flexDirection: "row",
@@ -36,12 +34,10 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     text: {
-        color: colors.secondary,
         fontSize: 29,
         textAlign: "center",
         margin: 5,
         fontWeight:'500',
-
     },
 });
 

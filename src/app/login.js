@@ -1,5 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity, Animated, Easing} from 'react-native'
-import colors from '../styles/colors';
+import { Text, StyleSheet, TouchableOpacity, Animated, Easing} from 'react-native'
 import Formulario_Texto from '../components/formulario_texto';
 import Formulario_Contraseña from '../components/formulario_contraseña';
 import React, { useState, useRef } from 'react';
@@ -7,6 +6,8 @@ import config from '../config/config';
 import {useAuth} from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import { useAlert } from '../context/AlertContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemedPrimaryView, ThemedText, ThemedView, TouchableSecondary } from '../components/ThemedComponents';
 
 export default function Login() {
     const [isLoginView, setIsLoginView] = useState(true);
@@ -18,6 +19,7 @@ export default function Login() {
     const [registerPassword, setRegisterPassword] = useState('');
     const {login} = useAuth();
     const {handleError} = useAlert();
+    const {theme} = useTheme();
 
     const toggleView = () => {
         Animated.timing(rotationAnim,{
@@ -104,53 +106,52 @@ export default function Login() {
       };
 
     return(
-        <View style={styles.main_container}>
+        <ThemedView style={styles.main_container}>
             <FloatingAlert/>
-            <View style={styles.container}>  
+            <ThemedView style={styles.container}>  
                 <Animated.View
                     style={[styles.flipContainer,{transform: [{rotateY: frontRotation}], opacity:frontOpacity,}]}pointerEvents={isLoginView ? 'auto' : 'none'}>
-                <Text style={styles.welcome_message}>¡Hola de nuevo!</Text>
-                <View style={styles.login_container}>
-                    <Text style={styles.header_title}>LOGIN</Text> 
+                <ThemedText style={styles.welcome_message}>¡Hola de nuevo!</ThemedText>
+                <ThemedPrimaryView style={styles.login_container}>
+                    <ThemedText style={styles.header_title}>LOGIN</ThemedText> 
                     <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setLoginUsername}></Formulario_Texto>
                     <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setLoginPassword}></Formulario_Contraseña>
-                    <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.button_text}>Accede!</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
-                    <Text style={{ color: colors.primary }}>
+                    <TouchableSecondary style={[styles.button, {backgroundColor: theme.ok}]} onPress={handleLogin}>
+                        <ThemedText style={styles.button_text}>Accede!</ThemedText>
+                    </TouchableSecondary>
+                    <TouchableSecondary style={styles.toggleButton} onPress={toggleView}>
+                    <Text style={{ color: theme.primary }}>
                         ¿Aun no tienes cuenta?
                     </Text>
-                    </TouchableOpacity>
-                </View>
+                    </TouchableSecondary>
+                </ThemedPrimaryView>
                 </Animated.View>
                 <Animated.View
                     style={[styles.flipContainer,{transform: [{rotateY: backRotation}], opacity:backOpacity,}]}pointerEvents={!isLoginView ? 'auto' : 'none'}>
-                <Text style={styles.welcome_message}>¡BIENVENIDO!</Text>
-                <View style={styles.register_container}>
-                    <Text style={styles.header_title}>REGISTRARTE</Text> 
+                <ThemedText style={styles.welcome_message}>¡BIENVENIDO!</ThemedText>
+                <ThemedPrimaryView style={styles.register_container}>
+                    <ThemedText style={styles.header_title}>REGISTRARTE</ThemedText> 
                     <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
                     <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
                     <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
-                    <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                        <Text style={styles.button_text}>Registrate!</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
-                    <Text style={{ color: colors.primary }}>
+                    <TouchableSecondary style={[styles.button, {backgroundColor: theme.ok}]} onPress={handleRegister}>
+                        <ThemedText style={styles.button_text}>Registrate!</ThemedText>
+                    </TouchableSecondary>
+                    <TouchableSecondary style={styles.toggleButton} onPress={toggleView}>
+                    <Text style={{ color: theme.primary }}>
                         ¿Ya tienes alguna cuenta?
                     </Text>
-                </TouchableOpacity>
-                </View>
+                </TouchableSecondary>
+                </ThemedPrimaryView>
                 
                 </Animated.View>
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 }
 
 const commonStyles = {
     container:{
-        backgroundColor: colors.primary,
         width:'90%',
         alignItems:'center',
         justifyContent:'space-evenly',
@@ -164,23 +165,20 @@ const commonStyles = {
 const styles = StyleSheet.create({
     main_container:{
         flex:1,
-        backgroundColor: colors.backgroundColor,  
     },
     container:{
         flex:1,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor: colors.backgroundColor,  
     },
     welcome_message:{
         fontSize:40,
-        color: colors.secondary,
     },
     flipContainer: {
         position: 'absolute',
         width: '100%',
         height: '100%',
-        backfaceVisibility: 'hidden', // Esconde el lado trasero
+        backfaceVisibility: 'hidden',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -191,13 +189,10 @@ const styles = StyleSheet.create({
         ...commonStyles.container,
     },
     header_title:{
-        color: colors.secondary,
         fontSize: 28
     },
     button:{
-        backgroundColor: colors.ok,
         borderRadius:15,
-        borderColor: colors.secondary,
         borderWidth:1,
         width:'70%',
         height:'15%',
@@ -206,13 +201,11 @@ const styles = StyleSheet.create({
         marginTop:5,
     },
     button_text:{
-        color:colors.secondary,
         fontSize:20
     },
     toggleButton: {
         marginTop: 20,
         padding: 10,
         borderRadius: 15,
-        backgroundColor: colors.secondary,
     },
 });

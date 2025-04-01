@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput} from 'react-native';
+import { StyleSheet, View, Text, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
 import FloatingPlusButton from '../components/floatingrightbutton';
-import colors from '../styles/colors';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +12,8 @@ import {TypeRecipie} from '../types/Recipie'
 import CustomModal from '../components/Modals/CustomModal';
 import {consume} from '../services/ConsumeService'
 import { useAlert } from '../context/AlertContext';
+import { ThemedView, ThemedTextInput, ThemedText } from '../components/ThemedComponents';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
@@ -23,6 +24,7 @@ export default function Recipies() {
     const [selectedVisible, setSelectedVisible] = useState(false);
     const [consumeVisible, setConsumeVisible] = useState(false);
     const { handleSuccess, handleError } = useAlert(); 
+    const {theme} = useTheme();
     
 
     const handleSelectRecipie = (recipie) => {
@@ -59,11 +61,11 @@ export default function Recipies() {
     }, [recipieSearch]);
   
     return (
-      <View style={styles.mainContainer}>
+      <ThemedView style={styles.mainContainer}>
         <FloatingAlert/>
         <TitleView title={'TUS RECETAS'}/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <TextInput style = {styles.textSearch} onChangeText={recipieSearch => setSearch(recipieSearch)} value = {recipieSearch} placeholder="Escribe aquí para encontrar una receta..."></TextInput>
+          <ThemedTextInput style = {styles.textSearch} onChangeText={recipieSearch => setSearch(recipieSearch)} value = {recipieSearch} placeholder="Escribe aquí para encontrar una receta..."></ThemedTextInput>
           {recipies.length > 0 ? (
             <View style={styles.recipies_container}>
             {recipies.map((recipie, index) => (
@@ -76,19 +78,18 @@ export default function Recipies() {
               />
             ))}
           </View>
-          ):(<Text style={styles.text}>¡AÑADE UNA RECETA PARA COMENZAR!</Text>)}          
+          ):(<ThemedText style={styles.text}>¡AÑADE UNA RECETA PARA COMENZAR!</ThemedText>)}          
         </ScrollView>
-        <FloatingPlusButton onPress={() => router.push('/AddRecipie')} color={colors.backgroundColor} icon={'plus'} bottom = {20} />
+        <FloatingPlusButton onPress={() => router.push('/AddRecipie')} color={theme.backgroundColor} icon={'plus'} bottom = {20} />
         <ViewerRecipiesModal recipie={recipieSelected} visible={selectedVisible} onClose={() => setSelectedVisible(false)} />
         <CustomModal visible={consumeVisible} onClose={() => setConsumeVisible(false)} message={`¿Quieres consumir ${recipieSelected?.nombre ?? 'esta receta'}?`} onConfirm={confirmConsume}></CustomModal>
-      </View>
+      </ThemedView>
     );
   }
   
   const styles = StyleSheet.create({
     mainContainer: {
       flex:1,
-      backgroundColor: colors.backgroundColor,
     },
     scrollContainer: {
       flexGrow: 1,
@@ -96,11 +97,9 @@ export default function Recipies() {
     },
     textSearch:{
       margin:10,
-      backgroundColor: colors.primary,
       fontSize: 18,
       borderRadius: 18,
-      borderColor: colors.secondary,
-      borderWidth: 1,
+      borderWidth:1,
     },
     recipies_container: {
         flexDirection: 'row',
@@ -110,7 +109,6 @@ export default function Recipies() {
         paddingVertical:20,
     },
     text: {
-        color: colors.secondary,
         fontSize: 18,
         textAlign: 'center',
         marginTop: 10,

@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import colors from '../styles/colors';
+import { ThemedText, ThemedTextInput } from './ThemedComponents';
+
 
 
 const Formulario_Contraseña = ({question, onChangeText}) => {
   return (
     <View style={styles.container}>
-        <Text color={colors.secondary}>{question}</Text>
-        <TextInput secureTextEntry={true} style={styles.input} onChangeText={onChangeText} placeholder="Escribe aquí"/>
+        <ThemedText color={colors.secondary}>{question}</ThemedText>
+        <ThemedTextInput secureTextEntry={true} style={styles.input} onChangeText={onChangeText} placeholder="Escribe aquí"/>
     </View>
   );
 };
@@ -23,12 +25,9 @@ const styles = StyleSheet.create({
     input: {
         height: 42,
         fontSize: 16,
-        borderColor: colors.secondary,
         borderWidth: 2,
         borderRadius: 10,
         paddingLeft: 10, 
-        color: colors.secondary,
-        placeholderTextColor: colors.secondary,
     },
 });
 

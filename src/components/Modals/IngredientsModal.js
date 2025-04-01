@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 import config from '../../config/config';
 import { useAuth } from '../../context/AuthContext';
 import Ingredient from '../Recipies/Ingredient';
+import { ThemedModalSelector, ThemedText, ThemedTextInput } from '../ThemedComponents';
 
 
 const IngredientsModal = ({ onSelect }) => {
@@ -45,17 +46,17 @@ const IngredientsModal = ({ onSelect }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Selecciona ingredientes:</Text>
-      <ModalSelector
+      <ThemedText style={styles.label}>Selecciona ingredientes:</ThemedText>
+      <ThemedModalSelector
         data={ingredientes.map(item => ({ key: item.key, label: item.nombre }))}
         initValue="Selecciona un ingrediente"
         onChange={handleSelect}
       >
-        <TextInput
+        <ThemedTextInput
             style={styles.selector}
             placeholder="Añada Ingredientes"
             />
-      </ModalSelector>
+      </ThemedModalSelector>
       <View>
         {selectedIngredients.map((item, index) => (
             <Ingredient 
@@ -80,13 +81,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    color: colors.secondary,
     marginBottom: 5,
   },
   selector: {
     width: '100%',
-    backgroundColor: colors.backgroundColor,
-    borderColor: colors.secondary,
     borderWidth: 2,
     borderRadius: 10,
     textAlign:'center',
