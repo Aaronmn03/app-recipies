@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
-import FloatingPlusButton from '../components/floatingrightbutton';
+import FloatingRightButton from '../components/floatingrightbutton';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import { useAuth } from '../context/AuthContext';
@@ -80,7 +80,7 @@ export default function Recipies() {
           </View>
           ):(<ThemedText style={styles.text}>¡AÑADE UNA RECETA PARA COMENZAR!</ThemedText>)}          
         </ScrollView>
-        <FloatingPlusButton onPress={() => router.push('/AddRecipie')} color={theme.backgroundColor} icon={'plus'} bottom = {20} />
+        <FloatingRightButton onPress={() => router.push('/AddRecipie')} color={theme.backgroundColor} icon={'plus'} bottom = {20} />
         <ViewerRecipiesModal recipie={recipieSelected} visible={selectedVisible} onClose={() => setSelectedVisible(false)} />
         <CustomModal visible={consumeVisible} onClose={() => setConsumeVisible(false)} message={`¿Quieres consumir ${recipieSelected?.nombre ?? 'esta receta'}?`} onConfirm={confirmConsume}></CustomModal>
       </ThemedView>

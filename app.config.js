@@ -22,7 +22,15 @@ export default{
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.aaron.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5705692e-9db3-45e5-8052-80597f400c67"
+      },
+      "REACT_APP_HOST_API": process.env.REACT_APP_HOST_API,
+      "REACT_APP_PORT_API": process.env.REACT_APP_PORT_API,
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -30,10 +38,5 @@ export default{
     "plugins": [
       "expo-router"
     ],
-    extra: {
-      REACT_APP_HOST_API: process.env.REACT_APP_HOST_API,
-      REACT_APP_PORT_API: process.env.REACT_APP_PORT_API,
-    },
-
   }
 }
