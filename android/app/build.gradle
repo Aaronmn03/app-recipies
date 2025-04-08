@@ -86,7 +86,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.aaron.app"
+    namespace 'com.aaron.app'
     defaultConfig {
         applicationId 'com.aaron.app'
         minSdkVersion rootProject.ext.minSdkVersion

@@ -52,7 +52,7 @@ export default function Login() {
 
     const handleLogin = async () => {
         try{
-            const response = await fetch(`${config.backendHost}:${config.backendPort}/login`,{
+            const response = await fetch(`${config.backendHost}/login`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export default function Login() {
 
     const handleRegister = async () => {
         try{
-            const response = await fetch(`${config.backendHost}:${config.backendPort}/register`,{
+            const response = await fetch(`${config.backendHost}/register`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

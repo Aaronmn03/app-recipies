@@ -22,7 +22,7 @@ export default function Home() {
 
 const fetchUserData = async () => {
     try {
-      const response = await fetch(`${config.backendHost}:${config.backendPort}/${user}`, {
+      const response = await fetch(`${config.backendHost}/${user}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

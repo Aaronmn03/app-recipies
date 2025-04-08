@@ -19,7 +19,7 @@ function validateIngredientes(ingredientes){
 
 export function sendDataBackend(receta, handleSuccess, handleError, user, token, router) {
     const body = JSON.stringify(receta);
-    fetch(`${config.backendHost}:${config.backendPort}/Recipie/${user}/AddRecipie` ,{
+   fetch(`${config.backendHost}/Recipie/${user}/AddRecipie` ,{
         method: 'POST',
         headers: {
         'Authorization': `Bearer ${token}`, 

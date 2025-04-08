@@ -1,7 +1,7 @@
 import config from "../config/config";
 
 export const removeAliment = (id_aliment, token, id, handleError, handleSuccess) => {
-    fetch(`${config.backendHost}:${config.backendPort}/Inventory/${id}/${id_aliment}`, {
+   fetch(`${config.backendHost}/Inventory/${id}/${id_aliment}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`, 
@@ -54,7 +54,7 @@ export const uploadImage = async (uri, alimento, token) => {
         type: 'image/jpeg',  
         });
         try {
-            const response = await fetch(`${config.backendHost}:${config.backendPort}/upload`, {
+            const response = await fetch(`${config.backendHost}/upload`, {
             headers: {
                 'Authorization': `Bearer ${token}`, 
                 'Content-Type': 'multipart/form-data'

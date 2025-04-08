@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import { ThemedText, ThemedView } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
-import CamaraModal from '../components/Modals/CamaraModal';
+import CamaraModal from '../components/Inventory/CamaraModal';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
@@ -19,6 +19,7 @@ export default function Inventary() {
   const {user, token} = useAuth();
   const {theme} = useTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+
 
   const handleItemDetails = (item) => {
     router.push({
@@ -29,7 +30,7 @@ export default function Inventary() {
 
   useEffect(() => {
     const fetchData = async () => {      
-      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${user}`, {
+     fetch(`${config.backendHost}/Inventory/${user}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, 

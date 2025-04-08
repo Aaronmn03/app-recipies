@@ -36,7 +36,7 @@ export default{
       "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
     ],
   }
 }

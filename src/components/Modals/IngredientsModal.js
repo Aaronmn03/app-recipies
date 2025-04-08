@@ -16,7 +16,7 @@ const IngredientsModal = ({ onSelect }) => {
 
   useEffect(() => {
     const fetchData = async () => {      
-      fetch(`${config.backendHost}:${config.backendPort}/Ingredients`, {
+     fetch(`${config.backendHost}/Ingredients`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, 
