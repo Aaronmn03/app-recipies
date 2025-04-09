@@ -31,7 +31,7 @@ const CamaraModal = ({ visible, setVisible }) => {
         const handleScan = async () => {
           console.log("Código escaneado: ", codes[0].value);
           setCamaraActive(false);
-          const alimento = await comprobarExisteAlimento(codes[0].value);
+          const alimento = await comprobarExisteAlimento(codes[0].value, token);
           if (!alimento) {
             handleExtractAlimentFromCode(codes[0].value);
           } else {
@@ -65,7 +65,7 @@ const CamaraModal = ({ visible, setVisible }) => {
     };
     
     const handleConfirmAliment = async () => {
-      insertCodigoAlimento(aliment.current);
+      insertCodigoAlimento(aliment.current, token);
       setListaAlimentos(prevLista => [...prevLista, aliment.current]);
       setCamaraActive(true);
     }

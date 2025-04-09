@@ -92,18 +92,22 @@ export async function extractAlimentFromCode(code = 8421691499294) {
   };
   
 
-export async function comprobarExisteAlimento(code){
+export async function comprobarExisteAlimento(code, token){
+    console.log("Comprobando si existe el alimento con el código: ", code);
     try {
         const response = await fetch(`${config.backendHost}/Inventory/code/${code}`, {
             method: 'GET',
             headers: {
+                'Authorization': `Bearer ${token}`,     
                 'Content-Type': 'application/json',
             },
         });
         if (response.status === 404) {
+            console.log("no se ha encontrado ninguna coincidencia");
             return false; 
         }
         if (!response.ok) {
+            console.log("Error en la respuesta de la red: ", response.status);
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
@@ -115,12 +119,13 @@ export async function comprobarExisteAlimento(code){
     }
 }
 
-export async function insertCodigoAlimento(aliment) {
+export async function insertCodigoAlimento(aliment, token) {
     console.log("Alimento a insertar: ", aliment);
     try {
         const response = await fetch(`${config.backendHost}/Inventory/code/${aliment.codigo}`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(aliment),
