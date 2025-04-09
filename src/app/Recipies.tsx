@@ -96,10 +96,12 @@ export default function Recipies() {
       width: '100%',
     },
     textSearch:{
+      padding: 10,
       margin:10,
       fontSize: 18,
-      borderRadius: 18,
+      borderRadius: 7,
       borderWidth:1,
+      height: '5%',
     },
     recipies_container: {
         flexDirection: 'row',
@@ -109,6 +111,7 @@ export default function Recipies() {
         paddingVertical:20,
     },
     text: {
+        width: '80%',
         fontSize: 18,
         textAlign: 'center',
         marginTop: 10,

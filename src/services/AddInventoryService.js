@@ -9,7 +9,6 @@ export function validateInput(alimento, handleError) {
   }
 
 export function sendDataBackend(alimento, handleSuccess, handleError, user, token, router) {
-    console.log("Alimento a subir: ", alimento);
     const body = JSON.stringify(alimento);
    fetch(`${config.backendHost}/Inventory/${user}/AddItem` ,{
         method: 'POST',
