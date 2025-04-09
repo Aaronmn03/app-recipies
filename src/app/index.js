@@ -22,7 +22,7 @@ export default function Home() {
 
 const fetchUserData = async () => {
     try {
-      const response = await fetch(`${config.backendHost}:${config.backendPort}/${user}`, {
+      const response = await fetch(`${config.backendHost}/${user}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -42,12 +42,12 @@ const fetchUserData = async () => {
       <ThemedText style ={styles.name_title} >Hola, {name}</ThemedText>
       <ThemedPrimaryView style={styles.container_days}></ThemedPrimaryView>
       <ThemedView style={styles.container_mid}>
-        <ButtonWithIcon title='CALENDARIO' icon='calendar' onPress={null}></ButtonWithIcon> 
-        <ButtonWithIcon title='INVENTARIO' icon='archive' onPress={() => router.push('/Inventory')}></ButtonWithIcon> 
+        <ButtonWithIcon style={{flex:1}} title='CALENDARIO' icon='calendar' onPress={null}></ButtonWithIcon> 
+        <ButtonWithIcon style={{flex:1}} title='INVENTARIO' icon='archive' onPress={() => router.push('/Inventory')}></ButtonWithIcon> 
       </ThemedView> 
-        <View style={styles.container_full}>
-          <ButtonWithIcon title='MIS RECETAS' icon='book' onPress={() => router.push('/Recipies')}></ButtonWithIcon>
-        </View>
+      <View style={styles.container_full}>
+        <ButtonWithIcon title='MIS RECETAS' icon='book' onPress={() => router.push('/Recipies')}></ButtonWithIcon>
+      </View>
       <StatusBar style="auto"/>
     </ThemedView>
   );

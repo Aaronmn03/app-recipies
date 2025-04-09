@@ -62,6 +62,7 @@ export default function AddRecipie() {
         <ThemedModalSelector
           data={dificultad}
           initValue="Selecciona una dificultad"
+          initValueTextStyle={{}}
           onChange={(option) => setSelectedValue(option.label)}
           style={styles.selector}
           cancelText='Cerrar'

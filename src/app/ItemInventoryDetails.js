@@ -149,10 +149,10 @@ export default function ItemInventoryDetails() {
             </ThemedPrimaryView>
             
             {editMode && (
-            <FloatingRightButton bottom={100} icon="check" color={theme.ok} onPress={() => setEditModalVisible(true)}/>       
+            <FloatingRightButton bottom={80} icon="check" color={theme.ok} onPress={() => setEditModalVisible(true)}/>       
             )}
             {!editMode && (
-            <FloatingRightButton bottom={100} icon="edit" color={theme.backgroundColor} onPress={() => {setEditMode(true)}}/>
+            <FloatingRightButton bottom={80} icon="edit" color={theme.backgroundColor} onPress={() => {setEditMode(true)}}/>
             )}
             <FloatingRightButton icon="trash" color={theme.exit} onPress={() => setRemoveModalVisible(true)}/>
 

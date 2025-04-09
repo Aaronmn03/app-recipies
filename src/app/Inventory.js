@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView} from 'react-native';
+import { StyleSheet, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
-import FloatingPlusButton from '../components/floatingrightbutton';
+import FloatingRightButton from '../components/floatingrightbutton';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import sizes from '../styles/sizes';
@@ -11,12 +11,15 @@ import { useAuth } from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import { ThemedText, ThemedView } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
+import CamaraModal from '../components/Inventory/CamaraModal';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
   const router = useRouter();
   const {user, token} = useAuth();
   const {theme} = useTheme();
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+
 
   const handleItemDetails = (item) => {
     router.push({
@@ -27,7 +30,7 @@ export default function Inventary() {
 
   useEffect(() => {
     const fetchData = async () => {      
-      fetch(`${config.backendHost}:${config.backendPort}/Inventory/${user}`, {
+     fetch(`${config.backendHost}/Inventory/${user}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, 
@@ -65,7 +68,9 @@ export default function Inventary() {
           <ThemedText style={styles.text}>No hay items en el inventario</ThemedText>
         )}
       </ScrollView>
-      <FloatingPlusButton onPress={() => router.push('/AddItem')} color={theme.backgroundColor} icon={'plus'}/>
+      <FloatingRightButton onPress={() => setIsCameraOpen(true)} color={theme.backgroundColor} bottom = {80} icon={'camera'}/>
+      <FloatingRightButton onPress={() => router.push('/AddItem')} color={theme.backgroundColor} icon={'plus'}/>
+      <CamaraModal visible={isCameraOpen} setVisible={setIsCameraOpen}/>
       </ThemedView>
   );
 }

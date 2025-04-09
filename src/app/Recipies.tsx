@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
-import FloatingPlusButton from '../components/floatingrightbutton';
+import FloatingRightButton from '../components/floatingrightbutton';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import { useAuth } from '../context/AuthContext';
@@ -43,7 +43,7 @@ export default function Recipies() {
     }
     useEffect(() => {
       const fetchData = async () => {   
-        const url = `${config.backendHost}:${config.backendPort}/Recipie/${user}?search=${recipieSearch}`;
+        const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
         fetch(url, {
           method: 'GET',
           headers: {
@@ -80,7 +80,7 @@ export default function Recipies() {
           </View>
           ):(<ThemedText style={styles.text}>¡AÑADE UNA RECETA PARA COMENZAR!</ThemedText>)}          
         </ScrollView>
-        <FloatingPlusButton onPress={() => router.push('/AddRecipie')} color={theme.backgroundColor} icon={'plus'} bottom = {20} />
+        <FloatingRightButton onPress={() => router.push('/AddRecipie')} color={theme.backgroundColor} icon={'plus'} bottom = {20} />
         <ViewerRecipiesModal recipie={recipieSelected} visible={selectedVisible} onClose={() => setSelectedVisible(false)} />
         <CustomModal visible={consumeVisible} onClose={() => setConsumeVisible(false)} message={`¿Quieres consumir ${recipieSelected?.nombre ?? 'esta receta'}?`} onConfirm={confirmConsume}></CustomModal>
       </ThemedView>
@@ -96,10 +96,12 @@ export default function Recipies() {
       width: '100%',
     },
     textSearch:{
+      padding: 10,
       margin:10,
       fontSize: 18,
-      borderRadius: 18,
+      borderRadius: 7,
       borderWidth:1,
+      height: '5%',
     },
     recipies_container: {
         flexDirection: 'row',
@@ -109,6 +111,7 @@ export default function Recipies() {
         paddingVertical:20,
     },
     text: {
+        width: '80%',
         fontSize: 18,
         textAlign: 'center',
         marginTop: 10,
