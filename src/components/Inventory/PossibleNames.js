@@ -12,6 +12,7 @@ const PossibleNames = ({ visible, onClose, onConfirm, names, imagen}) => {
 
   const {theme} = useTheme();
   return (
+    console.log("Los nombres posibles son: ", names),
     <Modal
       transparent={true}
       animationType="fade"
@@ -26,8 +27,8 @@ const PossibleNames = ({ visible, onClose, onConfirm, names, imagen}) => {
                     <ThemedText style={{color:theme.secondary, textAlign:'center'}}>No hay nombres posibles</ThemedText>
                 ) : (
                 names?.map((name, index) => (
-                    <TouchablePrimary onPress={() => selectName(name)} key={index} style={{flex:1,marginTop:5, padding:15, borderRadius:5, marginHorizontal:5, borderStyle:'solid', borderBottomWidth: 1, alignItems:'center', justifyContent:'center'}}>
-                        <ThemedText style={{color:theme.secondary, textAlign:'center'}}>{name}</ThemedText>
+                    <TouchablePrimary onPress={() => selectName(name)} key={index} style={{marginTop:5, padding:10, borderRadius:5, marginHorizontal:5}}>
+                        <ThemedText style={{textAlign:'center', }}>{name}</ThemedText>
                     </TouchablePrimary>
                 )))}
             </ThemedView>

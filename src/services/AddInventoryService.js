@@ -57,7 +57,7 @@ export async function extractAlimentFromCode(code = 8421691499294) {
         nombre: getCombinations(productNames),
         cantidad: data.product?.product_quantity,
         unidad_medida: data.product?.product_quantity_unit,
-        imagen: data.product?.selected_images?.front?.display || 'https://tse1.mm.bing.net/th/id/OIP.H1gHhKVbteqm1U5SrwpPgwHaFj?rs=1&pid=ImgDetMain',
+        imagen: data.product?.selected_images?.front?.display?.es || 'https://tse1.mm.bing.net/th/id/OIP.H1gHhKVbteqm1U5SrwpPgwHaFj?rs=1&pid=ImgDetMain',
       };
   
       console.log('Alimento extraído:', aliment);

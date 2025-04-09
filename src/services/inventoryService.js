@@ -21,7 +21,7 @@ export const removeAliment = (id_aliment, token, id, handleError, handleSuccess)
 
 export const editAliment = async (alimento, token, handleError, handleSuccess) =>{
     const body = JSON.stringify(alimento);
-    const response = await fetch (`${config.backendHost}:${config.backendPort}/Inventory/${alimento.id}`, {
+    const response = await fetch (`${config.backendHost}/Inventory/${alimento.id}`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`, 

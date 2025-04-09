@@ -43,7 +43,7 @@ export default function Recipies() {
     }
     useEffect(() => {
       const fetchData = async () => {   
-        const url = `${config.backendHost}:${config.backendPort}/Recipie/${user}?search=${recipieSearch}`;
+        const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
         fetch(url, {
           method: 'GET',
           headers: {

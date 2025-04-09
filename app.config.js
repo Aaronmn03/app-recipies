@@ -37,6 +37,7 @@ export default{
     },
     "plugins": [
       "expo-router",
+      "react-native-vision-camera"
     ],
   }
 }

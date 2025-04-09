@@ -170,7 +170,7 @@ const CamaraModal = ({ visible, setVisible }) => {
                       </TouchableOpacity>
                     </ThemedView>
                 )}
-                  <PossibleNames imagen = {aliment?.current.imagen?.es} visible={confirmModalVisible} names = {aliment.current.nombre} onClose={() => handleCancelAliment()} onConfirm={handleNameChange} /> 
+                  <PossibleNames imagen = {aliment?.current.imagen} visible={confirmModalVisible} names = {aliment.current.nombre} onClose={() => handleCancelAliment()} onConfirm={handleNameChange} /> 
               </ThemedPrimaryView>
             ):(
               <ThemedPrimaryView style={styles.loadingText}>
