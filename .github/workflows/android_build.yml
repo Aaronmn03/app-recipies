@@ -27,9 +27,3 @@ jobs:
       - name: Build Android App
         run: eas build --platform android 
 
-      - name: Upload Build Artifacts
-        if: success()  # Solo si el build fue exitoso
-        uses: actions/upload-artifact@v2
-        with:
-          name: android-build
-          path: path/to/your/builds  
