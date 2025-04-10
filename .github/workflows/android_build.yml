@@ -27,6 +27,9 @@ jobs:
       - name: Set up Expo token
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
+      - name: Verify Expo token
+        run: echo $EXPO_TOKEN
+
       - name: Build Android App
         run: eas build --platform android 
 
