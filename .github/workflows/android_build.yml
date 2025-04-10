@@ -25,9 +25,11 @@ jobs:
         run: npm install -g eas-cli
 
       - name: Login to EAS
-        run: eas login
+        run: |
+          echo "//expo.dev/api/v2/auth/login" > ~/.eas-cli-auth
+          echo ${{ secrets.EAS_TOKEN }} >> ~/.eas-cli-auth
         env:
-          EAS_CLI_ACCESS_TOKEN: ${{ secrets.EAS_TOKEN }}  # Usa secrets para las credenciales  
+          EAS_CLI_ACCESS_TOKEN: ${{ secrets.EAS_TOKEN }}  
 
       - name: Build Android App
         run: eas build --platform android 
