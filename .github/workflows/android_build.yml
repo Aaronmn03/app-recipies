@@ -1,0 +1,35 @@
+name: EAS Build on Merge to Main
+
+on:
+  push:
+    branches:
+      - main  # Ejecutará el workflow cuando se haga un push (merge) a la rama main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.13.0' 
+
+      - name: Install Dependencies
+        run: npm install 
+
+      - name: Login to EAS
+        run: eas login --username ${{ secrets.EAS_USERNAME }} --password ${{ secrets.EAS_PASSWORD }}  # Usa secrets para las credenciales  
+
+      - name: Build Android App
+        run: eas build --platform android 
+
+      - name: Upload Build Artifacts
+        if: success()  # Solo si el build fue exitoso
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-build
+          path: path/to/your/builds  
