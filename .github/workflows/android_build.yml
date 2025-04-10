@@ -27,9 +27,14 @@ jobs:
       - name: Set up Expo token
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Verify Expo token
-        run: echo $EXPO_TOKEN
 
       - name: Build Android App
         run: eas build --platform android 
+
+      - name: Upload Build Artifacts
+        if: success()  # Solo si el build fue exitoso
+        uses: actions/upload-artifact@v3  # Usamos la versión más reciente de la acción
+        with:
+          name: android-build
+          path: ./dist/*.apk 
 
