@@ -25,7 +25,9 @@ jobs:
         run: npm install -g eas-cli
 
       - name: Login to EAS
-        run: eas login --token ${{ secrets.EAS_TOKEN }}  # Usa secrets para las credenciales  
+        run: eas login
+        env:
+          EAS_CLI_ACCESS_TOKEN: ${{ secrets.EAS_TOKEN }}  # Usa secrets para las credenciales  
 
       - name: Build Android App
         run: eas build --platform android 
