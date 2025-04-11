@@ -15,6 +15,12 @@ const NotInfoModal = ({ alimento,visible, onClose }) => {
             handleError("Por favor, completa todos los campos.");
             return;
         }
+        if(alimento.unidad_medida!== 'G' && alimento.unidad_medida !== 'L' && alimento.unidad_medida !== 'U'){
+            handleError("Unidad de medida no valida. Debe ser G, L o U.");
+            return;
+        }
+        alimento.cantidad = parseInt(alimento.cantidad);
+        alimento.unidad_medida = alimento.unidad_medida.toUpperCase();
         onClose(alimento);
     }
     
