@@ -27,6 +27,8 @@ jobs:
       - name: Set up Expo token
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
+      - name: Set environment variables
+        run: echo "REACT_APP_HOST_API=${{ secrets.REACT_APP_HOST_API }}" >> $GITHUB_ENV
 
       - name: Build Android App
         run: eas build --platform android 
