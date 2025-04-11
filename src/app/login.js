@@ -17,6 +17,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const {login} = useAuth();
     const {handleError} = useAlert();
     const {theme} = useTheme();
@@ -78,6 +79,14 @@ export default function Login() {
       };
 
     const handleRegister = async () => {
+        if(registerUsername === '' || registerPassword === '' || email === ''){
+            handleError("Revise los campos, deben estar todos completos");
+            return;
+        }
+        if(registerPassword !== confirmPassword){
+            handleError("Las contraseñas no coinciden");
+            return;
+        }
         try{
             const response = await fetch(`${config.backendHost}/register`,{
                 method: 'POST',
@@ -134,6 +143,7 @@ export default function Login() {
                     <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
                     <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
                     <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
+                    <Formulario_Contraseña question="Confirma tu contraseña" onChangeText={setConfirmPassword}></Formulario_Contraseña>
                     <TouchableSecondary style={[styles.button, {backgroundColor: theme.ok}]} onPress={handleRegister}>
                         <ThemedText style={styles.button_text}>Registrate!</ThemedText>
                     </TouchableSecondary>
