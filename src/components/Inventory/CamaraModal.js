@@ -10,6 +10,7 @@ import { useAlert } from '../../context/AlertContext';
 import { extractAlimentFromCode, comprobarExisteAlimento, insertCodigoAlimento, sendDataBackend } from '../../services/AddInventoryService';
 import PossibleNames from './PossibleNames';
 import ListaAlimentos from './ListaAlimentos';
+import NotInfoModal from './NotInfoModal';
 
 const CamaraModal = ({ visible, setVisible }) => {
     const device = useCameraDevice('back');
@@ -21,6 +22,7 @@ const CamaraModal = ({ visible, setVisible }) => {
     const router = useRouter();
     const [camaraActive, setCamaraActive] = useState(true);
     const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+    const [notInfoModalVisible, setNotInfoModalVisible] = useState(false);
     const aliment = useRef({});
     const lastScannedCode = useRef();
     const [listaAlimentos, setListaAlimentos] = useState([]);
@@ -32,6 +34,7 @@ const CamaraModal = ({ visible, setVisible }) => {
           console.log("Código escaneado: ", codes[0].value);
           setCamaraActive(false);
           const alimento = await comprobarExisteAlimento(codes[0].value, token);
+
           if (!alimento) {
             handleExtractAlimentFromCode(codes[0].value);
           } else {
@@ -49,12 +52,21 @@ const CamaraModal = ({ visible, setVisible }) => {
       }
     })
 
+    const validateAlimento = (alimento) => {
+      if(!alimento?.nombre || !alimento?.cantidad || !alimento?.unidad_medida){  
+        return false;
+      }
+      return true;
+    }
+
     const handleExtractAlimentFromCode = async (code) => {
       const data = await extractAlimentFromCode(code);
       //todo: AQUI TENEMOS QUE GESTIONAR SI NO SE HA ENCONTRADO NOMBRE.
-      console.log(data);
-      if(data){
-        aliment.current = data;
+      aliment.current = data;
+      if(!data.codigo){return;}
+      if(!validateAlimento(data)){
+        setNotInfoModalVisible(true);
+      }else{
         setConfirmModalVisible(true);
       }
     }
@@ -76,7 +88,7 @@ const CamaraModal = ({ visible, setVisible }) => {
       aliment.current = {};
     }
 
-    const handleExist = () => {
+    const handleExit = () => {
       setListaAlimentos([]);
       setVisible(false);
     }
@@ -90,28 +102,19 @@ const CamaraModal = ({ visible, setVisible }) => {
       setVisible(false);
     }
 
-    const handleAddOneMore = (aliment) => {
-      setListaAlimentos(prevLista => [...prevLista, aliment]);
+    const handleCloseNotInfoModal = (nuevoAlimento) => {
+      setNotInfoModalVisible(false);
+      setCamaraActive(true);
+      aliment.current = nuevoAlimento;
+      if(!validateAlimento(aliment.current)){
+        aliment.current = {};
+      }else{
+        handleConfirmAliment();
+        setListaAlimentos(prevLista => [...prevLista, aliment.current]);
+      }
     }
 
-    const handleRemoveOne = (aliment) => {
-      setListaAlimentos(prevLista => {
-        const index = prevLista.findIndex(item => item.nombre === aliment.nombre);
-        if (index !== -1) {
-            return [
-                ...prevLista.slice(0, index),
-                ...prevLista.slice(index + 1)
-            ];
-        }
-        return prevLista;
-    });
-    }
-
-    const handleRemoveAll = (aliment) => {
-        setListaAlimentos(prevLista =>
-          prevLista.filter(alimento => alimento.nombre !== aliment.nombre)
-        );
-    }
+    
     
     useEffect(() => {
 
@@ -156,10 +159,10 @@ const CamaraModal = ({ visible, setVisible }) => {
                   />
                 </View>
                 {listaAlimentos.length > 0 && (
-                  <ListaAlimentos listaAlimentos={listaAlimentos} removeAliment = {handleRemoveAll} addOneMore={handleAddOneMore} removeOne={handleRemoveOne}/>
+                  <ListaAlimentos listaAlimentos={listaAlimentos} setListaAlimentos={setListaAlimentos}/>
                 )}
                 <ThemedView style={styles.closeCamera}>
-                    <TouchableOpacity style={styles.centerIcon} onPress={() => handleExist()}>
+                    <TouchableOpacity style={styles.centerIcon} onPress={handleExit}>
                       <Icon name="arrow-left" size={14} color= {theme.secondary}/>
                     </TouchableOpacity>
                 </ThemedView>
@@ -171,6 +174,7 @@ const CamaraModal = ({ visible, setVisible }) => {
                     </ThemedView>
                 )}
                   <PossibleNames imagen = {aliment?.current.imagen} visible={confirmModalVisible} names = {aliment.current.nombre} onClose={() => handleCancelAliment()} onConfirm={handleNameChange} /> 
+                  <NotInfoModal alimento = {aliment?.current} visible={notInfoModalVisible} onClose={handleCloseNotInfoModal}/>
               </ThemedPrimaryView>
             ):(
               <ThemedPrimaryView style={styles.loadingText}>

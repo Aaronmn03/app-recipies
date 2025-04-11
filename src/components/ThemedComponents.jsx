@@ -58,7 +58,7 @@ export const ThemedTextInput = ({ style, ...props }) => {
   const { theme } = useTheme();
   return (
     <TextInput
-      style={[{ color: theme.secondary, borderColor: theme.secondary }, style]}
+      style={[{color: theme.secondary, borderColor: theme.secondary }, style]}
       placeholderTextColor={theme.secondary}
       {...props}
     />

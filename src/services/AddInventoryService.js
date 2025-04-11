@@ -59,7 +59,6 @@ export async function extractAlimentFromCode(code = 8421691499294) {
         imagen: data.product?.selected_images?.front?.display?.es || 'https://tse1.mm.bing.net/th/id/OIP.H1gHhKVbteqm1U5SrwpPgwHaFj?rs=1&pid=ImgDetMain',
       };
   
-      console.log('Alimento extraído:', aliment);
       return aliment;
   
     } catch (error) {
@@ -92,7 +91,6 @@ export async function extractAlimentFromCode(code = 8421691499294) {
   
 
 export async function comprobarExisteAlimento(code, token){
-    console.log("Comprobando si existe el alimento con el código: ", code);
     try {
         const response = await fetch(`${config.backendHost}/Inventory/code/${code}`, {
             method: 'GET',
@@ -119,7 +117,6 @@ export async function comprobarExisteAlimento(code, token){
 }
 
 export async function insertCodigoAlimento(aliment, token) {
-    console.log("Alimento a insertar: ", aliment);
     try {
         const response = await fetch(`${config.backendHost}/Inventory/code/${aliment.codigo}`, {
             method: 'POST',
