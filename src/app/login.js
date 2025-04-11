@@ -8,6 +8,7 @@ import FloatingAlert from '../components/Modals/FloatingAlert';
 import { useAlert } from '../context/AlertContext';
 import { useTheme } from '../context/ThemeContext';
 import { ThemedPrimaryView, ThemedText, ThemedView, TouchableSecondary } from '../components/ThemedComponents';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Login() {
     const [isLoginView, setIsLoginView] = useState(true);
@@ -21,6 +22,7 @@ export default function Login() {
     const {login} = useAuth();
     const {handleError} = useAlert();
     const {theme} = useTheme();
+    const {showLoading, hideLoading} = useLoading();
 
     const toggleView = () => {
         Animated.timing(rotationAnim,{
@@ -52,6 +54,7 @@ export default function Login() {
     });
 
     const handleLogin = async () => {
+        showLoading();
         try{
             const response = await fetch(`${config.backendHost}/login`,{
                 method: 'POST',
@@ -69,11 +72,13 @@ export default function Login() {
                 login(userID, token);
             }else{
                 const errorData = await response.json();
+                hideLoading();
                 handleError("Usuario o contraseña incorrectos");
             }
 
         }catch (error){
             console.error('Error durante el inicio de sesión:', error);
+            hideLoading();
             handleError("Ha ocurrido un error al intentar iniciar sesión");
         }
       };

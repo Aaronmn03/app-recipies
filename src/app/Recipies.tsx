@@ -14,6 +14,7 @@ import {consume} from '../services/ConsumeService'
 import { useAlert } from '../context/AlertContext';
 import { ThemedView, ThemedTextInput, ThemedText } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
@@ -25,7 +26,7 @@ export default function Recipies() {
     const [consumeVisible, setConsumeVisible] = useState(false);
     const { handleSuccess, handleError } = useAlert(); 
     const {theme} = useTheme();
-    
+    const {showLoading, hideLoading} = useLoading();
 
     const handleSelectRecipie = (recipie) => {
       setSelectedVisible(true);
@@ -42,6 +43,7 @@ export default function Recipies() {
       setConsumeVisible(false);
     }
     useEffect(() => {
+      showLoading();
       const fetchData = async () => {   
         const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
         fetch(url, {
@@ -53,6 +55,7 @@ export default function Recipies() {
         })
         .then(response => response.json())
         .then(data => {
+          hideLoading();
           setRecipies(data);
         })
         .catch(error => console.error('Error fetching data:', error));

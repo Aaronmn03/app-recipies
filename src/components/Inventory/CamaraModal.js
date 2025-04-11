@@ -11,6 +11,7 @@ import { extractAlimentFromCode, comprobarExisteAlimento, insertCodigoAlimento, 
 import PossibleNames from './PossibleNames';
 import ListaAlimentos from './ListaAlimentos';
 import NotInfoModal from './NotInfoModal';
+import { useLoading } from '../../context/LoadingContext';
 
 const CamaraModal = ({ visible, setVisible }) => {
     const device = useCameraDevice('back');
@@ -26,21 +27,21 @@ const CamaraModal = ({ visible, setVisible }) => {
     const aliment = useRef({});
     const lastScannedCode = useRef();
     const [listaAlimentos, setListaAlimentos] = useState([]);
+    const { showLoading, hideLoading } = useLoading();
 
     const codeScanner = useCodeScanner({
       codeTypes: ['ean-13', 'ean-8', 'upc-a', 'upc-e'],
       onCodeScanned: (codes) => {
         const handleScan = async () => {
-          console.log("Código escaneado: ", codes[0].value);
+          showLoading();
           setCamaraActive(false);
           const alimento = await comprobarExisteAlimento(codes[0].value, token);
-
           if (!alimento) {
             handleExtractAlimentFromCode(codes[0].value);
           } else {
-            //todo:Poner algo como cargando
             setListaAlimentos(prevLista => [...prevLista, alimento]);
             setCamaraActive(true);
+            hideLoading();
           }
         };
         if(!lastScannedCode.current || lastScannedCode.current !== codes[0].value){ 
@@ -65,8 +66,10 @@ const CamaraModal = ({ visible, setVisible }) => {
       aliment.current = data;
       if(!data.codigo){return;}
       if(!validateAlimento(data)){
+        hideLoading();
         setNotInfoModalVisible(true);
       }else{
+        hideLoading();
         setConfirmModalVisible(true);
       }
     }
@@ -91,6 +94,7 @@ const CamaraModal = ({ visible, setVisible }) => {
     const handleExit = () => {
       setListaAlimentos([]);
       setVisible(false);
+      lastScannedCode.current = null;
     }
 
     const handleInsertAlimentos = async () => {
@@ -112,9 +116,7 @@ const CamaraModal = ({ visible, setVisible }) => {
         handleConfirmAliment();
         setListaAlimentos(prevLista => [...prevLista, aliment.current]);
       }
-    }
-
-    
+    }    
     
     useEffect(() => {
 

@@ -8,11 +8,14 @@ import {useAuth} from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { ThemedView, ThemedPrimaryView, ThemedText } from '../components/ThemedComponents';
+import Loading from '../components/Loading';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Home() {
   const [name, setName] = useState('');
   const router = useRouter();
   const {user, token, isLoading, isAuthenticated} = useAuth();
+  const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -22,6 +25,7 @@ export default function Home() {
 
 const fetchUserData = async () => {
     try {
+      showLoading();
       const response = await fetch(`${config.backendHost}/${user}`, {
         method: 'GET',
         headers: {
@@ -30,6 +34,7 @@ const fetchUserData = async () => {
         },
       });
       const data = await response.json();
+      hideLoading();
       setName(data[0].nombre_usuario);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -39,6 +44,7 @@ const fetchUserData = async () => {
   return (
     <ThemedView style={styles.container}>
       <FloatingAlert/>
+      <Loading/>
       <ThemedText style ={styles.name_title} >Hola, {name}</ThemedText>
       <ThemedPrimaryView style={styles.container_days}></ThemedPrimaryView>
       <ThemedView style={styles.container_mid}>
