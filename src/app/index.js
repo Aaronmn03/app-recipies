@@ -8,7 +8,6 @@ import {useAuth} from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { ThemedView, ThemedPrimaryView, ThemedText } from '../components/ThemedComponents';
-import Loading from '../components/Loading';
 import { useLoading } from '../context/LoadingContext';
 
 export default function Home() {
@@ -53,7 +52,6 @@ const fetchUserData = async () => {
       <View style={styles.container_full}>
         <ButtonWithIcon title='MIS RECETAS' icon='book' onPress={() => router.push('/Recipies')}></ButtonWithIcon>
       </View>
-      <StatusBar style="auto"/>
     </ThemedView>
   );
 }
