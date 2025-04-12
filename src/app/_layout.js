@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '../context/AuthContext';
 import { AlertProvider } from '../context/AlertContext';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { LoadingProvider } from '../context/LoadingContext';
+import Loading from '../components/Loading';
 
 function LayoutContent() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -56,6 +57,7 @@ export default function Layout() {
   return (
     <ThemeProvider>
       <LoadingProvider>
+        <Loading />
         <AuthProvider>
           <LayoutContent />
         </AuthProvider>

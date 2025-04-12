@@ -44,7 +44,6 @@ const fetchUserData = async () => {
   return (
     <ThemedView style={styles.container}>
       <FloatingAlert/>
-      <Loading/>
       <ThemedText style ={styles.name_title} >Hola, {name}</ThemedText>
       <ThemedPrimaryView style={styles.container_days}></ThemedPrimaryView>
       <ThemedView style={styles.container_mid}>
