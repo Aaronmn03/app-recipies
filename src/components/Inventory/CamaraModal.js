@@ -46,6 +46,8 @@ const CamaraModal = ({ visible, setVisible }) => {
         };
         if(!lastScannedCode.current || lastScannedCode.current !== codes[0].value){ 
           handleScan();
+        }else{
+          console.log("Este código ya fue escaneado.");
         }
         lastScannedCode.current = codes[0].value;
       }
@@ -143,35 +145,39 @@ const CamaraModal = ({ visible, setVisible }) => {
       );
     }
     return (
-        <Modal visible={visible} animationType="slide">
+        <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={() => setVisible(false)}>
             <ThemedPrimaryView style={styles.cameraContainer}>  
             {device ? (
               <ThemedPrimaryView style = {styles.camera}>
+                <Icon name="shopping-cart" size={30} color={theme.secondary} style={{alignSelf:'center', marginBottom:10}} />
+                <View style={{justifyContent:'center', alignItems:'center', marginBottom:10}}>
+                  <ThemedText style={{fontSize:32}}>Compras</ThemedText>
+                </View>
+                <ThemedText style={{fontSize:18, textAlign:'center', fontStyle:'italic', }}>Escanea el código de barras del producto</ThemedText>
+
                 <View style={styles.cameraWrapper}>
                   <Camera
                     ref={cameraRef}
-                    style={{flex:1}}
+                    style={{width:'100%', height:'100%'}}
                     device={device}
                     isActive={camaraActive}
                     photo={true}
                     codeScanner={codeScanner}
                   />
-                </View>
-                {listaAlimentos.length > 0 && (
-                  <ListaAlimentos listaAlimentos={listaAlimentos} setListaAlimentos={setListaAlimentos}/>
-                )}
+                </View>                
+                <ListaAlimentos listaAlimentos={listaAlimentos} setListaAlimentos={setListaAlimentos}/>
+
                 <ThemedView style={styles.closeCamera}>
                     <TouchableOpacity style={styles.centerIcon} onPress={handleExit}>
                       <Icon name="arrow-left" size={14} color= {theme.secondary}/>
                     </TouchableOpacity>
                 </ThemedView>
-                {listaAlimentos.length > 0 && (
                     <ThemedView style={styles.confirmButton}>
                       <TouchableOpacity style={styles.centerIcon} onPress={() => handleInsertAlimentos()}>
                         <Icon name="check" size={14} color= {theme.ok}/>
                       </TouchableOpacity>
                     </ThemedView>
-                )}
+                
                   <PossibleNames imagen = {aliment?.current.imagen} visible={confirmModalVisible} names = {aliment.current.nombre} onClose={() => handleCancelAliment()} onConfirm={handleNameChange} /> 
                   <NotInfoModal alimento = {aliment?.current} visible={notInfoModalVisible} onClose={handleCloseNotInfoModal}/>
               </ThemedPrimaryView>
@@ -211,7 +217,7 @@ const CamaraModal = ({ visible, setVisible }) => {
     closeCamera:{
       position: 'absolute',
       left:30,
-      bottom:50,
+      bottom:30,
       width: 45, 
       height: 45,
       borderRadius: 30, 
@@ -220,18 +226,9 @@ const CamaraModal = ({ visible, setVisible }) => {
     confirmButton:{
       position: 'absolute',
       right:30,
-      bottom:50,
+      bottom:30,
       width: 45, 
       height: 45,
-      borderRadius: 30, 
-      justifyContent:'center',
-    },
-    takePhotoButton:{
-      position: 'absolute',
-      bottom: 50, 
-      alignSelf: 'center', 
-      width: 60, 
-      height: 60,
       borderRadius: 30, 
       justifyContent:'center',
     },

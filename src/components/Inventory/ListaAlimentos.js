@@ -47,26 +47,29 @@ const ListaAlimentos = ({ listaAlimentos, setListaAlimentos }) => {
 
     return (
         <ScrollView style={styles.scrollContainer}>
-            {listaAgrupada.map((alimento, index) => (
-                <ThemedPrimaryView key={index} style={styles.itemContainer}>
-                    <Image source={{uri:alimento.imagen}} style={{height:40, aspectRatio:1, borderRadius:5, marginHorizontal:5}}/>
-                    <View style={{flex:1}}>
-                        <ThemedText style={styles.itemText}>{alimento.nombre}</ThemedText>
-                    </View>
-                    <View style={{flex:1/2, flexDirection:'row',gap:5, alignItems:'center'}}>
-                        <TouchableOpacity style={styles.centerIcon} onPress={() => handleAddOneMore(alimento)}>
-                            <Icon name="plus" size={25} color= {theme.secondary}/>
+            {listaAlimentos.length > 0 && (
+                listaAgrupada.map((alimento, index) => (
+                    <ThemedPrimaryView key={index} style={styles.itemContainer}>
+                        <Image source={{uri:alimento.imagen}} style={{height:40, aspectRatio:1, borderRadius:5, marginHorizontal:5}}/>
+                        <View style={{flex:1}}>
+                            <ThemedText style={styles.itemText}>{alimento.nombre}</ThemedText>
+                        </View>
+                        <View style={{flex:1/2, flexDirection:'row',gap:5, alignItems:'center'}}>
+                            <TouchableOpacity style={styles.centerIcon} onPress={() => handleAddOneMore(alimento)}>
+                                <Icon name="plus" size={25} color= {theme.secondary}/>
+                            </TouchableOpacity>
+                            <ThemedText style={styles.itemText}>{alimento.amount}</ThemedText>
+                            <TouchableOpacity style={styles.centerIcon} onPress={() => handleRemoveOne(alimento)}>
+                                <Icon name="minus" size={25} color= {theme.secondary}/>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={[styles.centerIcon, {marginLeft:15}]} onPress={() => handleRemoveAll(alimento)}>
+                            <Icon name="trash-o" size={28} color= {theme.exit}/>
                         </TouchableOpacity>
-                        <ThemedText style={styles.itemText}>{alimento.amount}</ThemedText>
-                        <TouchableOpacity style={styles.centerIcon} onPress={() => handleRemoveOne(alimento)}>
-                            <Icon name="minus" size={25} color= {theme.secondary}/>
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity style={[styles.centerIcon, {marginLeft:15}]} onPress={() => handleRemoveAll(alimento)}>
-                        <Icon name="trash-o" size={28} color= {theme.exit}/>
-                    </TouchableOpacity>
-                </ThemedPrimaryView>
-            ))}
+                    </ThemedPrimaryView>
+                ))
+            )}
+
         </ScrollView>
     );
   };

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
 import config from '../config/config';
