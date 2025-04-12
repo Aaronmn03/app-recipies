@@ -85,7 +85,6 @@ export async function extractAlimentFromCode(code = 8421691499294) {
     if (combinations.length === 0) {
       combinations.add('Desconocido');
     }
-    console.log('Combinaciones generadas:', combinations);
     return Array.from(combinations);
   };
   

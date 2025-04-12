@@ -46,8 +46,6 @@ const CamaraModal = ({ visible, setVisible }) => {
         };
         if(!lastScannedCode.current || lastScannedCode.current !== codes[0].value){ 
           handleScan();
-        }else{
-          console.log("Este código ya fue escaneado.");
         }
         lastScannedCode.current = codes[0].value;
       }
@@ -98,7 +96,6 @@ const CamaraModal = ({ visible, setVisible }) => {
     }
 
     const handleInsertAlimentos = async () => {
-      console.log("Alimentos a insertar: ", listaAlimentos);
       for (const aliment of listaAlimentos) {
         sendDataBackend(aliment,handleSuccess, handleError, user , token, router);
       }
