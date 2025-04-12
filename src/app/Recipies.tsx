@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, ScrollView} from 'react-native';
 import { useRouter } from 'expo-router';
 import FloatingRightButton from '../components/floatingrightbutton';
@@ -14,6 +14,7 @@ import {consume} from '../services/ConsumeService'
 import { useAlert } from '../context/AlertContext';
 import { ThemedView, ThemedTextInput, ThemedText } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
@@ -25,7 +26,9 @@ export default function Recipies() {
     const [consumeVisible, setConsumeVisible] = useState(false);
     const { handleSuccess, handleError } = useAlert(); 
     const {theme} = useTheme();
-    
+    const {showLoading, hideLoading} = useLoading();
+    const timeoutRef = useRef(null);
+
 
     const handleSelectRecipie = (recipie) => {
       setSelectedVisible(true);
@@ -42,23 +45,43 @@ export default function Recipies() {
       setConsumeVisible(false);
     }
     useEffect(() => {
-      const fetchData = async () => {   
-        const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`, 
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(response => response.json())
-        .then(data => {
+      const fetchData = async () => {
+        try {
+          showLoading();
+          const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`, 
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          const data = await response.json();
           setRecipies(data);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          handleError("Error al cargar las recetas");
+        } finally {
+          hideLoading();
+        }
+      };
+      // ESTO PONE UNA ESPERA DE 500ms PARA QUE NO SE HAGA UNA PETICION CADA VEZ QUE SE ESCRIBE EN EL INPUT
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
-      fetchData();
+      timeoutRef.current = setTimeout(() => {
+        fetchData();
+      }, 500);
+    
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+
     }, [recipieSearch]);
+    
   
     return (
       <ThemedView style={styles.mainContainer}>

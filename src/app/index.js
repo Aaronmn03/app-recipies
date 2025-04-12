@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
 import config from '../config/config';
@@ -8,11 +7,13 @@ import {useAuth} from '../context/AuthContext';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { ThemedView, ThemedPrimaryView, ThemedText } from '../components/ThemedComponents';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Home() {
   const [name, setName] = useState('');
   const router = useRouter();
   const {user, token, isLoading, isAuthenticated} = useAuth();
+  const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -22,6 +23,7 @@ export default function Home() {
 
 const fetchUserData = async () => {
     try {
+      showLoading();
       const response = await fetch(`${config.backendHost}/${user}`, {
         method: 'GET',
         headers: {
@@ -30,6 +32,7 @@ const fetchUserData = async () => {
         },
       });
       const data = await response.json();
+      hideLoading();
       setName(data[0].nombre_usuario);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -48,7 +51,6 @@ const fetchUserData = async () => {
       <View style={styles.container_full}>
         <ButtonWithIcon title='MIS RECETAS' icon='book' onPress={() => router.push('/Recipies')}></ButtonWithIcon>
       </View>
-      <StatusBar style="auto"/>
     </ThemedView>
   );
 }

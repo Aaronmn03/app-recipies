@@ -34,7 +34,8 @@ export function sendDataBackend(alimento, handleSuccess, handleError, user, toke
     .catch((error) => {
         console.error('Error fetching data:', error);
         handleError(error.message);
-    });
+    }
+    );
 }
 
 export async function extractAlimentFromCode(code = 8421691499294) {
@@ -58,8 +59,6 @@ export async function extractAlimentFromCode(code = 8421691499294) {
         unidad_medida: data.product?.product_quantity_unit,
         imagen: data.product?.selected_images?.front?.display?.es || 'https://tse1.mm.bing.net/th/id/OIP.H1gHhKVbteqm1U5SrwpPgwHaFj?rs=1&pid=ImgDetMain',
       };
-  
-      console.log('Alimento extraído:', aliment);
       return aliment;
   
     } catch (error) {
@@ -86,13 +85,11 @@ export async function extractAlimentFromCode(code = 8421691499294) {
     if (combinations.length === 0) {
       combinations.add('Desconocido');
     }
-    console.log('Combinaciones generadas:', combinations);
     return Array.from(combinations);
   };
   
 
 export async function comprobarExisteAlimento(code, token){
-    console.log("Comprobando si existe el alimento con el código: ", code);
     try {
         const response = await fetch(`${config.backendHost}/Inventory/code/${code}`, {
             method: 'GET',
@@ -102,7 +99,6 @@ export async function comprobarExisteAlimento(code, token){
             },
         });
         if (response.status === 404) {
-            console.log("no se ha encontrado ninguna coincidencia");
             return false; 
         }
         if (!response.ok) {
@@ -110,7 +106,6 @@ export async function comprobarExisteAlimento(code, token){
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log('Alimento encontrado:', data);
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -119,7 +114,6 @@ export async function comprobarExisteAlimento(code, token){
 }
 
 export async function insertCodigoAlimento(aliment, token) {
-    console.log("Alimento a insertar: ", aliment);
     try {
         const response = await fetch(`${config.backendHost}/Inventory/code/${aliment.codigo}`, {
             method: 'POST',

@@ -8,6 +8,7 @@ import FloatingAlert from '../components/Modals/FloatingAlert';
 import { useAlert } from '../context/AlertContext';
 import { useTheme } from '../context/ThemeContext';
 import { ThemedPrimaryView, ThemedText, ThemedView, TouchableSecondary } from '../components/ThemedComponents';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Login() {
     const [isLoginView, setIsLoginView] = useState(true);
@@ -17,9 +18,11 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const {login} = useAuth();
     const {handleError} = useAlert();
     const {theme} = useTheme();
+    const {showLoading, hideLoading} = useLoading();
 
     const toggleView = () => {
         Animated.timing(rotationAnim,{
@@ -51,6 +54,7 @@ export default function Login() {
     });
 
     const handleLogin = async () => {
+        showLoading();
         try{
             const response = await fetch(`${config.backendHost}/login`,{
                 method: 'POST',
@@ -68,16 +72,26 @@ export default function Login() {
                 login(userID, token);
             }else{
                 const errorData = await response.json();
+                hideLoading();
                 handleError("Usuario o contraseña incorrectos");
             }
 
         }catch (error){
             console.error('Error durante el inicio de sesión:', error);
+            hideLoading();
             handleError("Ha ocurrido un error al intentar iniciar sesión");
         }
       };
 
     const handleRegister = async () => {
+        if(registerUsername === '' || registerPassword === '' || email === ''){
+            handleError("Revise los campos, deben estar todos completos");
+            return;
+        }
+        if(registerPassword !== confirmPassword){
+            handleError("Las contraseñas no coinciden");
+            return;
+        }
         try{
             const response = await fetch(`${config.backendHost}/register`,{
                 method: 'POST',
@@ -134,6 +148,7 @@ export default function Login() {
                     <Formulario_Texto question="Introduce tu nombre de usuario" onChangeText={setRegisterUsername}></Formulario_Texto>
                     <Formulario_Texto question="Introduce un correo electronico" onChangeText={setEmail}></Formulario_Texto>
                     <Formulario_Contraseña question="Introduce tu contraseña" onChangeText={setRegisterPassword}></Formulario_Contraseña>
+                    <Formulario_Contraseña question="Confirma tu contraseña" onChangeText={setConfirmPassword}></Formulario_Contraseña>
                     <TouchableSecondary style={[styles.button, {backgroundColor: theme.ok}]} onPress={handleRegister}>
                         <ThemedText style={styles.button_text}>Registrate!</ThemedText>
                     </TouchableSecondary>

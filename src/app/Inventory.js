@@ -12,6 +12,7 @@ import FloatingAlert from '../components/Modals/FloatingAlert';
 import { ThemedText, ThemedView } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
 import CamaraModal from '../components/Inventory/CamaraModal';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
@@ -19,6 +20,7 @@ export default function Inventary() {
   const {user, token} = useAuth();
   const {theme} = useTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const { showLoading, hideLoading } = useLoading();
 
 
   const handleItemDetails = (item) => {
@@ -30,6 +32,7 @@ export default function Inventary() {
 
   useEffect(() => {
     const fetchData = async () => {      
+      showLoading();
      fetch(`${config.backendHost}/Inventory/${user}`, {
         method: 'GET',
         headers: {
@@ -40,6 +43,7 @@ export default function Inventary() {
         .then(response => response.json())
         .then(data => {
           setInventory(data);
+          hideLoading();
         })
         .catch(error => console.error('Error fetching data:', error));
     }

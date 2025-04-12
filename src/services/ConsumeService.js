@@ -1,7 +1,5 @@
 import config from '../config/config';
 
-
-
 export const consume = (recipie, user, token, handleError, handleSuccess) =>{
     const body = JSON.stringify(recipie.ingredientes)
    fetch(`${config.backendHost}/Recipie/${user}/Consume` ,{
@@ -15,7 +13,7 @@ export const consume = (recipie, user, token, handleError, handleSuccess) =>{
     .then((response) => {
         if (!response.ok) {
             return response.text().then(text => {
-                handleError(text);
+                handleError(JSON.parse(text).error);
                 throw new Error(`Network response was not ok: ${text}`);
             });
         }
@@ -26,6 +24,6 @@ export const consume = (recipie, user, token, handleError, handleSuccess) =>{
     })
     .catch((error) => {
         console.error('Error fetching data:', error);
-        handleError(error.message);
+        handleError(JSON.parse(error.message).error);
     });
 }

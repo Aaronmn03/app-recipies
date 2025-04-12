@@ -3,11 +3,14 @@ import { Stack } from 'expo-router';
 import { View, StyleSheet, Text } from 'react-native';
 import Header from '../components/header';
 import Footer from '../components/footer';
-import colors from '../styles/colors';
+import { SafeAreaView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useRouter} from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { AlertProvider } from '../context/AlertContext';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
+import { LoadingProvider } from '../context/LoadingContext';
+import Loading from '../components/Loading';
 
 function LayoutContent() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -54,9 +57,16 @@ function LayoutContent() {
 export default function Layout() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <LayoutContent />
-      </AuthProvider>
+      <LoadingProvider>
+        <Loading />
+        <AuthProvider>
+          <SafeAreaView style={{ flex: 1 }}>
+          <LayoutContent />
+          <StatusBar style="auto"/>
+          
+          </SafeAreaView>
+        </AuthProvider>
+      </LoadingProvider>
     </ThemeProvider>
     
   );
