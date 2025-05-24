@@ -15,6 +15,7 @@ import { useAlert } from '../context/AlertContext';
 import { ThemedView, ThemedTextInput, ThemedText } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
 import { useLoading } from '../context/LoadingContext';
+import { fetchRecipiesData } from '../services/RecipieService';
 
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
@@ -45,35 +46,16 @@ export default function Recipies() {
       setConsumeVisible(false);
     }
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          showLoading();
-          const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
-          const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`, 
-              'Content-Type': 'application/json',
-            },
-          });
-    
-          const data = await response.json();
-          setRecipies(data);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          handleError("Error al cargar las recetas");
-        } finally {
-          hideLoading();
-        }
-      };
       // ESTO PONE UNA ESPERA DE 500ms PARA QUE NO SE HAGA UNA PETICION CADA VEZ QUE SE ESCRIBE EN EL INPUT
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = setTimeout(() => {
-        fetchData();
+        showLoading();
+        fetchRecipiesData(recipieSearch, user, token, setRecipies,handleError);
+        hideLoading();
       }, 500);
-    
+
       return () => {
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);

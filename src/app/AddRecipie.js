@@ -6,7 +6,7 @@ import { useRouter} from 'expo-router';
 import TitleView from '../components/TitleView';
 import FloatingAlert from '../components/Modals/FloatingAlert';
 import IngredientsModal from '../components/Modals/IngredientsModal';
-import { validateInput, sendDataBackend } from '../services/AddRecipieService';
+import { validateInput, sendDataBackend } from '../services/RecipieService';
 import { useAlert } from '../context/AlertContext';
 import { useAuth } from '../context/AuthContext';
 import { ThemedModalSelector, ThemedText, ThemedTextInput, ThemedView } from '../components/ThemedComponents';

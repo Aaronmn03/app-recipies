@@ -45,3 +45,22 @@ export function sendDataBackend(receta, handleSuccess, handleError, user, token,
         handleError(error.message);
     });
 }
+
+export async function fetchRecipiesData (recipieSearch, user, token, setRecipies, handleError) {
+    try {
+        const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
+        const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+        },
+        });
+
+        const data = await response.json();
+        setRecipies(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        handleError("Error al cargar las recetas");
+    }
+}
