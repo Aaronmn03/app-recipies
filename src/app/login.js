@@ -4,7 +4,6 @@ import Formulario_Contraseña from '../components/formulario_contraseña';
 import React, { useState, useRef } from 'react';
 import config from '../config/config';
 import {useAuth} from '../context/AuthContext';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import { useAlert } from '../context/AlertContext';
 import { useTheme } from '../context/ThemeContext';
 import { ThemedPrimaryView, ThemedText, ThemedView, TouchableSecondary } from '../components/ThemedComponents';
@@ -121,7 +120,6 @@ export default function Login() {
 
     return(
         <ThemedView style={styles.main_container}>
-            <FloatingAlert/>
             <ThemedView style={styles.container}>  
                 <Animated.View
                     style={[styles.flipContainer,{transform: [{rotateY: frontRotation}], opacity:frontOpacity,}]}pointerEvents={isLoginView ? 'auto' : 'none'}>

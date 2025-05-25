@@ -1,26 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, View, Image, Touchable, TouchableOpacity } from 'react-native';
 import { ThemedView, ThemedText, TouchableSecondary } from '../ThemedComponents';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import { useTheme } from '../../context/ThemeContext';
 import { parse, format } from "date-fns";
-import { es } from "date-fns/locale";
+import { da, es } from "date-fns/locale";
 import ViewerRecipiesModal from '../Modals/ViewerRecipiesModal';
-
+import { useLoading } from '../../context/LoadingContext';
 
 export default function Recipies({dayOnCalendar, recetas}){
     const {theme} = useTheme();
-    const recetasComida = dayOnCalendar.comida.receta_id.map(id => recetas.find(r => r.receta_id === id));
-    const recetasCena = dayOnCalendar.cena.receta_id.map(id => recetas.find(r => r.receta_id === id));
-    const dia_string = format(
-                                parse(
-                                    new Date(dayOnCalendar.fecha).toLocaleDateString(),
-                                    'd/M/yyyy',
-                                    new Date()
-                                ),
-                                "EEEE, d 'de' MMMM 'del' yyyy",
-                                { locale: es }
-                            );
+    const { hideLoading } = useLoading();
 
     const [recipieSelected, setRecipieSelected] = useState();
     const [selectedVisible, setSelectedVisible] = useState(false);
@@ -31,7 +21,7 @@ export default function Recipies({dayOnCalendar, recetas}){
     }
 
     if(!dayOnCalendar){
-        return (
+        return (            
             <View style={styles.container}>
                 <ThemedText style={{fontSize:28,textAlign:'center'}}>¿Que vas a comer hoy?</ThemedText>
                 <TouchableSecondary style={{width:'35%', height:40, borderRadius:12, justifyContent:'center', alignItems:'center', marginTop:30}} onPress={() => {}}>
@@ -40,35 +30,81 @@ export default function Recipies({dayOnCalendar, recetas}){
             </View>
         );
     }else{
+
         return (
             <View style={styles.container}>
-                <ThemedText style={{fontSize:26}}>{dia_string}</ThemedText>
-                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around', width:'100%'}}>
-                    <View style={{flexDirection:'column', marginVertical:10}}>
-                        <ThemedText style={{fontSize:24,textAlign:'center'}}>COMIDA</ThemedText>
-                        <ThemedText style={{fontSize:16,textAlign:'center'}}>{dayOnCalendar.comida.personas}Persona</ThemedText>
-                        <View>
-                        {recetasComida.map((receta, index) => (
-                            <Recipie key={receta.receta_id} receta={receta} handleRecipieSelect={handleRecipieSelect}/>
-                        ))}
-                        </View>
-                    </View>
-                    <View style={{flexDirection:'column', marginVertical:10}}>
-                        <ThemedText style={{fontSize:24,textAlign:'center'}}>CENA</ThemedText>
-                        <ThemedText style={{fontSize:16,textAlign:'center'}}>{dayOnCalendar.cena.personas}Persona</ThemedText>
+                <DayRecipies handleRecipieSelect={handleRecipieSelect} dayOnCalendar={dayOnCalendar} personasComida={dayOnCalendar.comida.personas} personasCena={dayOnCalendar.cena.personas}></DayRecipies>
+                {selectedVisible && <ViewerRecipiesModal recipie={recipieSelected} visible={selectedVisible} onClose={() => setSelectedVisible(false)} />}
+            </View>
+        );
+    }
+}
+
+export const DayRecipies = ({handleRecipieSelect, dayOnCalendar, personasComida, personasCena}) => {
+    const { hideLoading } = useLoading();
+
+    const dias = new Map();
+    dias.set(obtenerFechaISO(), "Hoy");
+    dias.set(obtenerFechaISO(1), "Mañana");
+    dias.set(obtenerFechaISO(-1), "Ayer");
+
+    const formattedDate = (date) => {
+        const dia = format(
+            parse(
+                new Date(date).toLocaleDateString(),
+                'd/M/yyyy',
+                new Date()
+            ),
+            "EEEE, d 'de' MMMM 'del' yyyy",
+            { locale: es }
+        );
+        return dia;
+    }
+
+    function obtenerFechaISO(diasOffset = 0) {
+        const fecha = new Date();
+        fecha.setDate(fecha.getDate() + diasOffset);
+        return fecha.toISOString().split('T')[0];
+    }
+
+    function obtenerFecha() {
+        const fechaISO = dayOnCalendar.fecha;
+        if (dias.has(fechaISO)) {
+            return dias.get(fechaISO);
+        } else {
+            return formattedDate(fechaISO);
+        }
+    }
+
+    return (
+        hideLoading(),
+        <View style={{flex:1, width:'100%', alignItems:'center', justifyContent:'center'}}>
+            <ThemedText style={{fontSize:26}}>{obtenerFecha()}</ThemedText>
+            
+            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around', width:'100%'}}>
+                
+                <View style={{flexDirection:'column', marginVertical:10,}}>
+                    <ThemedText style={{fontSize:24,textAlign:'center'}}>COMIDA</ThemedText>
+                    <ThemedText style={{fontSize:16,textAlign:'center'}}>{personasComida}Persona</ThemedText>
                     <View>
-                    {recetasCena.map((receta, index) => (
+                    {dayOnCalendar.comida.map((receta, index) => (
                         <Recipie key={receta.receta_id} receta={receta} handleRecipieSelect={handleRecipieSelect}/>
                     ))}
                     </View>
                     </View>
+                    <View style={{flexDirection:'column', marginVertical:10}}>
+                        <ThemedText style={{fontSize:24,textAlign:'center'}}>CENA</ThemedText>
+                        <ThemedText style={{fontSize:16,textAlign:'center'}}>{personasCena}Persona</ThemedText>
+                    <View>
+                    {dayOnCalendar.cena.map((receta, index) => (
+                        <Recipie key={receta.receta_id} receta={receta} handleRecipieSelect={handleRecipieSelect}/>
+                    ))}
+                    </View>
                 </View>
-                {selectedVisible && <ViewerRecipiesModal recipie={recipieSelected} visible={selectedVisible} onClose={() => setSelectedVisible(false)} />}
             </View>
-            
-        );
-    }
-}
+        </View>
+    );
+};
 
 const Recipie = ({receta, handleRecipieSelect}) => {
     return (

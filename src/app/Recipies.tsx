@@ -5,7 +5,6 @@ import FloatingRightButton from '../components/floatingrightbutton';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import { useAuth } from '../context/AuthContext';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import Recipie from '../components/Recipies/Recipie';
 import ViewerRecipiesModal from '../components/Modals/ViewerRecipiesModal';
 import {TypeRecipie} from '../types/Recipie'
@@ -67,7 +66,6 @@ export default function Recipies() {
   
     return (
       <ThemedView style={styles.mainContainer}>
-        <FloatingAlert/>
         <TitleView title={'TUS RECETAS'}/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <ThemedTextInput style = {styles.textSearch} onChangeText={recipieSearch => setSearch(recipieSearch)} value = {recipieSearch} placeholder="Escribe aquí para encontrar una receta..."></ThemedTextInput>

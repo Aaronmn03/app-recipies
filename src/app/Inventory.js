@@ -8,7 +8,6 @@ import sizes from '../styles/sizes';
 import { unidad_medida } from '../utils/unitConverter.js';
 import Aliment from '../components/Aliment';
 import { useAuth } from '../context/AuthContext';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import { ThemedText, ThemedView } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
 import CamaraModal from '../components/Inventory/CamaraModal';
@@ -53,7 +52,6 @@ export default function Inventary() {
 
   return (
     <ThemedView style={styles.mainContainer}>
-      <FloatingAlert/>
       <TitleView title={'TU INVENTARIO'} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {items.length > 0 ? (

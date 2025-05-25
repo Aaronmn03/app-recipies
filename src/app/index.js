@@ -1,76 +1,113 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import config from '../config/config';
+import { StyleSheet, View, FlatList , Dimensions } from 'react-native';
 import sizes from '../styles/sizes';
 import {useAuth} from '../context/AuthContext';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import ButtonWithIcon from '../components/ButtonWithIcon';
-import { ThemedView, ThemedPrimaryView, ThemedText } from '../components/ThemedComponents';
+import { ThemedView, ThemedPrimaryView } from '../components/ThemedComponents';
 import { useLoading } from '../context/LoadingContext';
 import Recipies from '../components/Calendar/Recipies';
 import { useAlert } from '../context/AlertContext';
 import { fetchRecipiesData } from '../services/RecipieService';
+import { fetchDias } from '../services/CalendarService';
 
 export default function Home() {
-  const [name, setName] = useState('');
   const router = useRouter();
-  const {user, token, isLoading, isAuthenticated} = useAuth();
+  const {user, token} = useAuth();
   const { showLoading, hideLoading } = useLoading();
   const [recetas, setRecetas] = useState([]);
-  const { handleSuccess, handleError } = useAlert(); 
-  
+  const { handleError } = useAlert(); 
+  const [recetasDia, setRecetasDia] = useState([]);
+  const { width: screenWidth } = Dimensions.get('window');
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      fetchUserData();
+  const todayIndex = useMemo(() => {
+    return recetasDia.findIndex(dia => {
+      const hoy = new Date();
+      const fechaDia = new Date(dia.fecha);
+      return fechaDia.toDateString() === hoy.toDateString();
+    });
+  }, [recetasDia]);
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+  };
+
+  const onViewRef = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index ?? 0);
     }
-  }, [isLoading]);
+  });
 
   useEffect(() => {
+    if (todayIndex >= 0) {
+      setCurrentIndex(todayIndex);
+    }
+  }, [todayIndex]);
+
+  useEffect(() => {
+    showLoading();
     fetchRecipiesData("", user, token, setRecetas, handleError);
   }, []);
 
-const fetchUserData = async () => {
-    try {
-      showLoading();
-      const response = await fetch(`${config.backendHost}/${user}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      hideLoading();
-      setName(data[0].nombre_usuario);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const EJEMPLO_DIA = { //ESTAMOS USANDO LA INTERFAZ DE UN DIA PARA HACER PRUEBAS
-      id: 1,
-      fecha: "2025-04-25",
-      id_user: 22,
-      comida: {
-        receta_id: [59, 58],
-        personas: 1,
-      },
-      cena: {
-        receta_id: [59, 58],
-        personas: 1,
+  useEffect(() => {
+    const cargarDias = async () => {
+      try {
+        const dias = await fetchDias(recetas);
+        setRecetasDia(dias);
+      } catch (error) {
+        handleError("Error al cargar los días del calendario");
+        console.error("Error al cargar los días del calendario:", error);
+      } finally {
+        hideLoading();
       }
+    };
+
+    if (recetas.length > 0) {
+      cargarDias();    
     }
+  }, [recetas]);
+
   return (
     <ThemedView style={styles.container}>
-      <FloatingAlert/>
       <ThemedPrimaryView style={styles.container_days}>
-        <ScrollView contentContainerStyle={{justifyContent:'center', alignItems:'center'}}>
-          {recetas.length > 0 && (
-            <Recipies dayOnCalendar={EJEMPLO_DIA} recetas={recetas}/>
-          )}
-        </ScrollView>
+        <View style={{justifyContent:'center', alignItems:'center'}}>
+            {todayIndex >= 0 && <FlatList
+              data={recetasDia}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal
+              pagingEnabled
+              initialScrollIndex={todayIndex >= 0 ? todayIndex : 0}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <View style={{ width: screenWidth * 0.9, alignItems: 'center', justifyContent: 'center' }}>
+                  <Recipies dayOnCalendar={item} recetas={recetas} />
+                </View>
+              )}
+              getItemLayout={(data, index) => ({
+                length: screenWidth * 0.9,
+                offset: (screenWidth * 0.9) * index,
+                index
+              })}
+              onViewableItemsChanged={onViewRef.current}
+              viewabilityConfig={viewabilityConfig}
+            />
+          }
+          <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
+            {recetasDia.map((_, index) => (
+              <View
+                key={index}
+                style={{
+                  height: 8,
+                  width: 8,
+                  borderRadius: 4,
+                  marginHorizontal: 4,
+                  backgroundColor: currentIndex === index ? '#000' : '#ccc',
+                }}
+              />
+            ))}
+          </View>
+        </View>
       </ThemedPrimaryView>
       <ThemedView style={styles.container_mid}>
         <ButtonWithIcon style={{flex:1}} title='CALENDARIO' icon='calendar' onPress={() => router.push('/Calendar')}></ButtonWithIcon> 

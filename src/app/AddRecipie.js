@@ -4,7 +4,6 @@ import Formulario_Texto from '../components/formulario_texto';
 import FloatingRightButton from '../components/floatingrightbutton';
 import { useRouter} from 'expo-router';
 import TitleView from '../components/TitleView';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import IngredientsModal from '../components/Modals/IngredientsModal';
 import { validateInput, sendDataBackend } from '../services/RecipieService';
 import { useAlert } from '../context/AlertContext';
@@ -50,7 +49,6 @@ export default function AddRecipie() {
   return (
     
     <ThemedView style={styles.main_container}>
-      <FloatingAlert/>
       <TitleView title={'¡AÑADE TU RECETA!'} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.form}>
