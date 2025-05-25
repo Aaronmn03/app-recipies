@@ -33,14 +33,14 @@ export default function Recipies({dayOnCalendar, recetas}){
 
         return (
             <View style={styles.container}>
-                <DayRecipies handleRecipieSelect={handleRecipieSelect} dayOnCalendar={dayOnCalendar} personasComida={dayOnCalendar.comida.personas} personasCena={dayOnCalendar.cena.personas}></DayRecipies>
+                <DayRecipies handleRecipieSelect={handleRecipieSelect} dayOnCalendar={dayOnCalendar}></DayRecipies>
                 {selectedVisible && <ViewerRecipiesModal recipie={recipieSelected} visible={selectedVisible} onClose={() => setSelectedVisible(false)} />}
             </View>
         );
     }
 }
 
-export const DayRecipies = ({handleRecipieSelect, dayOnCalendar, personasComida, personasCena}) => {
+export const DayRecipies = ({handleRecipieSelect, dayOnCalendar}) => {
     const { hideLoading } = useLoading();
 
     const dias = new Map();
@@ -80,23 +80,25 @@ export const DayRecipies = ({handleRecipieSelect, dayOnCalendar, personasComida,
         hideLoading(),
         <View style={{flex:1, width:'100%', alignItems:'center', justifyContent:'center'}}>
             <ThemedText style={{fontSize:26}}>{obtenerFecha()}</ThemedText>
-            
             <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around', width:'100%'}}>
-                
                 <View style={{flexDirection:'column', marginVertical:10,}}>
-                    <ThemedText style={{fontSize:24,textAlign:'center'}}>COMIDA</ThemedText>
-                    <ThemedText style={{fontSize:16,textAlign:'center'}}>{personasComida}Persona</ThemedText>
+                    <ThemedText style={{fontSize:20,textAlign:'center'}}>COMIDA</ThemedText>
+                    <ThemedText style={{fontSize:16,textAlign:'center'}}>
+                        {dayOnCalendar.comida.personas} {dayOnCalendar.comida.personas > 1 ? 'Comensales' : 'Comensal'}
+                    </ThemedText>
                     <View>
-                    {dayOnCalendar.comida.map((receta, index) => (
+                    {dayOnCalendar.comida.recetas.map((receta, index) => (
                         <Recipie key={receta.receta_id} receta={receta} handleRecipieSelect={handleRecipieSelect}/>
                     ))}
                     </View>
                     </View>
                     <View style={{flexDirection:'column', marginVertical:10}}>
-                        <ThemedText style={{fontSize:24,textAlign:'center'}}>CENA</ThemedText>
-                        <ThemedText style={{fontSize:16,textAlign:'center'}}>{personasCena}Persona</ThemedText>
+                        <ThemedText style={{fontSize:20,textAlign:'center'}}>CENA</ThemedText>
+                        <ThemedText style={{fontSize:16,textAlign:'center'}}>
+                            {dayOnCalendar.cena.personas} {dayOnCalendar.cena.personas > 1 ? 'Comensales' : 'Comensal'}
+                        </ThemedText>
                     <View>
-                    {dayOnCalendar.cena.map((receta, index) => (
+                    {dayOnCalendar.cena.recetas.map((receta, index) => (
                         <Recipie key={receta.receta_id} receta={receta} handleRecipieSelect={handleRecipieSelect}/>
                     ))}
                     </View>

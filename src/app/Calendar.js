@@ -63,8 +63,6 @@ export default function Calendar() {
               key={index} 
               handleRecipieSelect={handleRecipieSelect} 
               dayOnCalendar={dayOnCalendar}
-              personasComida={dayOnCalendar.personasComida}
-              personasCena={dayOnCalendar.personasCena}
             />
         ))
       } 

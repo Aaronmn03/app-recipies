@@ -10,6 +10,7 @@ import Recipies from '../components/Calendar/Recipies';
 import { useAlert } from '../context/AlertContext';
 import { fetchRecipiesData } from '../services/RecipieService';
 import { fetchDias } from '../services/CalendarService';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Home() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function Home() {
   const [recetasDia, setRecetasDia] = useState([]);
   const { width: screenWidth } = Dimensions.get('window');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { theme } = useTheme();
 
   const todayIndex = useMemo(() => {
     return recetasDia.findIndex(dia => {
@@ -102,7 +104,7 @@ export default function Home() {
                   width: 8,
                   borderRadius: 4,
                   marginHorizontal: 4,
-                  backgroundColor: currentIndex === index ? '#000' : '#ccc',
+                  backgroundColor: currentIndex === index ? theme.secondary : theme.backgroundColor,
                 }}
               />
             ))}

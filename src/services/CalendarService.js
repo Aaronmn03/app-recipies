@@ -76,13 +76,17 @@ export const fetchDias = async (recetas) => {
         const cena = dia.cena.receta_id
           .map(id => recetas.find(r => r.receta_id === id))
           .filter(Boolean);
-
         return {
           fecha: dia.fecha,
-          comida,
-          cena,
-          personasComida: dia.comida.personas,
-          personasCena: dia.cena.personas,
+          id_user: dia.id_user,
+          comida: {
+            recetas: comida,  
+            personas: dia.comida.personas,
+          },
+          cena: {
+            recetas: cena,    
+            personas: dia.cena.personas,
+          }
         };
       });
       nuevasRecetasDia.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
