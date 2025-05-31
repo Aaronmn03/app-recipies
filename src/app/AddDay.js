@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, View, Platform, Image } from 'react-native';
-import { ThemedView, ThemedText, TouchablePrimary, ThemedModalSelector, ThemedTextInput } from '../components/ThemedComponents';
+import { ThemedView, ThemedText, TouchablePrimary, ThemedModalSelector, ThemedTextInput, ThemedPrimaryView } from '../components/ThemedComponents';
 import TitleView from '../components/TitleView';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext';
 import { useLoading } from '../context/LoadingContext';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../context/ThemeContext';
 import { fetchRecipiesData } from '../services/RecipieService';
 import { guardarNuevoDia } from '../services/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ViewerRecipiesModal from '../components/Modals/ViewerRecipiesModal';
+import { useLocalSearchParams } from 'expo-router';
 
 
 export default function AddDay() {
   const { user, token } = useAuth();
   const { handleError, handleSuccess } = useAlert();
-  const [date, setDate] = useState(getMaxSelectableDate());
-  const [showPicker, setShowPicker] = useState(false);
   const [recetas, setRecetas] = useState([]);
   const { showLoading, hideLoading } = useLoading();
   const [recetasComida, setRecetasComida] = useState([]);
@@ -26,6 +24,7 @@ export default function AddDay() {
   const [selectedVisible, setSelectedVisible] = useState(false);
   const [comensalesComida, setComensalesComida] = useState('');
   const [comensalesCena, setComensalesCena] = useState('');
+  const { fecha } = useLocalSearchParams();
 
 
   const handleAddComida = (recetaId) => {
@@ -64,27 +63,7 @@ export default function AddDay() {
       label: r.nombre
   }));
 
-  function getMaxSelectableDate() {
-    const today = new Date();
-    today.setDate(today.getDate() + 7);
-    return today;
-  }
-
-  function getMinSelectableDate() {
-    const today = new Date();
-    today.setDate(today.getDate());
-    return today;
-  }
-
   const handleGuardar = () => {
-    if (date < new Date()) {
-      handleError('La fecha no puede ser anterior a hoy.');
-      return;
-    }
-    if (date >= getMaxSelectableDate()) {
-      handleError('La fecha no puede ser mayor a 4 días desde hoy.');
-      return;
-    }
     if (comensalesComida === '' || comensalesCena === '') {
       handleError('Debes introducir el número de comensales para comida y cena.');
       return;
@@ -95,9 +74,8 @@ export default function AddDay() {
     }
     const recetasComidaIds = recetasComida.map(receta => receta.receta_id);
     const recetasCenaIds = recetasCena.map(receta => receta.receta_id);
-    const fechaISO = date.toISOString().split('T')[0]; 
     const nuevoDia = {
-      fecha: fechaISO,
+      fecha: fecha,
       comida: {
         receta_id: recetasComidaIds,
         personas: parseInt(comensalesComida),
@@ -111,32 +89,13 @@ export default function AddDay() {
     guardarNuevoDia(nuevoDia, handleSuccess, handleError);
   };
 
-  const onChangeDate = (event, selectedDate) => {
-    setShowPicker(false);
-    if (selectedDate && selectedDate <= getMaxSelectableDate() || selectedDate >= getMinSelectableDate()) {
-      setDate(selectedDate);
-    }else{
-        handleError('La fecha seleccionada no es válida. Debe ser dentro de los próximos 7 días.');
-    }
-  };
-
   return (
     <ThemedView style={styles.container}>        
       <TitleView title="AÑADIR DIETA" />
-        <ThemedText style={styles.label}>Selecciona una fecha (maximo 7 días en adelante):</ThemedText>
-        <TouchablePrimary onPress={() => setShowPicker(true)} style={styles.dateButton}>
-          <ThemedText style={[styles.dateText]}>{date.toISOString().split('T')[0]}</ThemedText>
-        </TouchablePrimary>
+        <ThemedPrimaryView style={styles.dateButton}>
+          <ThemedText style={[styles.dateText]}>{fecha}</ThemedText>
+        </ThemedPrimaryView>
 
-        {showPicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display={Platform.OS === 'android' ? 'spinner' : 'default'}
-            maximumDateDate={getMaxSelectableDate()}
-            onChange={onChangeDate}
-          />
-        )}
         <ScrollView style={{width:'80%'}}>
         <ThemedText style={styles.label}>Comida:</ThemedText>
         <ThemedModalSelector
@@ -157,10 +116,7 @@ export default function AddDay() {
                 <Recipie key={index} receta = {receta} handleRemoveReceta={handleRemoveComida} handleSelect={handleSelect}/>
             ))}
             </>
-        )}
-
-        
-
+        )}        
         <ThemedText style={styles.label}>Cena:</ThemedText>
         <ThemedModalSelector
             data={recetasFormateadas}
