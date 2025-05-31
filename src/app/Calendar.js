@@ -158,10 +158,11 @@ export default function Calendar() {
     const router = useRouter();
 
     const latestDay = () => {
-      const hoy = new Date();
+      const ayer = new Date();
+      ayer.setDate(ayer.getDate() - 1);
       if (daySelected) {
         const fechaSeleccionada = new Date(daySelected);
-        return fechaSeleccionada > hoy;
+        return fechaSeleccionada >= ayer;
       }
     }
 

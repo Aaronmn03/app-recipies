@@ -67,6 +67,10 @@ export const fetchDias = async (recetas) => {
       await limpiarDiasAntiguos();
 
       const dias = await obtenerDias();
+      console.log(dias, 'dias');
+      if (!dias || dias.length === 0) {
+        return [];
+      }
       const diasParsed = typeof dias === 'string' ? JSON.parse(dias) : dias;
       const nuevasRecetasDia = diasParsed.map((dia) => {
         const comida = dia.comida.receta_id
