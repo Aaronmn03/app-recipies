@@ -34,6 +34,7 @@ export default function AddDay() {
   }
 
   const handleAddCena = (recetaId) => {
+    console.log("Receta ID:", recetaId);
     const receta = recetas.find(receta => receta.receta_id === recetaId); 
     setRecetasCena(prev => [...prev, receta]);
   }
@@ -99,14 +100,12 @@ export default function AddDay() {
 
         <ScrollView style={{width:'80%'}}>
         <ThemedText style={styles.label}>Comida:</ThemedText>
-        <ThemedModalSelector
-            data={recetasFormateadas}
+        <ModalRecipieSelector
             initValue="Selecciona una comida"
-            onChange={(option) => handleAddComida(option.key)}
+            recetas={recetas}
             style={styles.selector}
-            cancelText='Cerrar'
-            >
-        </ThemedModalSelector>
+            handleAddReceta={handleAddComida}
+        />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, width:'75%' }}>
           <ThemedText style={{fontSize:15}}>Comensales: </ThemedText>
           <ThemedTextInput style={styles.input} onChangeText={comensales => setComensalesComida(comensales)} editable={true} placeholder="Introduce el numero de comensales" value={comensalesComida} />
@@ -119,14 +118,12 @@ export default function AddDay() {
             </>
         )}        
         <ThemedText style={styles.label}>Cena:</ThemedText>
-        <ThemedModalSelector
-            data={recetasFormateadas}
+        <ModalRecipieSelector
             initValue="Selecciona una cena"
-            onChange={(option) => handleAddCena(option.key)}
+            recetas={recetas}
             style={styles.selector}
-            cancelText='Cerrar'
-            >
-        </ThemedModalSelector>
+            handleAddReceta={handleAddCena}
+        />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, width:'75%' }}>
           <ThemedText style={{fontSize:15}}>Comensales: </ThemedText>
           <ThemedTextInput style={styles.input} onChangeText={comensales => setComensalesCena(comensales)} editable={true} placeholder="Introduce el numero de comensales" value={comensalesCena} />
@@ -162,6 +159,49 @@ const Recipie = ({ receta, handleRemoveReceta, handleSelect }) => {
     </TouchablePrimary>
   );
 };
+
+
+const ModalRecipieSelector = ({ recetas, handleAddReceta, renderOption, initValue }) => {
+const data = recetas.map((receta) => ({
+  key: receta.receta_id,
+  label: receta.nombre,
+  component: renderOption ? renderOption(receta) : (
+    <ThemedPrimaryView key={receta.receta_id} style={{ borderRadius: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', padding: 5 }}>
+      <Image style={stylesModal.optionImage} source={receta.imagen ? { uri: receta.imagen } : require('../assets/aguacate.jpg')} />
+      <ThemedText style={stylesModal.optionText}>{receta.nombre}</ThemedText>
+    </ThemedPrimaryView>
+  )
+}));
+
+  return (
+    <ThemedModalSelector
+      initValue={initValue}
+      data={data}
+      onChange={(option) => handleAddReceta(option.key)}
+      cancelText='Cerrar'
+      
+    />
+  );
+};
+
+
+const stylesModal = StyleSheet.create({
+  optionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  optionImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  optionText: {
+    fontSize: 20,
+  }
+});
+
 
 const styles = StyleSheet.create({
   container: {
