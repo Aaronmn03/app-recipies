@@ -4,7 +4,6 @@ import Formulario_Texto from '../components/formulario_texto';
 import FloatingRightButton from '../components/floatingrightbutton';
 import { useRouter} from 'expo-router';
 import TitleView from '../components/TitleView';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import { useAlert } from '../context/AlertContext';
 import { useAuth } from '../context/AuthContext';
 import { validateInput, sendDataBackend } from '../services/AddInventoryService';
@@ -41,7 +40,6 @@ export default function AddItem() {
   
   return (
     <ThemedView style={styles.main_container}>
-      <FloatingAlert/>
       <TitleView title={'¡AÑADE TU ALIMENTO!'} />
       <View style={styles.form}>
         <Formulario_Texto question="Nombre de articulo:" onChangeText={setItemName}/>

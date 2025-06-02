@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { ThemedPrimaryView, ThemedText, TouchableSecondary } from "../ThemedComponents";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -16,9 +16,11 @@ export default function Recipie({nombre, funcion, funcion1, image}) {
         <TouchableSecondary style={[styles.button, {backgroundColor: theme.backgroundColor}]} onPress={funcion}>
             <ThemedText style={styles.title}>Ver receta</ThemedText>
         </TouchableSecondary>
+        {funcion1 && 
         <TouchableSecondary style={[styles.button, {backgroundColor: theme.backgroundColor}]} onPress={funcion1}>
             <ThemedText style={styles.title}>Consumir</ThemedText>
         </TouchableSecondary>
+        }
       </View>
     </ThemedPrimaryView>
   );

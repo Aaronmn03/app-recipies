@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet,View, Text, TouchableOpacity, TextInput } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useTheme } from '../context/ThemeContext';
@@ -41,11 +41,10 @@ export const IconSecondary = ({style, ...props}) => {
 
 export const ThemedModalSelector = ({ style, initValueTextStyle, optionTextStyle, cancelStyle, ...props }) => {
   const { theme } = useTheme();
-
   return (
     <ModalSelector
       {...props}
-      style={[{ backgroundColor: theme.backgroundColor, borderColor: theme.secondary }, style]}
+      style={StyleSheet.flatten([{ backgroundColor: theme.backgroundColor, borderColor: theme.secondary }, style])}
       initValueTextStyle={[{ color: theme.secondary }, initValueTextStyle]}
       optionTextStyle={[{ color: theme.primary }, optionTextStyle]}
       cancelStyle={[{ backgroundColor: theme.exit }, cancelStyle]}

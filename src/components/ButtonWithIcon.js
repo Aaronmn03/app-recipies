@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import sizes from "../styles/sizes";
-import {ThemedText, TouchablePrimary, IconSecondary } from '../components/ThemedComponents';
+import {ThemedText, TouchablePrimary, IconSecondary } from './ThemedComponents';
 
 
 const ButtonWithIcon = ({ title, icon, onPress }) => {

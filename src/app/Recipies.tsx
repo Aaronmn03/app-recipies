@@ -5,7 +5,6 @@ import FloatingRightButton from '../components/floatingrightbutton';
 import config from '../config/config';
 import TitleView from '../components/TitleView.js';
 import { useAuth } from '../context/AuthContext';
-import FloatingAlert from '../components/Modals/FloatingAlert';
 import Recipie from '../components/Recipies/Recipie';
 import ViewerRecipiesModal from '../components/Modals/ViewerRecipiesModal';
 import {TypeRecipie} from '../types/Recipie'
@@ -15,6 +14,8 @@ import { useAlert } from '../context/AlertContext';
 import { ThemedView, ThemedTextInput, ThemedText } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
 import { useLoading } from '../context/LoadingContext';
+import { fetchRecipiesData } from '../services/RecipieService';
+import { ca } from 'date-fns/locale';
 
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
@@ -39,41 +40,30 @@ export default function Recipies() {
       setRecipieSelected(recipie)
       setConsumeVisible(true);
     }
-  
+    
+    const fetchRecipies = async (search) => {
+          try {
+            const recetas = await fetchRecipiesData(search, user, token, handleError);
+            setRecipies(recetas);
+          } catch (error) {
+            handleError("Error al cargar las recetas");
+            console.error("Error al cargar las recetas:", error);
+          }
+        };
     const confirmConsume = () => {
       consume(recipieSelected, user, token, handleError, handleSuccess);
       setConsumeVisible(false);
     }
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          showLoading();
-          const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
-          const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`, 
-              'Content-Type': 'application/json',
-            },
-          });
-    
-          const data = await response.json();
-          setRecipies(data);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          handleError("Error al cargar las recetas");
-        } finally {
-          hideLoading();
-        }
-      };
-      // ESTO PONE UNA ESPERA DE 500ms PARA QUE NO SE HAGA UNA PETICION CADA VEZ QUE SE ESCRIBE EN EL INPUT
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = setTimeout(() => {
-        fetchData();
+        showLoading();
+        fetchRecipies(recipieSearch);
+        hideLoading();
       }, 500);
-    
+
       return () => {
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
@@ -85,7 +75,6 @@ export default function Recipies() {
   
     return (
       <ThemedView style={styles.mainContainer}>
-        <FloatingAlert/>
         <TitleView title={'TUS RECETAS'}/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <ThemedTextInput style = {styles.textSearch} onChangeText={recipieSearch => setSearch(recipieSearch)} value = {recipieSearch} placeholder="Escribe aquí para encontrar una receta..."></ThemedTextInput>
