@@ -60,8 +60,7 @@ export default function Home() {
 
     showLoading();
     fetchRecipies()
-
-
+    hideLoading();
   }, []);
 
   useEffect(() => {
