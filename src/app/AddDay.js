@@ -10,7 +10,7 @@ import { fetchRecipiesData } from '../services/RecipieService';
 import { guardarNuevoDia } from '../services/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ViewerRecipiesModal from '../components/Modals/ViewerRecipiesModal';
-import { useLocalSearchParams } from 'expo-router';
+import { useRouter , useLocalSearchParams } from 'expo-router';
 
 
 export default function AddDay() {
@@ -25,6 +25,7 @@ export default function AddDay() {
   const [comensalesComida, setComensalesComida] = useState('');
   const [comensalesCena, setComensalesCena] = useState('');
   const { fecha } = useLocalSearchParams();
+  const router = useRouter();
 
 
   const handleAddComida = (recetaId) => {
@@ -72,21 +73,21 @@ export default function AddDay() {
       handleError('Debes seleccionar al menos una receta para comida y cena.');
       return;
     }
-    const recetasComidaIds = recetasComida.map(receta => receta.receta_id);
-    const recetasCenaIds = recetasCena.map(receta => receta.receta_id);
     const nuevoDia = {
       fecha: fecha,
       comida: {
-        receta_id: recetasComidaIds,
+        recetas: recetasComida,
         personas: parseInt(comensalesComida),
       },
       cena: {
-        receta_id: recetasCenaIds,
+        recetas: recetasCena,
         personas: parseInt(comensalesCena),
       },
-      id_user: user?.id,
+      id_user: user,
+      procesado: false,
     };
     guardarNuevoDia(nuevoDia, handleSuccess, handleError);
+    router.replace('/Calendar');
   };
 
   return (

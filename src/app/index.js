@@ -9,7 +9,7 @@ import { useLoading } from '../context/LoadingContext';
 import Recipies from '../components/Calendar/Recipies';
 import { useAlert } from '../context/AlertContext';
 import { fetchRecipiesData } from '../services/RecipieService';
-import { fetchDias } from '../services/CalendarService';
+import { fetchDias, procesarDias } from '../services/CalendarService';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
   const {user, token} = useAuth();
   const { showLoading, hideLoading } = useLoading();
   const [recetas, setRecetas] = useState([]);
-  const { handleError } = useAlert(); 
+  const { handleError, handleSuccess } = useAlert(); 
   const [recetasDia, setRecetasDia] = useState([]);
   const { width: screenWidth } = Dimensions.get('window');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -55,20 +55,36 @@ export default function Home() {
   useEffect(() => {
     const cargarDias = async () => {
       try {
-        const dias = await fetchDias(recetas);
+        const dias = await fetchDias();
         setRecetasDia(dias);
       } catch (error) {
         handleError("Error al cargar los días del calendario");
         console.error("Error al cargar los días del calendario:", error);
+      } 
+    };
+    if (recetas.length === 0) {
+      cargarDias();    
+    }
+  }, []);
+
+  useEffect(() => {
+    const ejecutarProcesamiento = async () => {
+      if (!recetasDia || recetasDia.length === 0) return;
+
+      try {
+        showLoading();
+        await procesarDias(recetasDia, user, token, handleError, handleSuccess);
+      } catch (error) {
+        handleError("Error al procesar los días del calendario");
+        console.error("Error al procesar los días del calendario:", error);
       } finally {
         hideLoading();
       }
     };
 
-    if (recetas.length > 0) {
-      cargarDias();    
-    }
-  }, [recetas]);
+    ejecutarProcesamiento();
+
+  }, [recetasDia]);
 
   return (
     <ThemedView style={styles.container}>
@@ -83,7 +99,7 @@ export default function Home() {
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => (
                 <View style={{ width: screenWidth * 0.9, alignItems: 'center', justifyContent: 'center' }}>
-                  <Recipies dayOnCalendar={item} recetas={recetas} />
+                  <Recipies dayOnCalendar={item} />
                 </View>
               )}
               getItemLayout={(data, index) => ({

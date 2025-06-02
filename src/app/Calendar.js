@@ -30,6 +30,7 @@ export default function Calendar() {
   const [recetasDia, setRecetasDia] = useState([]);
   const [daySelected, setDaySelected] = useState();
   const [diaReceta, setDiaReceta] = useState();
+  const scrollRef = useRef(null);
 
   const handleRecipieSelect = (recipie) => {
       setRecipieSelected(recipie);
@@ -58,7 +59,6 @@ export default function Calendar() {
     fetchRecipiesData("", user, token, setRecetas, handleError);    
   }, []);
 
-  const scrollRef = useRef(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -74,8 +74,20 @@ export default function Calendar() {
   useEffect(() => {
     const cargarDias = async () => {
       try {
-        const dias = await fetchDias(recetas);
+        showLoading();
+        const dias = await fetchDias();
         setRecetasDia(dias);
+        if (dias.length > 0) {
+          const hoy = new Date().toISOString().split('T')[0];
+          const recetaDelDia = dias.find(receta => receta.fecha === hoy);
+          if (recetaDelDia) {
+            setDiaReceta(recetaDelDia);
+            setDaySelected(hoy);
+          } else {
+            setDiaReceta(undefined);
+            setDaySelected(undefined);
+          }
+        }
       } catch (error) {
         handleError("Error al cargar los días del calendario");
         console.error("Error al cargar los días del calendario:", error);
@@ -167,7 +179,6 @@ export default function Calendar() {
     }
 
     if(daySelected == undefined){
-      
       return (
         <ThemedPrimaryView style={RecipieStyles.mainContainer}>
           <ThemedText style={{fontSize: 26, textAlign: 'center'}}>Selecciona el dia que quieras mirar</ThemedText>

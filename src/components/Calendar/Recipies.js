@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Image, Touchable, TouchableOpacity } from 'react-native';
-import { ThemedView, ThemedText, TouchableSecondary } from '../ThemedComponents';
+import React, {useState} from 'react';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import {  ThemedText, TouchableSecondary } from '../ThemedComponents';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import { useTheme } from '../../context/ThemeContext';
 import { parse, format } from "date-fns";
@@ -8,9 +8,8 @@ import { da, es } from "date-fns/locale";
 import ViewerRecipiesModal from '../Modals/ViewerRecipiesModal';
 import { useLoading } from '../../context/LoadingContext';
 
-export default function Recipies({dayOnCalendar, recetas}){
+export default function Recipies({dayOnCalendar}){
     const {theme} = useTheme();
-    const { hideLoading } = useLoading();
 
     const [recipieSelected, setRecipieSelected] = useState();
     const [selectedVisible, setSelectedVisible] = useState(false);
@@ -77,7 +76,6 @@ export const DayRecipies = ({handleRecipieSelect, dayOnCalendar}) => {
     }
 
     return (
-        hideLoading(),
         <View style={{flex:1, width:'100%', alignItems:'center', justifyContent:'center'}}>
             <ThemedText style={{fontSize:26}}>{obtenerFecha()}</ThemedText>
             <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around', width:'100%'}}>

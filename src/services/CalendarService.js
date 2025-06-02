@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { consume } from './ConsumeService';
 
 export const guardarNuevoDia = async (nuevoDia, handleSuccess, handleError) => {
     try {
@@ -63,36 +64,52 @@ export const limpiarDiasAntiguos = async () => {
   }
 };
 
-export const fetchDias = async (recetas) => {
-      await limpiarDiasAntiguos();
+const comprobarDiaProcesado = async (fecha) => {
+  try {
+    await AsyncStorage.removeItem('ultimaFechaProcesada');
+    const ultimaFechaProcesada = await AsyncStorage.getItem('ultimaFechaProcesada');
+    if (ultimaFechaProcesada === fecha) {
+      return true;
+    }
+    await AsyncStorage.setItem('ultimaFechaProcesada', fecha);
+    return false;
+  } catch (error) {
+    console.error('Error comprobando si el día ya fue procesado:', error);
+    return false;
+  }
+}
 
-      const dias = await obtenerDias();
-      console.log(dias, 'dias');
+export const procesarDias = async (dias, user, token, handleError, handleSuccess) => {
+  const hoy = new Date().toISOString().split('T')[0];
+  if(await comprobarDiaProcesado(hoy)){
+    return;
+  }
+  dias.forEach(dia => {
+    if(!dia.procesado){
+      if(dia.fecha < new Date().toISOString().split('T')[0]) {
+        consumirDia(dia, user, token, handleError, handleSuccess);
+        dia.procesado = true;
+      }
+    }
+  });
+    await AsyncStorage.setItem('@dias', JSON.stringify(dias));
+}
+
+const consumirDia = async (dia, user, token, handleError, handleSuccess) => {
+  dia.comida.recetas.forEach(receta => {
+    consume(receta, user, token, handleError, handleSuccess);
+  })
+  dia.cena.recetas.forEach(receta => {
+    consume(receta, user, token, handleError, handleSuccess);
+  });
+}
+
+export const fetchDias = async () => {  
+      const dias = await limpiarDiasAntiguos();
       if (!dias || dias.length === 0) {
         return [];
       }
-      const diasParsed = typeof dias === 'string' ? JSON.parse(dias) : dias;
-      const nuevasRecetasDia = diasParsed.map((dia) => {
-        const comida = dia.comida.receta_id
-          .map(id => recetas.find(r => r.receta_id === id))
-          .filter(Boolean);
 
-        const cena = dia.cena.receta_id
-          .map(id => recetas.find(r => r.receta_id === id))
-          .filter(Boolean);
-        return {
-          fecha: dia.fecha,
-          id_user: dia.id_user,
-          comida: {
-            recetas: comida,  
-            personas: dia.comida.personas,
-          },
-          cena: {
-            recetas: cena,    
-            personas: dia.cena.personas,
-          }
-        };
-      });
-      nuevasRecetasDia.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-      return nuevasRecetasDia;
+      dias.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+      return dias;
     }
