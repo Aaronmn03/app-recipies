@@ -19,6 +19,24 @@ export const removeAliment = (id_aliment, token, id, handleError, handleSuccess)
     });
 };
 
+export const readInventory = async (user, token) => {      
+  try {
+    const response = await fetch(`${config.backendHost}/Inventory/${user}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`, 
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+};
+
+
 export const editAliment = async (alimento, token, handleError, handleSuccess) =>{
     const body = JSON.stringify(alimento);
     const response = await fetch (`${config.backendHost}/Inventory/${alimento.id}`, {

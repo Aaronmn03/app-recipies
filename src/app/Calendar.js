@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useTheme } from '../context/ThemeContext';
 import { useRouter } from 'expo-router';
 import { fetchDias } from '../services/CalendarService';
+import { set } from 'date-fns';
 
   const styles = StyleSheet.create({
     container: {
@@ -55,8 +56,19 @@ export default function Calendar() {
   }
 
   useEffect(() => {
+    const fetchRecipies = async () => {
+      try {
+        const recetas = await fetchRecipiesData("", user, token, handleError);
+        setRecetas(recetas);
+      } catch (error) {
+        handleError("Error al cargar las recetas");
+        console.error("Error al cargar las recetas:", error);
+      }
+    };
+
     showLoading();
-    fetchRecipiesData("", user, token, setRecetas, handleError);    
+    fetchRecipies();
+
   }, []);
 
 

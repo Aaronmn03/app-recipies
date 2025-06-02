@@ -105,11 +105,10 @@ const consumirDia = async (dia, user, token, handleError, handleSuccess) => {
 }
 
 export const fetchDias = async () => {  
-      const dias = await limpiarDiasAntiguos();
-      if (!dias || dias.length === 0) {
-        return [];
-      }
-
-      dias.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-      return dias;
-    }
+  const dias = await limpiarDiasAntiguos();
+  if (!dias || dias.length === 0) {
+    return [];
+  }
+  dias.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  return dias;
+}

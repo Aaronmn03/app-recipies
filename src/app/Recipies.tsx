@@ -15,6 +15,7 @@ import { ThemedView, ThemedTextInput, ThemedText } from '../components/ThemedCom
 import { useTheme } from '../context/ThemeContext';
 import { useLoading } from '../context/LoadingContext';
 import { fetchRecipiesData } from '../services/RecipieService';
+import { ca } from 'date-fns/locale';
 
 export default function Recipies() {
     const [recipies, setRecipies] = useState<TypeRecipie[]>([]);
@@ -39,19 +40,27 @@ export default function Recipies() {
       setRecipieSelected(recipie)
       setConsumeVisible(true);
     }
-  
+    
+    const fetchRecipies = async (search) => {
+          try {
+            const recetas = await fetchRecipiesData(search, user, token, handleError);
+            setRecipies(recetas);
+          } catch (error) {
+            handleError("Error al cargar las recetas");
+            console.error("Error al cargar las recetas:", error);
+          }
+        };
     const confirmConsume = () => {
       consume(recipieSelected, user, token, handleError, handleSuccess);
       setConsumeVisible(false);
     }
     useEffect(() => {
-      // ESTO PONE UNA ESPERA DE 500ms PARA QUE NO SE HAGA UNA PETICION CADA VEZ QUE SE ESCRIBE EN EL INPUT
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = setTimeout(() => {
         showLoading();
-        fetchRecipiesData(recipieSearch, user, token, setRecipies,handleError);
+        fetchRecipies(recipieSearch);
         hideLoading();
       }, 500);
 

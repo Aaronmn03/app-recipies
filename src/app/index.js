@@ -48,8 +48,20 @@ export default function Home() {
   }, [todayIndex]);
 
   useEffect(() => {
+    const fetchRecipies = async () => {
+          try {
+            const recetas = await fetchRecipiesData("", user, token, handleError);
+            setRecetas(recetas);
+          } catch (error) {
+            handleError("Error al cargar las recetas");
+            console.error("Error al cargar las recetas:", error);
+          }
+        };
+
     showLoading();
-    fetchRecipiesData("", user, token, setRecetas, handleError);
+    fetchRecipies()
+
+
   }, []);
 
   useEffect(() => {

@@ -46,7 +46,7 @@ export function sendDataBackend(receta, handleSuccess, handleError, user, token,
     });
 }
 
-export async function fetchRecipiesData (recipieSearch, user, token, setRecipies, handleError) {
+export async function fetchRecipiesData (recipieSearch, user, token, handleError) {
     try {
         const url = `${config.backendHost}/Recipie/${user}?search=${recipieSearch}`;
         const response = await fetch(url, {
@@ -58,9 +58,49 @@ export async function fetchRecipiesData (recipieSearch, user, token, setRecipies
         });
 
         const data = await response.json();
-        setRecipies(data);
+        return data;
     } catch (error) {
         console.error('Error fetching data:', error);
         handleError("Error al cargar las recetas");
     }
+}
+
+import { readInventory } from './inventoryService';
+import { fetchDias } from './CalendarService';
+
+export const fetchRecetasConsumibles = async (user, token, handleError) =>{
+  const recetas = await fetchRecipiesData("", user, token, handleError);
+  if (!recetas) {
+    console.error("Error al cargar las recetas");
+    return [];
+  }
+  const inventario = await readInventory(user, token, handleError);
+  console.log("Inventario:", inventario.find(item => item.nombre === "MACARRONES"));
+  const dias = await fetchDias();
+  dias.forEach(dia => {
+    dia.comida.recetas.forEach(receta => {
+        receta.ingredientes.forEach(ingrediente => {
+            const alimento = inventario.find(item => item.nombre === ingrediente.nombre);
+            if (alimento) {
+                alimento.cantidad -= ingrediente.cantidad;
+            }
+        });
+    });
+    dia.cena.recetas.forEach(receta => {
+        receta.ingredientes.forEach(ingrediente => {
+            const alimento = inventario.find(item => item.nombre === ingrediente.nombre);
+            if (alimento) {
+                alimento.cantidad -= ingrediente.cantidad;
+            }
+        });
+    });
+  })
+  console.log("inventario, despues de quitar los dias", inventario.find(item => item.nombre === "MACARRONES"));
+
+  const recetasConsumibles = recetas.filter(receta => {
+    return receta.ingredientes.every(ingrediente => {
+      return inventario.some(alimento => alimento.nombre === ingrediente.nombre && alimento.cantidad >= ingrediente.cantidad);
+    });
+  });
+  return recetasConsumibles;
 }

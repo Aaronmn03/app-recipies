@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, View, Platform, Image } from 'react-native';
+import { ScrollView, StyleSheet, View, Image } from 'react-native';
 import { ThemedView, ThemedText, TouchablePrimary, ThemedModalSelector, ThemedTextInput, ThemedPrimaryView } from '../components/ThemedComponents';
 import TitleView from '../components/TitleView';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext';
 import { useLoading } from '../context/LoadingContext';
 import { useTheme } from '../context/ThemeContext';
-import { fetchRecipiesData } from '../services/RecipieService';
+import { fetchRecetasConsumibles } from '../services/RecipieService';
 import { guardarNuevoDia } from '../services/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ViewerRecipiesModal from '../components/Modals/ViewerRecipiesModal';
 import { useRouter , useLocalSearchParams } from 'expo-router';
-
 
 export default function AddDay() {
   const { user, token } = useAuth();
@@ -34,7 +33,6 @@ export default function AddDay() {
   }
 
   const handleAddCena = (recetaId) => {
-    console.log("Receta ID:", recetaId);
     const receta = recetas.find(receta => receta.receta_id === recetaId); 
     setRecetasCena(prev => [...prev, receta]);
   }
@@ -53,17 +51,22 @@ export default function AddDay() {
   }
 
   useEffect(() => {
-      showLoading();
-      fetchRecipiesData("", user, token, setRecetas, handleError);    
-      hideLoading();
-  }, []);
+      const fetchRecipies = async () => {
+        try {
+          const recetas = await fetchRecetasConsumibles(user, token, handleError);
+          setRecetas(recetas);
+        } catch (error) {
+          handleError("Error al cargar las recetas");
+          console.error("Error al cargar las recetas:", error);
+        }
+      };
 
-  const recetasFormateadas = recetas
-  .filter(r => r && r.receta_id != null && r.nombre != null)
-  .map(r => ({
-      key: r.receta_id,
-      label: r.nombre
-  }));
+      showLoading();
+      fetchRecipies()
+      hideLoading();
+
+
+  }, []);
 
   const handleGuardar = () => {
     if (comensalesComida === '' || comensalesCena === '') {
@@ -179,7 +182,6 @@ const data = recetas.map((receta) => ({
       data={data}
       onChange={(option) => handleAddReceta(option.key)}
       cancelText='Cerrar'
-      
     />
   );
 };

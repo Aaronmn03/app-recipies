@@ -12,6 +12,7 @@ import { ThemedText, ThemedView } from '../components/ThemedComponents';
 import { useTheme } from '../context/ThemeContext';
 import CamaraModal from '../components/Inventory/CamaraModal';
 import { useLoading } from '../context/LoadingContext';
+import { readInventory } from '../services/inventoryService.js';
 
 export default function Inventary() {
   const [items, setInventory] = useState([]);
@@ -30,23 +31,13 @@ export default function Inventary() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {      
+    const loadInventory = async () => {
       showLoading();
-     fetch(`${config.backendHost}/Inventory/${user}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`, 
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(response => response.json())
-        .then(data => {
-          setInventory(data);
-          hideLoading();
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    }
-    fetchData();
+      const inventory = await readInventory(user, token);
+      setInventory(inventory);
+      hideLoading();
+    };
+    loadInventory();
   }, []);
 
 
