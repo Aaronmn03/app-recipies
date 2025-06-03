@@ -68,6 +68,8 @@ export default function Calendar() {
 
     showLoading();
     fetchRecipies();
+    hideLoading();
+
 
   }, []);
 
@@ -193,7 +195,7 @@ export default function Calendar() {
     if(daySelected == undefined){
       return (
         <ThemedPrimaryView style={RecipieStyles.mainContainer}>
-          <ThemedText style={{fontSize: 26, textAlign: 'center'}}>Selecciona el dia que quieras mirar</ThemedText>
+          <ThemedText style={{fontSize: 26, textAlign: 'center'}}>Selecciona el dia que quieras añadir</ThemedText>
         </ThemedPrimaryView>
       );
     }else{
