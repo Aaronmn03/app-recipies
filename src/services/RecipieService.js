@@ -56,7 +56,6 @@ export async function fetchRecipiesData (recipieSearch, user, token, handleError
             'Content-Type': 'application/json',
         },
         });
-
         const data = await response.json();
         return data;
     } catch (error) {
@@ -75,7 +74,6 @@ export const fetchRecetasConsumibles = async (user, token, handleError) =>{
     return [];
   }
   const inventario = await readInventory(user, token, handleError);
-  console.log("Inventario:", inventario.find(item => item.nombre === "MACARRONES"));
   const dias = await fetchDias();
   dias.forEach(dia => {
     dia.comida.recetas.forEach(receta => {
@@ -95,7 +93,6 @@ export const fetchRecetasConsumibles = async (user, token, handleError) =>{
         });
     });
   })
-  console.log("inventario, despues de quitar los dias", inventario.find(item => item.nombre === "MACARRONES"));
 
   const recetasConsumibles = recetas.filter(receta => {
     return receta.ingredientes.every(ingrediente => {

@@ -133,39 +133,3 @@ export async function insertCodigoAlimento(aliment, token) {
         return null;
     }
 }
-  
-/*
-export function sendImageBackend(imageUri, user, token, router, handleSuccess, handleError){
-    const formData = new FormData();
-    formData.append('imagen', {
-        uri: imageUri.startsWith('file://') ? imageUri : `file://${imageUri}`,
-        type: 'image/jpeg', 
-        name: 'ticket.jpg', 
-    });
-   fetch(`${config.backendHost}/Inventory/${user}/image`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`, 
-            'Content-Type': 'multipart/form-data'
-        },
-        body: formData,
-    })
-    .then((response) => {
-        if (!response.ok) {
-            return response.text().then(text => {
-                handleError(text);
-                throw new Error(`Network response was not ok: ${text}`);
-            });
-        }
-        return response.json();
-    })
-    .then((data) => {
-        handleSuccess('Imagen procesada correctamente');
-        router.replace('/Inventory');
-    })
-    .catch((error) => {
-        handleError(error.message);
-        router.replace('/Inventory');
-        console.error('Error fetching data:', error);
-    });
-}*/

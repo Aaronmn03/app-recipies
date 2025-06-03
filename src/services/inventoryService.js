@@ -38,14 +38,32 @@ export const readInventory = async (user, token) => {
 
 
 export const editAliment = async (alimento, token, handleError, handleSuccess) =>{
-    const body = JSON.stringify(alimento);
+    const formData = new FormData();
+    if (alimento.imagen && alimento.imagen.startsWith('file')) {
+      formData.append('imagen', {
+        uri: alimento.imagen,
+        name: `alimento_${alimento.id}_${Date.now()}.jpg`, 
+        type: 'image/jpeg', 
+      });
+    }
+    for (const key in alimento) {
+        if (key !== 'imagen') {
+        try {
+            formData.append(key, alimento[key].toString());
+            } catch (e) {
+            }
+        }
+    }
+
+    for (const pair of formData._parts) {
+        console.log(pair[0] + ': ' + JSON.stringify(pair[1]));
+    }
     const response = await fetch (`${config.backendHost}/Inventory/${alimento.id}`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`, 
-            'Content-Type': 'application/json',
             },
-        body: body,
+        body: formData,
     })
     .then(response => {
         console.assert('Item actualizado:', response);
@@ -60,33 +78,4 @@ export const editAliment = async (alimento, token, handleError, handleSuccess) =
 export const emptyAliment = async (alimento, token, handleError, handleSuccess) =>{
     alimento.cantidad = 0;
     editAliment(alimento, token, handleError, handleSuccess);
-}
-
-export const uploadImage = async (uri, alimento, token) => {
-    if (uri !== undefined) {
-        const formData = new FormData();
-        const fileName = alimento.imagen;
-        formData.append('image', {
-        uri: uri,
-        name: fileName, 
-        type: 'image/jpeg',  
-        });
-        try {
-            const response = await fetch(`${config.backendHost}/upload`, {
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'multipart/form-data'
-            },
-            method: 'POST',
-            body: formData,
-            });
-            
-            if (!response.ok) {
-            throw new Error(`Error en la respuesta del servidor: ${response.status}`);
-            }
-            const data = await response.json();
-        } catch (error) {
-            console.error('Error al subir la foto:', error);
-        }
-    }       
 }
