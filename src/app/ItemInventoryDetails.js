@@ -8,7 +8,7 @@ import { unidad_medida } from '../utils/unitConverter.js';
 import TextOrInput from '../components/TextOrInput';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import * as ImagePicker from 'expo-image-picker';
-import { uploadImage, editAliment, removeAliment, emptyAliment } from '../services/inventoryService';
+import { editAliment, removeAliment, emptyAliment } from '../services/inventoryService';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext';
 import {useTheme} from '../context/ThemeContext'
@@ -54,7 +54,6 @@ export default function ItemInventoryDetails() {
         setEditModalVisible(false);
         editAliment(alimento, token, handleError, handleSuccess);
         router.replace('/');
-        uploadImage(uri, alimento, token);
     }
 
     const pickImage = async () => {
@@ -73,7 +72,7 @@ export default function ItemInventoryDetails() {
                 const uri = result.assets[0].uri;
                 setUri(uri)
                 setImageAux(uri);
-                updateAlimento('imagen', `${alimento.id.toString()}_${alimento.nombre.toString()}_${alimento.id_inventario.toString()}_${new Date().getTime()}.jpg`);
+                updateAlimento('imagen', uri);
                 setEditMode(true);
             }
         } catch (error) {
