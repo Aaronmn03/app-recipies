@@ -1,11 +1,18 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
-  <uses-permission android:name="android.permission.CAMERA"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission
+      android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      android:minSdkVersion="34" 
+  />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>
@@ -26,8 +33,34 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="com.aaron.app"/>
+        <data android:scheme="baby-ciao"/>
       </intent-filter>
     </activity>
+    <receiver
+            android:name="com.expoalarmmodule.receivers.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true"
+            />
+        <receiver
+            android:name="com.expoalarmmodule.receivers.BootReceiver"
+            android:exported="true"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.expoalarmmodule.receivers.NotificationActionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="DISMISS_ACTION" />
+                <action android:name="SNOOZE_ACTION" />
+            </intent-filter>
+        </receiver>
+        <service 
+            android:name="com.expoalarmmodule.AlarmService" 
+            android:foregroundServiceType="mediaPlayback"
+        />
   </application>
 </manifest>
